@@ -3,6 +3,23 @@
 The React frontend runs on Vercel Hobby. The FastAPI backend runs on Render Free,
 with the existing Supabase PostgreSQL database and Groq account.
 
+## Verified progress — October 29, 2026
+
+The Render backend is live at https://animo-meals-api.onrender.com. A public
+request to `/api/health` returned `status=ok` and `database=connected`.
+`/api/menu-items` returned 10 records, and `?budget=75.50` returned 9 records,
+all priced at or below PHP 75.50. These are fictional demonstration listings.
+
+[Deployment pull request #15](https://github.com/s2301945-rgb/animo-meals/pull/15)
+passed its frontend and backend checks before merge. The frontend hook job was
+intentionally skipped while the hook is unconfigured. Render detected the main
+branch checks and queued an automatic deployment of commit `c9fcac0`.
+
+Vercel project creation is waiting for the account owner's email reauthentication.
+The frontend URL and final end-to-end evidence will be recorded after that step.
+The frontend allows 75 seconds for its first menu request so a sleeping Render
+service can wake up; users see a loading explanation during that request.
+
 ## Backend
 
 Connect the GitHub repository in Render and create a Python web service:
