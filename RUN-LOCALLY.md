@@ -42,7 +42,7 @@ The certificate setting uses Windows trusted certificates for npm requests on th
 
 ## 4. Try the working flow
 
-1. Check that ten demonstration items load from the backend.
+1. Check that sixteen demonstration items load from the backend after running the latest seed.
 2. Enter a budget of `75` and select **Find food**.
 3. Choose a category or search for `chicken`.
 4. Clear search, choose **All items**, and clear the budget to restore every item.

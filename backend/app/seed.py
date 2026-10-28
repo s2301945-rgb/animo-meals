@@ -12,16 +12,22 @@ DEMO_MENU = [
         ('Vegetable rice bowl', 'Mixed vegetables over steamed rice.', '55', 'Main dish'),
         ('Bottled water', 'A simple drink to complete your lunch.', '15', 'Drink'),
         ('Extra rice', 'One serving of steamed rice.', '15', 'Side'),
+        ('Egg fried rice', 'Fried rice with egg and mixed vegetables.', '45', 'Main dish'),
+        ('Pancit bihon', 'Rice noodles with vegetables in a light savory sauce.', '50', 'Main dish'),
     ]),
     ('Demo • Bowl Corner', 'Ground floor · Zone B', [
         ('Chicken teriyaki bowl', 'Chicken, teriyaki-style sauce, and rice.', '85', 'Main dish'),
         ('Tofu rice bowl', 'Tofu and vegetables with rice.', '65', 'Main dish'),
         ('Iced tea', 'A chilled tea drink.', '20', 'Drink'),
+        ('Mushroom rice bowl', 'Sauteed mushrooms and vegetables over rice.', '60', 'Main dish'),
+        ('Fish fillet with rice', 'A crisp fish fillet served with steamed rice.', '70', 'Main dish'),
     ]),
     ('Demo • Snack Stop', 'Ground floor · Zone C', [
         ('Egg sandwich', 'An egg sandwich for a lighter break.', '40', 'Snack'),
         ('Banana bread', 'One slice of banana bread.', '30', 'Snack'),
         ('Calamansi drink', 'A refreshing citrus drink.', '25', 'Drink'),
+        ('Tuna pandesal', 'A soft pandesal roll with a tuna filling.', '35', 'Snack'),
+        ('Cheese sandwich', 'A simple cheese sandwich for a quick break.', '30', 'Snack'),
     ]),
 ]
 
