@@ -59,6 +59,10 @@ variable `DEPLOYMENT_ENABLED=true`. The deployment job runs only on `main` pushe
 after both application check jobs succeed. Keep the flag unset until the hook is
 configured. Never commit the hook URL.
 
+`frontend/vercel.json` disables automatic commit-triggered Vercel deployments;
+GitHub Actions uses the approved deploy hook after its checks instead. This
+avoids publishing a production commit before validation finishes.
+
 ## Consultation evidence
 
 Before closing the deployment issue, record the actual public URLs and verify:
