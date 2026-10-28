@@ -50,11 +50,11 @@ Target: Week 1. Requirement: functional frontend connected to backend. Depends o
 - [ ] Clearly label fictional menus as demonstration data.
 - [ ] Verify the page is usable on a narrow mobile screen.
 
-## 5. Verify one backend Gemini request
+## 5. Verify one backend Groq request
 
 Target: Week 1. Requirement: confirm AI provider credentials work.
 
-- [ ] Configure an actual Gemini key and supported model only in the backend environment.
+- [ ] Configure an actual Groq key and supported model only in the backend environment.
 - [ ] Make one real request from a backend command or restricted development tool.
 - [ ] Confirm a successful provider response for a sample budget extraction request.
 - [ ] Handle missing credentials, timeouts, and provider errors clearly.

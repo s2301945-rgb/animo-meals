@@ -1,0 +1,26 @@
+{
+  "verified_at_utc": "2026-10-28T15:51:08.686069+00:00",
+  "provider": "Groq",
+  "model": "openai/gpt-oss-20b",
+  "status": "real_provider_response_validated",
+  "sample_input": "I have 100 pesos. I want a non-spicy chicken meal with a drink, preferably from one stall. No pork.",
+  "extracted_preferences": {
+    "budget_php": 100.0,
+    "preferred_food": "chicken",
+    "include_drink": true,
+    "avoid_spicy": true,
+    "prefer_same_stall": true,
+    "exclusions": [
+      "pork"
+    ]
+  },
+  "semantic_checks": {
+    "budget": true,
+    "food": true,
+    "drink": true,
+    "non_spicy": true,
+    "same_stall": true,
+    "exclude_pork": true
+  },
+  "note": "A successful smoke test does not establish general extraction accuracy."
+}
