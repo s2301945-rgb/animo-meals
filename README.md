@@ -4,7 +4,7 @@
 
 The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
 
-Local development uses SQLite without cloud credentials. Supabase PostgreSQL is the planned hosted database and still needs a verified connection. Gemini integration, administrator CRUD, meal-combination recommendations, and live deployment are not implemented yet. The features below describe the intended completed project.
+Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and ten menu items have been verified. Groq structured extraction and a backend smoke-test command are implemented; a real provider call is still pending key configuration. Administrator CRUD, meal-combination recommendations, and live deployment are not implemented yet. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
 
 ## Branch Strategy
 
@@ -16,7 +16,7 @@ Local development uses SQLite without cloud credentials. Supabase PostgreSQL is 
 - [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
 - [Local setup and verification](RUN-LOCALLY.md)
 
-The Week 1 live URL, pipeline-triggered deployment, Supabase migration evidence, and real backend AI call evidence remain outstanding.
+Supabase migration and API verification are complete. Week 1 still needs a successful real AI provider call and pipeline-triggered live deployment. The current source includes the Groq verification command; do not mark the real-call requirement complete until evidence exists.
 
 AnimoMeals is an AI-assisted application designed to help La Salle students discover budget-friendly canteen meals tailored to their preferences. Simply input your budget and food desires, such as "I have ₱100 and want a non-spicy chicken meal with a drink," and AnimoMeals will suggest meal combinations from recorded menus. You'll see prices, stall locations, and your remaining budget at a glance.
 
@@ -57,7 +57,7 @@ This project is an individual endeavor.
 | Database            | Supabase PostgreSQL | Persistent relational data storage                                   |
 | Database Access     | SQLAlchemy          | ORM for Python database interaction                                  |
 | Migrations          | Alembic             | Track and apply database schema changes                              |
-| AI Provider         | Google Gemini API   | Extract structured preferences from student queries                  |
+| AI Provider         | Groq API   | Extract structured preferences with Groq-hosted GPT-OSS 20B                  |
 | Frontend Hosting    | Vercel Hobby        | Host the frontend application                                        |
 | Backend Hosting     | Render Free         | Host the backend application                                         |
 | Repository & Automation | GitHub + GitHub Actions | Source control, issue tracking, CI/CD, and deployment automation     |

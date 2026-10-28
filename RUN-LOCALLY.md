@@ -2,9 +2,9 @@
 
 ## What works now
 
-React displays menu records read from a database by FastAPI. You can search food/stalls, filter categories, and request individual items within a budget. The sample stalls, prices, and locations are fictional. No AI or meal-combination recommendations are implemented yet.
+React displays menu records read from a database by FastAPI. You can search food/stalls, filter categories, and request individual items within a budget. The sample stalls, prices, and locations are fictional. A backend-only Groq extraction function and verification command are available; frontend AI and meal-combination recommendations are not implemented yet. See AI-SETUP.md.
 
-Local development uses a real SQLite file, `backend/animomeals.db`, so no cloud account is required to try the app. Supabase PostgreSQL remains the planned deployment database. Both use the same SQLAlchemy models and Alembic migration; the Supabase connection has not been verified yet.
+Local development uses a real SQLite file, `backend/animomeals.db`, so no cloud account is required to try the app. Supabase PostgreSQL remains the planned deployment database. Both use the same SQLAlchemy models and Alembic migration; the original laptop now has a verified Supabase connection configured in its ignored backend/.env file.
 
 ## 1. Open the project
 
@@ -54,7 +54,7 @@ The backend loads `backend/.env` if present. Without it, it uses local SQLite. D
 
 The frontend defaults to `http://localhost:8000`. Override it with `VITE_API_BASE_URL` in `frontend/.env`. The backend allows the origin configured by `FRONTEND_ORIGIN` (default `http://localhost:5173`). Restart servers after changing configuration.
 
-For Supabase, use its supplied connection method with the psycopg driver, configure SSL as required, then run the same migration and seed commands against that database. Do not commit passwords or API keys. A Gemini key is not needed to run the current version.
+For Supabase, use its supplied connection method with the psycopg driver, configure SSL as required, then run the same migration and seed commands against that database. Do not commit passwords or API keys. An AI key is not needed for menu browsing. The Groq smoke test requires its own backend key.
 
 ## Checks
 
@@ -66,7 +66,7 @@ GitHub Actions runs install, lint, frontend build, backend import checks, migrat
 
 ## Still required for Week 1
 
-- Configure and verify Supabase PostgreSQL.
-- Verify one real Gemini request from the backend.
+- Supabase PostgreSQL was configured and verified on the original laptop; new checkouts need their own private configuration.
+- Verify one real Groq request from the backend using AI-SETUP.md.
 - Deploy a live frontend/backend through a pipeline after successful checks.
 - Collect consultation evidence. A running local app alone does not satisfy the live URL requirement.
