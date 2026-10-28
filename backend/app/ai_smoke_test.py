@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import getpass
 import json
 from pathlib import Path
+import re
 import subprocess
 
 from dotenv import set_key
@@ -16,6 +17,16 @@ SAMPLE = (
     'I have 100 pesos. I want a non-spicy chicken meal with a drink, '
     'preferably from one stall. No pork.'
 )
+
+
+def validate_key_input(key):
+    if not re.fullmatch(r'gsk_[A-Za-z0-9_-]{20,}', key):
+        raise AIError(
+            'key_format',
+            'This does not look like a complete Groq key. Copy the generated key '
+            'using Groq\'s Copy button. Paste only the key, without a label or quotes. '
+            'A database password or masked key will not work.',
+        )
 
 
 def main():
@@ -36,6 +47,12 @@ def main():
         key = getpass.getpass('Groq API key: ').strip()
         if not key:
             print('Cancelled: no key entered.')
+            return 1
+        try:
+            validate_key_input(key)
+        except AIError as error:
+            print(f'Key not submitted ({error.code}): {error}')
+            print('No request was sent and no key was saved. Run this command again to retry.')
             return 1
         config.groq_api_key = SecretStr(key)
     try:

@@ -102,8 +102,10 @@ def extract_preferences(
     except httpx.RequestError:
         raise AIError('connection', 'The AI service could not be reached.') from None
 
-    if response.status_code in (401, 403):
-        raise AIError('authentication', 'The AI key was rejected. Check the backend configuration.')
+    if response.status_code == 401:
+        raise AIError('authentication', 'Groq rejected the key. Copy the complete active API key, not the masked key or your database password.')
+    if response.status_code == 403:
+        raise AIError('permission', 'Groq denied access. Check the project and model permissions in your Groq account.')
     if response.status_code == 429:
         raise AIError('rate_limit', 'The free AI quota is temporarily unavailable. Try again later.')
     if response.status_code != 200:

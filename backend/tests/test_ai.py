@@ -6,6 +6,7 @@ import pytest
 
 from app.ai import AIError, extract_preferences
 from app.config import Settings
+from app.ai_smoke_test import validate_key_input
 
 VALID = {'budget_php': 100.0, 'preferred_food': 'chicken', 'include_drink': True,
          'avoid_spicy': True, 'prefer_same_stall': True, 'exclusions': ['pork']}
@@ -36,7 +37,7 @@ def test_extracts_validated_data_and_sends_strict_schema():
     assert result.exclusions == ['pork']
 
 
-@pytest.mark.parametrize('status,code', [(401, 'authentication'), (403, 'authentication'),
+@pytest.mark.parametrize('status,code', [(401, 'authentication'), (403, 'permission'),
                                       (429, 'rate_limit'), (500, 'provider'), (400, 'provider')])
 def test_provider_failures_do_not_leak_response_or_credentials(status, code):
     transport = httpx.MockTransport(lambda _: httpx.Response(status, text='private-provider-content'))
@@ -95,3 +96,18 @@ def test_no_key_does_not_contact_provider():
     with pytest.raises(AIError) as failure:
         extract_preferences('100 pesos', Settings(_env_file=None, groq_api_key=SecretStr('')))
     assert failure.value.code == 'not_configured'
+
+
+@pytest.mark.parametrize('key_text', [
+    'a-database-password', 'gsk_...masked', 'Groq API key: gsk_' + 'A' * 40,
+    '"gsk_' + 'A' * 40 + '"', 'gsk_short',
+])
+def test_key_entry_rejects_labels_passwords_and_masked_values(key_text):
+    with pytest.raises(AIError) as failure:
+        validate_key_input(key_text)
+    assert failure.value.code == 'key_format'
+    assert key_text not in str(failure.value)
+
+
+def test_complete_key_format_can_proceed_to_provider_validation():
+    validate_key_input('gsk_' + 'A' * 40)
