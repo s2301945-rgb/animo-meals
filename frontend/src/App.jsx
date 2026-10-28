@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -209,6 +209,7 @@ function FoodArt({ item }) {
 export default function App() {
   const [items, setItems] = useState([]);
   const [catalog, setCatalog] = useState([]);
+  const catalogLoaded = useRef(false);
   const [status, setStatus] = useState("loading");
   const [attempt, setAttempt] = useState(0);
   const [query, setQuery] = useState("");
@@ -233,9 +234,24 @@ export default function App() {
         if (!response.ok) throw new Error("Menu request failed");
         const data = await response.json();
         if (!Array.isArray(data)) throw new Error("Unexpected menu response");
+        let fullCatalog = budget ? null : data;
+        // A visitor can choose a budget before the initial menu has loaded.
+        // Keep shop counts and starting prices based on the complete catalog.
+        if (budget && !catalogLoaded.current) {
+          const catalogResponse = await fetch(`${API}/api/menu-items`, {
+            signal: controller.signal,
+          });
+          if (!catalogResponse.ok) throw new Error("Shop menu request failed");
+          fullCatalog = await catalogResponse.json();
+          if (!Array.isArray(fullCatalog))
+            throw new Error("Unexpected shop menu response");
+        }
         if (!cancelled) {
           setItems(data);
-          if (!budget) setCatalog(data);
+          if (fullCatalog) {
+            setCatalog(fullCatalog);
+            catalogLoaded.current = true;
+          }
           setStatus("ready");
         }
       })
@@ -261,13 +277,11 @@ export default function App() {
     setSort("default");
   }
   function scrollToMenu() {
-    document
-      .getElementById("menu")
-      .scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "instant"
-          : "smooth",
-      });
+    document.getElementById("menu").scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
   }
   function findFood(value) {
     const amount = value.trim();
