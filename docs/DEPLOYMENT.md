@@ -13,10 +13,12 @@ all priced at or below PHP 75.50. These are fictional demonstration listings.
 [Deployment pull request #15](https://github.com/s2301945-rgb/animo-meals/pull/15)
 passed its frontend and backend checks before merge. The frontend hook job was
 intentionally skipped while the hook is unconfigured. Render detected the main
-branch checks and queued an automatic deployment of commit `c9fcac0`.
+branch checks and successfully deployed commit `c9fcac0` automatically
+(Render deployment `dep-dbh28sbd9pos73c3huk0`).
 
-Vercel project creation is waiting for the account owner's email reauthentication.
-The frontend URL and final end-to-end evidence will be recorded after that step.
+The frontend is live at https://animo-meals.vercel.app. The production page loaded
+all ten items from the hosted API. Submitting PHP 50 displayed six items, all
+within that budget. This also verifies the configured production CORS origin.
 The frontend allows 75 seconds for its first menu request so a sleeping Render
 service can wake up; users see a loading explanation during that request.
 

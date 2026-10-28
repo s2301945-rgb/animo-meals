@@ -16,7 +16,7 @@ Local development defaults to SQLite when DATABASE_URL is absent. The original l
 - [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
 - [Local setup and verification](RUN-LOCALLY.md)
 
-Supabase migration and API verification are complete. The Week 1 real AI provider call has succeeded and its evidence is saved. The [hosted backend health check](https://animo-meals-api.onrender.com/api/health) confirms a connected database; its menu endpoint returns ten demonstration items. Frontend deployment and full live verification are still in progress. See [deployment setup](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
+The [live Week 1 website](https://animo-meals.vercel.app) loads ten demonstration menu items from the [hosted backend](https://animo-meals-api.onrender.com/api/health) and Supabase. Live budget filtering has been verified. Render automatically deploys after the main branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
 
 AnimoMeals is an AI-assisted application designed to help La Salle students discover budget-friendly canteen meals tailored to their preferences. Simply input your budget and food desires, such as "I have ₱100 and want a non-spicy chicken meal with a drink," and AnimoMeals will suggest meal combinations from recorded menus. You'll see prices, stall locations, and your remaining budget at a glance.
 
