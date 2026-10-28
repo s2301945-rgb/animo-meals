@@ -31,11 +31,14 @@ Open a second terminal at the repository root:
 
 ```powershell
 cd frontend
+$env:NODE_USE_SYSTEM_CA = '1'
 npm.cmd ci
 npm.cmd run dev
 ```
 
 Open **http://localhost:5173**. Keep both terminals running. Use **Ctrl+C** in each to stop.
+
+The certificate setting uses Windows trusted certificates for npm requests on this laptop; HTTPS certificate verification remains enabled.
 
 ## 4. Try the working flow
 
