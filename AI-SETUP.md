@@ -41,6 +41,10 @@ After configuration, rerun a test without entering the key:
 
 Do not run real provider calls in CI. Manual menu browsing continues to work without an AI key.
 
+## Verified result
+
+A real Groq request succeeded on October 28, 2026. The fixed sample passed all six checks: budget, chicken preference, drink, non-spicy requirement, same-stall preference, and pork exclusion. See [saved evidence](docs/verification/ai-provider.json). The initial trial had a non-spicy interpretation error; the instructions and semantic validation were corrected before this successful rerun. This is one smoke sample, not a broad accuracy evaluation.
+
 ## Remaining work
 
-The Week 1 AI connection requirement is complete only after a real provider response is verified and its evidence is saved. Full preference-review UI, an authenticated or rate-limited API route, and meal-combination recommendations are later features. Deployment remains a separate Week 1 task.
+The Week 1 AI connection requirement has been verified, with non-secret evidence saved. Full preference-review UI, an authenticated or rate-limited API route, and meal-combination recommendations are later features. Deployment remains a separate Week 1 task.
