@@ -1,5 +1,23 @@
 # AnimoMeals: Your AI-Powered Canteen Meal Finder
 
+## Current Week 1 Status
+
+The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
+
+Local development uses SQLite without cloud credentials. Supabase PostgreSQL is the planned hosted database and still needs a verified connection. Gemini integration, administrator CRUD, meal-combination recommendations, and live deployment are not implemented yet. The features below describe the intended completed project.
+
+## Branch Strategy
+
+`main` holds reviewed changes. Work happens on descriptive feature branches, such as `feature/week-1-app`, and enters `main` through a pull request. The solo developer reviews the diff and validation results before merging. GitHub Actions runs install, lint, build, migration, and backend checks on pull requests.
+
+## Backlog and Consultation
+
+- [All project issues](https://github.com/s2301945-rgb/animo-meals/issues)
+- [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
+- [Local setup and verification](RUN-LOCALLY.md)
+
+The Week 1 live URL, pipeline-triggered deployment, Supabase migration evidence, and real backend AI call evidence remain outstanding.
+
 AnimoMeals is an AI-assisted application designed to help La Salle students discover budget-friendly canteen meals tailored to their preferences. Simply input your budget and food desires, such as "I have ₱100 and want a non-spicy chicken meal with a drink," and AnimoMeals will suggest meal combinations from recorded menus. You'll see prices, stall locations, and your remaining budget at a glance.
 
 

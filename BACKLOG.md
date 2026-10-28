@@ -1,6 +1,10 @@
 # AnimoMeals GitHub Issues
 
-Status: prepared locally; these issues have not been created on GitHub. All tasks below start incomplete.
+Status: these tasks are tracked as GitHub Issues #2–#12. Repository setup (#2) is complete. Check the live issues and Week 1 milestone for current completion status; the checklists below describe acceptance criteria.
+
+Issues: https://github.com/s2301945-rgb/animo-meals/issues
+
+Week 1: https://github.com/s2301945-rgb/animo-meals/milestone/1
 
 ## 1. Set up repository foundation
 
