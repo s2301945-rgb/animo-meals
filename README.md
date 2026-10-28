@@ -4,7 +4,7 @@
 
 The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
 
-Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and ten menu items have been verified. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD, meal-combination recommendations, and live deployment are not implemented yet. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
+Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and ten menu items have been verified. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD and meal-combination recommendations are not implemented yet. The frontend and backend are deployed; live verification is documented below. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
 
 ## Branch Strategy
 
@@ -16,7 +16,7 @@ Local development defaults to SQLite when DATABASE_URL is absent. The original l
 - [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
 - [Local setup and verification](RUN-LOCALLY.md)
 
-Supabase migration and API verification are complete. The Week 1 real AI provider call has succeeded and its evidence is saved. Pipeline-triggered live deployment remains outstanding. The backend AI command is implemented; a frontend AI interface is later work.
+The [live Week 1 website](https://animo-meals.vercel.app) loads ten demonstration menu items from the [hosted backend](https://animo-meals-api.onrender.com/api/health) and Supabase. Live budget filtering has been verified. Render automatically deploys after the main branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
 
 AnimoMeals is an AI-assisted application designed to help La Salle students discover budget-friendly canteen meals tailored to their preferences. Simply input your budget and food desires, such as "I have ₱100 and want a non-spicy chicken meal with a drink," and AnimoMeals will suggest meal combinations from recorded menus. You'll see prices, stall locations, and your remaining budget at a glance.
 

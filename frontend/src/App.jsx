@@ -24,7 +24,7 @@ export default function App() {
   useEffect(() => {
     const controller = new AbortController();
     let cancelled = false;
-    const timeout = setTimeout(() => controller.abort(), 12000);
+    const timeout = setTimeout(() => controller.abort(), 75000);
     setStatus("loading");
     const suffix = budget ? `?budget=${encodeURIComponent(budget)}` : "";
     fetch(`${API}/api/menu-items${suffix}`, { signal: controller.signal })
@@ -204,7 +204,7 @@ export default function App() {
           </div>
           {status === "loading" && (
             <div className="state-box" role="status">
-              Loading the canteen menu…
+              Loading the canteen menu… The first visit may take about a minute while the service wakes up.
             </div>
           )}
           {status === "error" && (
