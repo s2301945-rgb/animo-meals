@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -51,7 +51,7 @@ function Brand() {
 // Illustrations intentionally avoid implying photos of demonstration listings.
 function FoodArt({ item }) {
   const name = item.name.toLowerCase();
-  const vegetables = /tofu|vegetable/.test(name);
+  const vegetables = /tofu|vegetable|mushroom/.test(name);
   return (
     <svg viewBox="0 0 300 220" className="food-art" aria-hidden="true">
       <ellipse cx="150" cy="190" rx="86" ry="9" fill="#173f2812" />
@@ -166,43 +166,313 @@ function FoodArt({ item }) {
             strokeWidth="3"
           />
           <ellipse cx="150" cy="115" rx="81" ry="60" fill="#f0f1e7" />
-          <ellipse cx="120" cy="109" rx="39" ry="42" fill="#fffef9" />
-          {[0, 1, 2, 3].map((row) => (
-            <path
-              key={row}
-              d={`m${98 + row * 3} ${87 + row * 12} 8 3m9-4 8 3m9-3 7 2`}
-              stroke="#dedfca"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          ))}
-          {item.category !== "Side" && (
-            <>
+          {/pancit/.test(name) ? (
+            <g>
+              <ellipse cx="150" cy="115" rx="65" ry="43" fill="#dcb56d" />
+              {[0, 1, 2, 3, 4].map((row) => (
+                <path
+                  key={row}
+                  d={`M96 ${91 + row * 11}q23-12 44 0t62 0`}
+                  fill="none"
+                  stroke="#f5d58f"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                />
+              ))}
               <path
-                d="M161 76q25-10 38 9 7 18-9 24-28 11-37-7-5-16 8-26Z"
-                fill={vegetables ? "#cfa963" : "#ad6734"}
-              />
-              <path
-                d="M173 112q26-12 35 6 12 22-13 28-22 8-30-9-6-15 8-25Z"
-                fill={vegetables ? "#e0bd78" : "#be7b3f"}
-              />
-              <path
-                d="m158 88 20 8m3 25 16 7"
-                stroke={vegetables ? "#b98b43" : "#8e512c"}
-                strokeWidth="3"
+                d="m113 98 15 9m40-20 13 10m-36 28 19 9m-48 8 18 3"
+                stroke="#5b884c"
+                strokeWidth="6"
                 strokeLinecap="round"
               />
               <path
-                d="M130 147q7-27 28-17-1 23-28 17Zm17 4q12-24 28-10-7 21-28 10Z"
-                fill="#548b49"
+                d="m149 88 10 9m21 32 10 8"
+                stroke="#d27e44"
+                strokeWidth="5"
               />
-              <circle cx="109" cy="147" r="10" fill="#cb7050" />
-              <circle cx="109" cy="147" r="5" fill="#ebaa74" />
+            </g>
+          ) : /fried rice/.test(name) ? (
+            <g>
+              <ellipse cx="150" cy="116" rx="64" ry="42" fill="#d7b870" />
+              {[0, 1, 2, 3].map((row) => (
+                <path
+                  key={row}
+                  d={`m${108 + row * 4} ${93 + row * 12} 9 3m13-1 9 3m14-4 9 2`}
+                  stroke="#f8e4a6"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              ))}
+              <path
+                d="m125 100 5 5m41 25 5 5m-35 5 4 4m-24-20 3 3"
+                stroke="#61984c"
+                strokeWidth="6"
+              />
+              <path d="M157 86q17-9 27 4 7 14-8 20-18 5-23-8Z" fill="#fffdf0" />
+              <circle cx="170" cy="98" r="9" fill="#edc348" />
+            </g>
+          ) : (
+            <>
+              <ellipse cx="120" cy="109" rx="39" ry="42" fill="#fffef9" />
+              {[0, 1, 2, 3].map((row) => (
+                <path
+                  key={row}
+                  d={`m${98 + row * 3} ${87 + row * 12} 8 3m9-4 8 3m9-3 7 2`}
+                  stroke="#dedfca"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              ))}
+              {item.category !== "Side" && (
+                <>
+                  {/fish/.test(name) ? (
+                    <g>
+                      <path
+                        d="M154 85q27-18 45 9l7 39q-33 21-53-3Z"
+                        fill="#d4a354"
+                      />
+                      <path
+                        d="m164 91 27 30m-32-16 25 29m-10-49 23 27"
+                        stroke="#edc577"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
+                    </g>
+                  ) : (
+                    <>
+                      <path
+                        d="M161 76q25-10 38 9 7 18-9 24-28 11-37-7-5-16 8-26Z"
+                        fill={vegetables ? "#cfa963" : "#ad6734"}
+                      />
+                      <path
+                        d="M173 112q26-12 35 6 12 22-13 28-22 8-30-9-6-15 8-25Z"
+                        fill={vegetables ? "#e0bd78" : "#be7b3f"}
+                      />
+                      <path
+                        d="m158 88 20 8m3 25 16 7"
+                        stroke={vegetables ? "#b98b43" : "#8e512c"}
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
+                    </>
+                  )}
+                  <path
+                    d="M130 147q7-27 28-17-1 23-28 17Zm17 4q12-24 28-10-7 21-28 10Z"
+                    fill="#548b49"
+                  />
+                  <circle cx="109" cy="147" r="10" fill="#cb7050" />
+                  <circle cx="109" cy="147" r="5" fill="#ebaa74" />
+                </>
+              )}
             </>
           )}
         </g>
       )}
     </svg>
+  );
+}
+
+function MenuCarousel({ items, budget, onSelect }) {
+  const limit = budget ? Math.min(Number(budget), 75) : 75;
+  const eligible = useMemo(
+    () =>
+      items.filter(
+        (item) =>
+          item.is_available &&
+          ["Main dish", "Snack"].includes(item.category) &&
+          Number(item.price) <= limit,
+      ),
+    [items, limit],
+  );
+  const [frame, setFrame] = useState({
+    current: null,
+    previous: null,
+    cycle: 0,
+  });
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [hidden, setHidden] = useState(() => document.hidden);
+  const current =
+    eligible.find((item) => item.id === frame.current) || eligible[0];
+  const previous = eligible.find((item) => item.id === frame.previous);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => setReducedMotion(preference.matches);
+    const updateVisibility = () => setHidden(document.hidden);
+    updateMotion();
+    preference.addEventListener("change", updateMotion);
+    document.addEventListener("visibilitychange", updateVisibility);
+    return () => {
+      preference.removeEventListener("change", updateMotion);
+      document.removeEventListener("visibilitychange", updateVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (
+      eligible.length < 2 ||
+      paused ||
+      hovered ||
+      focused ||
+      reducedMotion ||
+      hidden
+    )
+      return;
+    const timer = setInterval(() => {
+      setFrame((old) => {
+        const active =
+          eligible.find((item) => item.id === old.current) || eligible[0];
+        const choices = eligible.filter((item) => item.id !== active.id);
+        const next = choices[Math.floor(Math.random() * choices.length)];
+        return { current: next.id, previous: active.id, cycle: old.cycle + 1 };
+      });
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [eligible, paused, hovered, focused, reducedMotion, hidden]);
+
+  function changeItem(direction) {
+    if (eligible.length < 2) return;
+    const index = eligible.findIndex((item) => item.id === current.id);
+    const next =
+      eligible[(index + direction + eligible.length) % eligible.length];
+    setFrame((old) => ({
+      current: next.id,
+      previous: current.id,
+      cycle: old.cycle + 1,
+    }));
+  }
+
+  function slide(item, outgoing) {
+    const content = (
+      <>
+        <span className="featured-icon">
+          <Icon name="shop" />
+        </span>
+        <span>
+          <small>{item.category.toUpperCase()} · DEMO MENU</small>
+          <strong>{item.name}</strong>
+          <span>{cleanName(item.stall_name)}</span>
+        </span>
+        <b>{pesos.format(item.price)}</b>
+      </>
+    );
+    return (
+      <div
+        key={`${item.id}-${outgoing ? "out" : frame.cycle}`}
+        className={`carousel-slide ${outgoing ? "slide-out" : "slide-in"}`}
+        aria-hidden={outgoing || undefined}
+      >
+        <div className="hero-plate">
+          <FoodArt item={item} />
+        </div>
+        {outgoing ? (
+          <div className="featured-label">{content}</div>
+        ) : (
+          <a
+            href="#menu"
+            className="featured-label"
+            onClick={() => onSelect(item)}
+            aria-label={`View ${item.name}, ${pesos.format(item.price)} at ${cleanName(item.stall_name)}`}
+          >
+            {content}
+          </a>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <section
+      className="hero-stage menu-carousel"
+      aria-label="Affordable available menu highlights"
+      aria-roledescription="carousel"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget))
+          setFocused(false);
+      }}
+    >
+      <div className="hero-arc" />
+      <div className="stage-top">
+        <span className="stage-star">✦</span>
+        <span>
+          A LITTLE BUDGET INSPIRATION
+          <br />
+          <strong>Available picks · {pesos.format(limit)} and under</strong>
+        </span>
+      </div>
+      <div
+        className="carousel-window"
+        aria-live={paused || focused ? "polite" : "off"}
+        aria-atomic="true"
+      >
+        {current ? (
+          <>
+            {previous && previous.id !== current.id && slide(previous, true)}
+            {slide(current, false)}
+          </>
+        ) : (
+          <div className="carousel-empty">
+            <Icon name="shop" width="40" height="40" />
+            <h3>
+              {items.length
+                ? "No picks in this budget just yet."
+                : "Your next food find is on its way."}
+            </h3>
+            <p>
+              {items.length
+                ? "Try a larger budget or browse the full menu below."
+                : "Available meal and snack listings will appear here."}
+            </p>
+          </div>
+        )}
+      </div>
+      {current && (
+        <div className="carousel-controls">
+          <button
+            className="carousel-arrow previous-arrow"
+            aria-label="Previous menu highlight"
+            onClick={() => changeItem(-1)}
+            disabled={eligible.length < 2}
+          >
+            <Icon name="arrow" />
+          </button>
+          <span className="carousel-count">
+            {eligible.findIndex((item) => item.id === current.id) + 1}{" "}
+            <span>/ {eligible.length}</span>
+          </span>
+          <button
+            className="carousel-arrow"
+            aria-label="Next menu highlight"
+            onClick={() => changeItem(1)}
+            disabled={eligible.length < 2}
+          >
+            <Icon name="arrow" />
+          </button>
+          <button
+            className="carousel-pause"
+            onClick={() => setPaused((value) => !value)}
+            aria-pressed={paused}
+            disabled={reducedMotion || eligible.length < 2}
+          >
+            {reducedMotion ? "Autoplay off" : paused ? "▶ Resume" : "Ⅱ Pause"}
+          </button>
+        </div>
+      )}
+      <span className="carousel-note">
+        {reducedMotion
+          ? "Use the arrows to browse at your pace."
+          : "Random picks every 7 seconds · pauses on hover or focus"}
+      </span>
+      <span className="illustration-label">
+        Food illustrations · fictional demonstration menus
+      </span>
+    </section>
   );
 }
 
@@ -328,9 +598,6 @@ export default function App() {
           ? a.name.localeCompare(b.name)
           : 0,
     );
-  const featured = catalog.find(
-    (item) => item.category === "Main dish" && item.is_available,
-  );
   const filtered =
     budget || query || shop || category !== "All items" || availableOnly;
 
@@ -418,39 +685,16 @@ export default function App() {
               </span>
             </div>
           </div>
-          <div className="hero-stage">
-            <div className="hero-arc" />
-            <div className="stage-top">
-              <span className="stage-star">✦</span>
-              <span>
-                THE LUNCH BREAK EDIT
-                <br />
-                <strong>Good finds, every break.</strong>
-              </span>
-            </div>
-            <div className="hero-plate">
-              <FoodArt
-                item={featured || { name: "rice meal", category: "Main dish" }}
-              />
-            </div>
-            <span className="handwritten">Make lunch a little easier.</span>
-            {featured && (
-              <a href="#menu" className="featured-label">
-                <span className="featured-icon">
-                  <Icon name="shop" />
-                </span>
-                <span>
-                  <small>FROM THE DEMO MENU</small>
-                  <strong>{featured.name}</strong>
-                  <span>{cleanName(featured.stall_name)}</span>
-                </span>
-                <b>{pesos.format(featured.price)}</b>
-              </a>
-            )}
-            <span className="illustration-label">
-              Food illustration · not a product photo
-            </span>
-          </div>
+          <MenuCarousel
+            items={catalog}
+            budget={budget}
+            onSelect={(item) => {
+              setQuery(item.name);
+              setShop(item.stall_name);
+              setCategory("All items");
+              setAvailableOnly(true);
+            }}
+          />
         </section>
         <aside className="notice">
           <span className="demo-pill">DEMO EDITION</span>

@@ -4,7 +4,7 @@
 
 The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
 
-Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and ten menu items have been verified. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD and meal-combination recommendations are not implemented yet. The frontend and backend are deployed; live verification is documented below. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
+Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and sixteen menu items are available after the latest seed. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD and meal-combination recommendations are not implemented yet. The frontend and backend are deployed; live verification is documented below. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
 
 ## Branch Strategy
 
@@ -16,9 +16,13 @@ Local development defaults to SQLite when DATABASE_URL is absent. The original l
 - [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
 - [Local setup and verification](RUN-LOCALLY.md)
 
-The [live Week 1 website](https://animo-meals.vercel.app) loads ten demonstration menu items from the [hosted backend](https://animo-meals-api.onrender.com/api/health) and Supabase. Live budget filtering has been verified. Render automatically deploys after the main branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
+The [live Week 1 website](https://animo-meals.vercel.app) loads sixteen demonstration menu items from the [hosted backend](https://animo-meals-api.onrender.com/api/health) and Supabase. Live budget filtering has been verified. Render automatically deploys after the main branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
 
-### Week 1 consultation evidence
+The hero carousel randomly highlights available meals and snacks priced at PHP 75 or below (or the applied budget, if lower), changing every seven seconds with a slow slide. Hover, keyboard focus, a hidden browser tab, and the Pause button stop autoplay. Reduced-motion preferences disable autoplay and animated transitions; manual arrows remain available. Clicking a highlighted item filters the menu to that listing.
+
+Six additional fictional items are included in the repeatable seed: egg fried rice (PHP 45), pancit bihon (PHP 50), mushroom rice bowl (PHP 60), fish fillet with rice (PHP 70), tuna pandesal (PHP 35), and cheese sandwich (PHP 30). Seeding adds missing records without overwriting existing prices or availability.
+
+### Week 1 consultation evidence (original ten-item dataset)
 
 - [Passing pull-request checks](https://github.com/s2301945-rgb/animo-meals/pull/16/checks).
 - [Successful production pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/40729505099): frontend, backend, then frontend deployment all succeeded for `c105cca`.
