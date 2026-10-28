@@ -4,7 +4,7 @@
 
 The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
 
-Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and ten menu items have been verified. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD and meal-combination recommendations are not implemented yet. The backend is deployed; frontend hosting is being configured. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
+Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and ten menu items have been verified. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD and meal-combination recommendations are not implemented yet. The frontend and backend are deployed; live verification is documented below. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
 
 ## Branch Strategy
 
