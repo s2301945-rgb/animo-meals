@@ -18,6 +18,16 @@ Local development defaults to SQLite when DATABASE_URL is absent. The original l
 
 The [live Week 1 website](https://animo-meals.vercel.app) loads ten demonstration menu items from the [hosted backend](https://animo-meals-api.onrender.com/api/health) and Supabase. Live budget filtering has been verified. Render automatically deploys after the main branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
 
+### Week 1 consultation evidence
+
+- [Passing pull-request checks](https://github.com/s2301945-rgb/animo-meals/pull/16/checks).
+- [Successful production pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/40729505099): frontend, backend, then frontend deployment all succeeded for `c105cca`.
+- [Vercel production deployment](https://vercel.com/s2301945-rgb/animo-meals/9EG5yPo8pngE85u4hbT1crAiJ5rL): Ready, created by Deploy Hook from the same commit.
+- [Render automatic deployment](https://dashboard.render.com/web/srv-dbh28nfb9u1s739got00/deploys/dep-dbh28sbd9pos73c3huk0): succeeded after main-branch checks.
+- [Database migration](backend/alembic/versions/0001_create_menu.py): revision `0001` applied to Supabase; hosted health and menu reads confirm connectivity.
+- [Live verification results](docs/verification/live-deployment.json): ten items, six within PHP 50, correct frontend origin, and HTTP 422 for an invalid budget.
+- [Real AI provider evidence](docs/verification/ai-provider.json): all six smoke-sample semantic checks passed.
+
 AnimoMeals is an AI-assisted application designed to help La Salle students discover budget-friendly canteen meals tailored to their preferences. Simply input your budget and food desires, such as "I have ₱100 and want a non-spicy chicken meal with a drink," and AnimoMeals will suggest meal combinations from recorded menus. You'll see prices, stall locations, and your remaining budget at a glance.
 
 

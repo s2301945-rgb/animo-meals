@@ -22,6 +22,15 @@ within that budget. This also verifies the configured production CORS origin.
 The frontend allows 75 seconds for its first menu request so a sleeping Render
 service can wake up; users see a loading explanation during that request.
 
+The approved frontend deploy hook is stored as `VERCEL_DEPLOY_HOOK` in GitHub
+Actions secrets and `DEPLOYMENT_ENABLED=true` is configured. Production workflow
+[40729505099](https://github.com/s2301945-rgb/animo-meals/actions/runs/40729505099)
+successfully ran frontend checks, backend checks, and the deploy job in that order.
+Vercel deployment `9EG5yPo8pngE85u4hbT1crAiJ5rL` is Ready and identifies Deploy Hook
+as its creator for the same `c105cca` commit. The public menu and PHP 50 filter
+were checked after release; CORS matched the frontend origin and an invalid
+negative budget returned HTTP 422. No credentials are included in this evidence.
+
 ## Backend
 
 Connect the GitHub repository in Render and create a Python web service:

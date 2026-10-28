@@ -1,0 +1,17 @@
+{
+  "verified_date_manila": "2026-10-29",
+  "frontend": "https://animo-meals.vercel.app",
+  "backend": "https://animo-meals-api.onrender.com",
+  "health": {
+    "status": "ok",
+    "database": "connected"
+  },
+  "menu_count": 10,
+  "budget_php": 50,
+  "budget_count": 6,
+  "budget_all_within_limit": true,
+  "cors_origin": "https://animo-meals.vercel.app",
+  "invalid_budget_http": 422,
+  "github_pipeline": "https://github.com/s2301945-rgb/animo-meals/actions/runs/40729505099",
+  "release_commit": "c105cca"
+}
