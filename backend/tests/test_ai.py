@@ -4,9 +4,9 @@ import httpx
 from pydantic import SecretStr
 import pytest
 
-from app.ai import AIError, extract_preferences
+from app.ai import AIError, MealPreferences, extract_preferences
 from app.config import Settings
-from app.ai_smoke_test import validate_key_input
+from app.ai_smoke_test import check_smoke_sample, validate_key_input
 
 VALID = {'budget_php': 100.0, 'preferred_food': 'chicken', 'include_drink': True,
          'avoid_spicy': True, 'prefer_same_stall': True, 'exclusions': ['pork']}
@@ -111,3 +111,14 @@ def test_key_entry_rejects_labels_passwords_and_masked_values(key_text):
 
 def test_complete_key_format_can_proceed_to_provider_validation():
     validate_key_input('gsk_' + 'A' * 40)
+
+
+def test_smoke_sample_rejects_schema_valid_non_spicy_misinterpretation():
+    result = MealPreferences.model_validate({**VALID, 'avoid_spicy': False})
+    checks = check_smoke_sample(result)
+    assert checks['non_spicy'] is False
+    assert not all(checks.values())
+
+
+def test_smoke_sample_accepts_correct_meaning():
+    assert all(check_smoke_sample(MealPreferences.model_validate(VALID)).values())

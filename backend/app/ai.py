@@ -15,6 +15,10 @@ SYSTEM_PROMPT = (
     'budget_php is the maximum budget in Philippine pesos; use null if missing or ambiguous. '
     'Use null for unstated preferred_food, include_drink, avoid_spicy, or prefer_same_stall. '
     'Use an empty exclusions list if none are stated. '
+    'avoid_spicy means the person wants to AVOID spicy food: non-spicy, not spicy, '
+    'no spicy food, and ayaw ng maanghang all mean avoid_spicy=true. '
+    'Set avoid_spicy=false only when the user explicitly wants or accepts spicy food; '
+    'otherwise use null. Do not confuse a non-spicy dish with a false avoidance preference. '
     'Do not invent foods, prices, availability, nutrition facts, or medical advice. '
     'Return the required JSON object only.'
 )
@@ -33,7 +37,9 @@ class MealPreferences(BaseModel):
     budget_php: float | None = Field(description='Maximum budget in Philippine pesos, or null.')
     preferred_food: str | None
     include_drink: bool | None
-    avoid_spicy: bool | None
+    avoid_spicy: bool | None = Field(
+        description='True for non-spicy/no spicy food; false for explicitly accepting spicy food; null if unstated.'
+    )
     prefer_same_stall: bool | None
     exclusions: list[str]
 

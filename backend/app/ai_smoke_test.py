@@ -29,6 +29,18 @@ def validate_key_input(key):
         )
 
 
+def check_smoke_sample(result):
+    """Check meaning against the fixed labeled sample, not just JSON structure."""
+    return {
+        'budget': result.budget_php == 100,
+        'food': result.preferred_food is not None and 'chicken' in result.preferred_food.lower(),
+        'drink': result.include_drink is True,
+        'non_spicy': result.avoid_spicy is True,
+        'same_stall': result.prefer_same_stall is True,
+        'exclude_pork': any('pork' in item.lower() for item in result.exclusions),
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description='Verify one backend Groq extraction request.')
     parser.add_argument('--configure', action='store_true', help='Enter a key privately and save after success.')
@@ -61,21 +73,29 @@ def main():
         print(f'AI test failed ({error.code}): {error}')
         print('No automatic retries or new credentials were saved.')
         return 1
-    if args.configure:
+    checks = check_smoke_sample(result)
+    meaning_passed = all(checks.values())
+    if args.configure and meaning_passed:
         set_key(str(env_file), 'GROQ_API_KEY', config.groq_api_key.get_secret_value())
         set_key(str(env_file), 'GROQ_MODEL', config.groq_model)
         print('Saved Groq settings in the ignored backend/.env file.')
     evidence = {
         'verified_at_utc': datetime.now(timezone.utc).isoformat(),
         'provider': 'Groq', 'model': config.groq_model,
-        'status': 'real_provider_response_validated', 'sample_input': SAMPLE,
+        'status': ('real_provider_response_validated' if meaning_passed
+                   else 'real_provider_response_semantic_mismatch'),
+        'sample_input': SAMPLE,
         'extracted_preferences': result.model_dump(),
+        'semantic_checks': checks,
         'note': 'A successful smoke test does not establish general extraction accuracy.',
     }
     print(json.dumps(evidence, indent=2))
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(evidence, indent=2) + '\n', encoding='utf-8')
+    if not meaning_passed:
+        print('Connection succeeded, but sample meaning checks failed. No new key was saved.')
+        return 2
     return 0
 
 
