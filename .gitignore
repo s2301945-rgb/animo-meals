@@ -25,5 +25,7 @@ htmlcov/
 *.log
 .DS_Store
 Thumbs.db
+*.db
+*.db-journal
 
 # Keep migrations and dependency lockfiles in version control.
