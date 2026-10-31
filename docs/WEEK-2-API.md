@@ -112,10 +112,8 @@ browser workflow. The developer has also confirmed real administrator login.
 
 ## Later tasks require the developer's approval
 
-1. Complete and verify the administrator screens and real sign-in configuration.
-2. Confirm the expanded API tests run in GitHub Actions.
-3. Set up an isolated preview/staging environment.
-4. Verify successful merges deploy automatically.
+1. Set up an isolated preview/staging environment (Task 5).
+2. Verify successful merges deploy automatically (Task 6).
 
 Real shop/menu datasets are pending. Do not assign fictional meals or prices to
 Maria Rosa, Pritong Manok, Nene's, Crazy Crunch, or Lola Barbz.
@@ -186,3 +184,23 @@ as part of browser testing: an isolated identity/storage fixture was used to
 verify UI selection, preview, persistence, display, removal and mobile layout.
 The local preview database was migrated in place, preserving existing records.
 See `ADMIN-SETUP.md` for setup and file-retention details.
+
+## Task 4: API tests verified in GitHub Actions
+
+[Draft pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20)
+targets `main` and remains unmerged. [CI run 41169686171](https://github.com/s2301945-rgb/animo-meals/actions/runs/41169686171)
+passed for commit `d53f6da9240a051caed581e869eaefc1ebab5808`:
+
+- Frontend dependency installation, lint and production build succeeded.
+- Backend dependency installation, lint, imports, both migrations, repeated demo
+  seeding and the test suite succeeded.
+- The saved `api-test-results` JUnit report was downloaded and inspected:
+  **112 tests, zero failures, zero errors, zero skipped tests**.
+- The backend job explicitly uses `sqlite:///ci.db` and empty provider/Auth
+  credentials. Tests use disposable databases and mocked external services.
+- The production frontend deployment job was skipped because this is a pull
+  request. Nothing was merged or deployed as part of Task 4.
+
+Every subsequent update to this PR reruns these checks and publishes its own
+test-report artifact. Separate staging/preview configuration and production
+deployment verification require the developer's approval before work begins.
