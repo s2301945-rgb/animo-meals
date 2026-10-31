@@ -1040,6 +1040,7 @@ export default function App() {
             <p>A little planning. A better lunch.</p>
           </div>
           <div className="footer-links">
+            <a href="#admin">Administrator</a>
             <a href="#menu">Find food</a>
             <a href="#shops">Browse shops</a>
             <a href="#how">How it works</a>

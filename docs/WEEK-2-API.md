@@ -1,8 +1,9 @@
 # Week 2, Task 1: CRUD API and request validation
 
 Local implementation on `feature/week-2-admin-crud`. Not deployed yet.
-Existing production menu data has not been changed. The admin UI is a separate,
-unverified draft; completing Task 1 does not claim Week 2 is complete.
+Existing production menu data has not been changed. The admin UI has since been
+implemented and tested locally, with real-account sign-in configuration still
+pending; completing these local tasks does not claim Week 2 is complete.
 
 ## Endpoints
 
@@ -106,8 +107,8 @@ counts, an empty shop, resetting selection, and a 390-pixel mobile viewport.
 No JavaScript page errors were observed. Preview uses a separate SQLite demo
 database, including one explicitly fictional empty shop; production is unchanged.
 
-The administrator form's shop selector remains part of the Task 3 draft. Real
-administrator login and UI editing have not been verified yet.
+The administrator form's shop selector has since been verified with the Task 3
+browser workflow. Real administrator login is still pending project-key setup.
 
 ## Later tasks require the developer's approval
 
@@ -143,3 +144,23 @@ routes support future edits; the real admin login/dashboard remains Task 3.
 
 Verification after this change: 99 backend tests pass, frontend lint/build pass,
 and a local browser confirms all five shops, their locations and empty menus.
+
+## Task 3: administrator screens
+
+The `/#admin` page now supports sign-in, shop/menu creation, editing, searching,
+shop filtering and deletion with confirmation. It includes responsive layouts,
+clear validation/service errors, loading states and a disabled menu-create action
+until a shop exists. Access tokens stay in memory and expire automatically.
+
+An isolated browser workflow passed: rejected and accepted login, shop and meal
+CRUD using the real SQL-backed API, shop reassignment, availability changes,
+visitor reflection, blocked deletion of a populated shop, cancellation of delete,
+390-pixel mobile layout, and session clearing on reload. The identity provider
+alone was mocked; there is no authentication bypass in the production app.
+
+Real Supabase account creation and email confirmation have been verified. The
+account UUID and project URL are saved only in ignored local backend settings.
+The public publishable key still needs to be configured, then real-account login
+verified before Task 3 can be called fully complete. See `ADMIN-SETUP.md` and the
+local `python -m app.configure_admin` setup window. No hosted settings or
+production records have been changed.
