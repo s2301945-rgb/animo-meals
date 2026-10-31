@@ -118,3 +118,28 @@ administrator login and UI editing have not been verified yet.
 
 Real shop/menu datasets are pending. Do not assign fictional meals or prices to
 Maria Rosa, Pritong Manok, Nene's, Crazy Crunch, or Lola Barbz.
+
+## Selected shops: empty-menu preview
+
+At the developer's request, the current local preview uses these records:
+
+| Shop | User-provided location |
+| --- | --- |
+| Maria Rosa | Location to be confirmed |
+| Pritong Manok | USLS Stingers |
+| Nene’s | In front of Gate 5 |
+| Crazy Crunch | Ground floor, MM Building |
+| Lola Barbz | The Agora |
+
+`python -m app.shop_catalog` adds missing shop records only. It does not create
+menu items, overwrite locations subsequently edited by an administrator, or delete
+existing data. Run it after migrations against the intended database. Do not run
+the fictional `app.seed` command on this real-shop catalog.
+
+The preview database is `work/week2-selected-shops.db`, separate from both the
+earlier demo database and production. It contains five shops and zero menu items.
+Both the website and API show blank menus until real items are added. Admin CRUD
+routes support future edits; the real admin login/dashboard remains Task 3.
+
+Verification after this change: 99 backend tests pass, frontend lint/build pass,
+and a local browser confirms all five shops, their locations and empty menus.

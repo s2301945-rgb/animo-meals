@@ -9,6 +9,7 @@ const pesos = new Intl.NumberFormat("en-PH", {
 });
 const categories = ["All items", "Main dish", "Drink", "Snack", "Side"];
 const cleanName = (name) => name.replace(/^Demo\s*[•·]\s*/i, "");
+const isDemoName = (name) => /^Demo\s*[•·]/i.test(name);
 
 function Icon({ name, ...props }) {
   const paths = {
@@ -352,7 +353,10 @@ function MenuCarousel({ items, budget, onSelect }) {
           <Icon name="shop" />
         </span>
         <span>
-          <small>{item.category.toUpperCase()} · DEMO MENU</small>
+          <small>
+            {item.category.toUpperCase()}
+            {isDemoName(item.stall_name) ? " · DEMO MENU" : " · LISTED MENU"}
+          </small>
           <strong>{item.name}</strong>
           <span>{cleanName(item.stall_name)}</span>
         </span>
@@ -470,7 +474,7 @@ function MenuCarousel({ items, budget, onSelect }) {
           : "Random picks every 7 seconds · pauses on hover or focus"}
       </span>
       <span className="illustration-label">
-        Food illustrations · fictional demonstration menus
+        Illustrations are not actual food photos
       </span>
     </section>
   );
@@ -579,6 +583,7 @@ export default function App() {
     };
   });
   const selectedShop = shops.find((entry) => String(entry.id) === shop);
+  const hasDemoShops = shops.some((entry) => isDemoName(entry.name));
   const visible = items
     .filter(
       (item) =>
@@ -695,11 +700,17 @@ export default function App() {
           />
         </section>
         <aside className="notice">
-          <span className="demo-pill">DEMO EDITION</span>
+          <span className="demo-pill">
+            {hasDemoShops ? "DEMO EDITION" : "MENU UPDATES"}
+          </span>
           <p>
-            Explore with sample menus. Shop names, locations, prices, and
-            availability are fictional. AI meal suggestions are coming in a
-            later version.
+            {hasDemoShops
+              ? "Listings marked Demo contain fictional shop and menu data. "
+              : "Shop locations are based on information provided for this project. "}
+            {status === "ready" && !catalog.length
+              ? "Menus and prices have not been added yet. "
+              : "Confirm current prices and availability at the shop. "}
+            AI meal suggestions are coming in a later version.
           </p>
         </aside>
         <section
@@ -715,7 +726,9 @@ export default function App() {
             <p className="section-caption">
               Browse a shop, then explore its menu.
               <br />
-              Demonstration listings for now.
+              {hasDemoShops
+                ? "Demonstration listings for now."
+                : "Menus will appear as they are added."}
             </p>
           </div>
           {shops.length > 0 ? (
@@ -897,12 +910,12 @@ export default function App() {
             <div className="state-box">
               <Icon name="search" width="32" height="32" />
               <h3>
-                {selectedShop?.count === 0
+                {selectedShop?.count === 0 || !catalog.length
                   ? "This shop’s menu is on its way."
                   : "No matches on the menu just yet."}
               </h3>
               <p>
-                {selectedShop?.count === 0
+                {selectedShop?.count === 0 || !catalog.length
                   ? "No meals or prices have been listed for this shop yet. Browse another shop while its menu is being added."
                   : "Try a bigger budget, another category, or a different search."}
               </p>
@@ -968,7 +981,9 @@ export default function App() {
                           day: "numeric",
                           year: "numeric",
                         })}{" "}
-                        · Demo
+                        {isDemoName(item.stall_name)
+                          ? " · Demo"
+                          : " · Availability may vary"}
                       </small>
                     </div>
                   </div>
