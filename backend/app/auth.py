@@ -1,6 +1,7 @@
 """Verify Supabase access tokens remotely and authorize one configured administrator."""
 import base64
 import json
+import ssl
 from typing import Annotated
 from urllib.parse import urlsplit
 
@@ -41,6 +42,7 @@ def require_admin(
         response = httpx.get(
             f'{url}/auth/v1/user',
             headers={'apikey': key, 'Authorization': f'Bearer {credentials.credentials}'},
+            verify=ssl.create_default_context(),
             timeout=10,
         )
         if response.status_code in (401, 403):

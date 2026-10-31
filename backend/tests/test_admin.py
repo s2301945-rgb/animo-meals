@@ -1,7 +1,8 @@
 """Exercise real CRUD against disposable SQL tables; mock only the identity provider."""
 import base64
 import json
-from unittest.mock import Mock
+import ssl
+from unittest.mock import ANY, Mock
 
 import httpx
 import pytest
@@ -206,7 +207,12 @@ def test_valid_admin_token_is_verified_with_provider(client):
     assert client.get('/api/admin/me', headers=HEADERS).json() == {'role': 'admin'}
     auth.httpx.get.assert_called_once_with(
         'https://test-project.supabase.co/auth/v1/user',
-        headers={'apikey': 'sb_publishable_test', 'Authorization': 'Bearer test-access-token'}, timeout=10)
+        headers={'apikey': 'sb_publishable_test', 'Authorization': 'Bearer test-access-token'},
+        verify=ANY, timeout=10)
+    tls = auth.httpx.get.call_args.kwargs['verify']
+    assert isinstance(tls, ssl.SSLContext)
+    assert tls.verify_mode == ssl.CERT_REQUIRED
+    assert tls.check_hostname is True
 
 
 def test_signed_in_non_admin_cannot_write_even_with_admin_metadata(client, monkeypatch):

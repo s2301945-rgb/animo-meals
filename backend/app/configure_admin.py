@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+import ssl
 import threading
 import tkinter as tk
 from tkinter import ttk
@@ -50,10 +51,17 @@ def main():
         try:
             settings.supabase_publishable_key = SecretStr(value)
             url, key = auth_config()
-            response = httpx.get(f'{url}/auth/v1/settings', headers={'apikey': key}, timeout=20)
+            response = httpx.get(f'{url}/auth/v1/settings', headers={'apikey': key},
+                                 verify=ssl.create_default_context(), timeout=20)
             if response.status_code != 200:
-                raise ValueError('Public key was rejected')
+                root.after(0, finish, False,
+                           f'Supabase returned HTTP {response.status_code}. Copy the full Publishable key from this project and try again. No new key was saved.')
+                return
             set_key(BACKEND_DIR / '.env', 'SUPABASE_PUBLISHABLE_KEY', value)
+        except httpx.HTTPError:
+            root.after(0, finish, False,
+                       'The secure connection to Supabase failed. Check your network and contact Codex. This does not mean your copied key is wrong; no new key was saved.')
+            return
         except Exception:
             root.after(0, finish, False,
                        'Could not verify the key. Use the publishable key from this Supabase project and try again. No new key was saved.')
@@ -74,7 +82,11 @@ def main():
 
     button = ttk.Button(frame, text='Verify and save public key', command=save)
     button.pack(anchor='w')
-    entry.focus()
+    root.deiconify()
+    root.lift()
+    root.attributes('-topmost', True)
+    root.after(2000, lambda: root.attributes('-topmost', False))
+    entry.focus_force()
     root.mainloop()
 
 
