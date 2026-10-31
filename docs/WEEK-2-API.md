@@ -2,8 +2,8 @@
 
 Local implementation on `feature/week-2-admin-crud`. Not deployed yet.
 Existing production menu data has not been changed. The admin UI has since been
-implemented and tested locally, with real-account sign-in configuration still
-pending; completing these local tasks does not claim Week 2 is complete.
+implemented and tested locally, with real-account sign-in confirmed by the
+developer; completing these local tasks does not claim Week 2 is complete.
 
 ## Endpoints
 
@@ -108,7 +108,7 @@ No JavaScript page errors were observed. Preview uses a separate SQLite demo
 database, including one explicitly fictional empty shop; production is unchanged.
 
 The administrator form's shop selector has since been verified with the Task 3
-browser workflow. Real administrator login is still pending project-key setup.
+browser workflow. The developer has also confirmed real administrator login.
 
 ## Later tasks require the developer's approval
 
@@ -160,7 +160,8 @@ alone was mocked; there is no authentication bypass in the production app.
 
 Real Supabase account creation and email confirmation have been verified. The
 account UUID and project URL are saved only in ignored local backend settings.
-The public publishable key still needs to be configured, then real-account login
-verified before Task 3 can be called fully complete. See `ADMIN-SETUP.md` and the
-local `python -m app.configure_admin` setup window. No hosted settings or
-production records have been changed.
+The public publishable key has been verified against Supabase and saved in the
+ignored local settings. The developer confirmed successful sign-in to the local
+administrator dashboard on October 31, 2026. Task 3 is complete locally. See
+`ADMIN-SETUP.md` and the local `python -m app.configure_admin` setup window for
+setup instructions. No hosted settings or production records have been changed.
