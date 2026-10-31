@@ -1,5 +1,6 @@
 """Provision only the application's public photo bucket and admin-only insert policy."""
 from uuid import UUID
+import argparse
 
 from sqlalchemy import create_engine, text
 
@@ -11,18 +12,20 @@ def main():
     if not settings.database_url.startswith('postgresql'):
         raise ValueError('Supabase PostgreSQL settings are required.')
     engine = create_engine(settings.database_url, connect_args={'connect_timeout': 10})
+    bucket = settings.image_storage_bucket
+    policy_name = 'animomeals_admin_image_insert' + ('_staging' if bucket.endswith('-staging') else '')
     with engine.begin() as connection:
         connection.execute(text('''
             INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-            VALUES ('animo-meals-images', 'animo-meals-images', true, 2097152, ARRAY['image/webp'])
+            VALUES (:bucket, :bucket, true, 2097152, ARRAY['image/webp'])
             ON CONFLICT (id) DO NOTHING
-        '''))
-        policy = connection.scalar(text("SELECT 1 FROM pg_policies WHERE schemaname='storage' AND tablename='objects' AND policyname='animomeals_admin_image_insert'"))
+        '''), {'bucket': bucket})
+        policy = connection.scalar(text("SELECT 1 FROM pg_policies WHERE schemaname='storage' AND tablename='objects' AND policyname=:policy"), {'policy': policy_name})
         if not policy:
             connection.execute(text(f'''
-                CREATE POLICY animomeals_admin_image_insert ON storage.objects
+                CREATE POLICY {policy_name} ON storage.objects
                 FOR INSERT TO authenticated WITH CHECK (
-                    bucket_id = 'animo-meals-images'
+                    bucket_id = '{bucket}'
                     AND (SELECT auth.uid()) = '{admin_id}'::uuid
                     AND (storage.foldername(name))[1] = '{admin_id}'
                 )
@@ -32,6 +35,10 @@ def main():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--staging', action='store_true')
+    if parser.parse_args().staging:
+        settings.image_storage_bucket = 'animo-meals-images-staging'
     try:
         main()
     except Exception as error:

@@ -112,8 +112,7 @@ browser workflow. The developer has also confirmed real administrator login.
 
 ## Later tasks require the developer's approval
 
-1. Set up an isolated preview/staging environment (Task 5).
-2. Verify successful merges deploy automatically (Task 6).
+1. Verify successful merges deploy automatically (Task 6).
 
 Real shop/menu datasets are pending. Do not assign fictional meals or prices to
 Maria Rosa, Pritong Manok, Nene's, Crazy Crunch, or Lola Barbz.
@@ -204,3 +203,18 @@ passed for commit `d53f6da9240a051caed581e869eaefc1ebab5808`:
 Every subsequent update to this PR reruns these checks and publishes its own
 test-report artifact. Separate staging/preview configuration and production
 deployment verification require the developer's approval before work begins.
+
+## Task 5: isolated local staging
+
+Implemented with the developer's approval. The staging site at
+`http://127.0.0.1:5177` uses its backend at `http://127.0.0.1:8003`, a restricted
+Supabase PostgreSQL role/schema and the separate `animo-meals-images-staging`
+bucket. Credentials stay in ignored staging environment files. Supabase Auth
+is shared intentionally; this is not a second Supabase project or public staging
+deployment.
+
+Verified actual role/schema, migration `0002`, five seeded shops, no menu items,
+denied production table reads, a staging write with rollback, and unchanged
+production row counts. Browser checks verified the staging banner and rejection
+of a production backend mismatch. 116 backend tests and frontend lint/build pass.
+See `STAGING.md` for launch commands, safeguards and limitations.

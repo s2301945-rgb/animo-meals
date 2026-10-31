@@ -15,6 +15,7 @@ from app.admin import commit, find
 from app.auth import auth_config, bearer, require_admin
 from app.database import get_session
 from app.models import MenuItem, Stall
+from app.config import settings
 
 router = APIRouter()
 MAX_UPLOAD_BYTES = 5 * 1024 * 1024
@@ -53,7 +54,7 @@ async def store_image(data, path, token):
     try:
         async with httpx.AsyncClient(verify=ssl.create_default_context(), timeout=30) as client:
             response = await client.post(
-                f'{url}/storage/v1/object/animo-meals-images/{path}',
+                f'{url}/storage/v1/object/{settings.image_storage_bucket}/{path}',
                 content=data,
                 headers={'apikey': key, 'Authorization': f'Bearer {token}',
                          'Content-Type': 'image/webp', 'Cache-Control': '3600'},
@@ -62,7 +63,7 @@ async def store_image(data, path, token):
         raise HTTPException(503, 'Photo storage is temporarily unavailable. Please try again.') from None
     if response.status_code not in (200, 201):
         raise HTTPException(503, 'Photo upload failed. Check the storage setup and try again.')
-    return f'{url}/storage/v1/object/public/animo-meals-images/{path}'
+    return f'{url}/storage/v1/object/public/{settings.image_storage_bucket}/{path}'
 
 
 @router.post('/api/{kind}/{record_id}/image')

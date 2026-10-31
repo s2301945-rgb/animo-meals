@@ -23,7 +23,7 @@ Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max
 def validate_image_url(value):
     if value is None:
         return None
-    prefix = f'{settings.supabase_url.rstrip("/")}/storage/v1/object/public/animo-meals-images/'
+    prefix = f'{settings.supabase_url.rstrip("/")}/storage/v1/object/public/{settings.image_storage_bucket}/'
     if not value.startswith('https://') or not value.startswith(prefix) or len(value) > 2048:
         raise ValueError('Use a photo uploaded through the administrator image control.')
     return value

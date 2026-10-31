@@ -56,6 +56,11 @@ def health(session: Db):
     return {'status': 'ok', 'database': 'connected'}
 
 
+@app.get('/api/environment')
+def environment():
+    return {'environment': settings.app_env}
+
+
 @app.get('/api/menu-items', response_model=list[MenuItemOut])
 def menu_items(
     session: Db,

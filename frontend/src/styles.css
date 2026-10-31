@@ -11,6 +11,16 @@
   --line: #dfe5d8;
   --gold: #efbd49;
 }
+.staging-banner {
+  padding: 12px 20px;
+  text-align: center;
+  background: #fff0b5;
+  border-bottom: 1px solid #d9bf68;
+  color: #57410d;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+}
 * {
   box-sizing: border-box;
 }

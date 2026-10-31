@@ -2,11 +2,11 @@
 
 ## Week 2 Progress — Feature Branch
 
-Week 2 work is on [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20), which remains unmerged. Tasks 1–4 are complete: validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, and API tests verified in GitHub Actions. Real administrator sign-in was confirmed locally.
+Week 2 work is on [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20), which remains unmerged. Tasks 1–5 are complete: validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, API tests verified in GitHub Actions, and an isolated local staging environment. Real administrator sign-in was confirmed locally.
 
 The [verified CI run](https://github.com/s2301945-rgb/animo-meals/actions/runs/41169686171) passed frontend lint/build and backend checks. Its downloadable `api-test-results` artifact contains **112 tests, zero failures, zero errors and zero skipped tests**. External identity, AI and storage calls are mocked in automated tests; CI uses its own SQLite database and no production credentials.
 
-Preview/staging separation and Week 2 production deployment remain pending. The public site still runs the Week 1 version below. The local preview has the five selected shops and administrator-entered records; these have not been copied to production. See [Week 2 API and verification](docs/WEEK-2-API.md) and [Administrator setup](ADMIN-SETUP.md).
+Week 2 production deployment remains pending. The public site still runs the Week 1 version below. The development preview has the five selected shops and administrator-entered records; these have not been copied to production. [Local staging](STAGING.md) uses its own PostgreSQL schema/role, database credential and photo bucket, plus a visible staging banner. It shares the existing Supabase Auth project and has no public staging URL. The expanded backend suite now has 116 tests. See [Week 2 API and verification](docs/WEEK-2-API.md) and [Administrator setup](ADMIN-SETUP.md).
 
 ## Week 1 Production Baseline
 

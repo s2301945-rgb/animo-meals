@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./admin.css";
 import Photo from "./Photo.jsx";
+import StagingBanner, { verifyStagingEnvironment } from "./Staging.jsx";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -90,7 +91,10 @@ export default function Admin() {
     const timeout = setTimeout(() => controller.abort(), 75000);
     setConfigLoading(true);
     setConfig(null);
-    fetch(`${API}/api/admin/auth-config`, { signal: controller.signal })
+    verifyStagingEnvironment(API, controller.signal)
+      .then(() =>
+        fetch(`${API}/api/admin/auth-config`, { signal: controller.signal }),
+      )
       .then(async (response) => {
         if (!response.ok)
           throw new Error(
@@ -375,6 +379,7 @@ export default function Admin() {
   );
   return (
     <div className="admin-page">
+      <StagingBanner />
       <header className="admin-header">
         <a className="brand" href="#top">
           <img src="/animo-mark.png" alt="" width="40" height="40" />

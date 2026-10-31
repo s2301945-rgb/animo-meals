@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Photo from "./Photo.jsx";
+import StagingBanner, { verifyStagingEnvironment } from "./Staging.jsx";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -523,13 +524,18 @@ export default function App() {
     }
     // Read shop records directly: a shop exists even before its first menu item.
     // Always refresh the full catalog so shop summaries do not depend on budget.
-    const fullCatalogRequest = readList("/api/menu-items");
+    const isolationCheck = verifyStagingEnvironment(API, controller.signal);
+    const fullCatalogRequest = isolationCheck.then(() =>
+      readList("/api/menu-items"),
+    );
     Promise.all([
       budget
-        ? readList(`/api/menu-items?budget=${encodeURIComponent(budget)}`)
+        ? isolationCheck.then(() =>
+            readList(`/api/menu-items?budget=${encodeURIComponent(budget)}`),
+          )
         : fullCatalogRequest,
       fullCatalogRequest,
-      readList("/api/stalls"),
+      isolationCheck.then(() => readList("/api/stalls")),
     ])
       .then(([data, fullCatalog, stalls]) => {
         if (!cancelled) {
@@ -621,6 +627,7 @@ export default function App() {
       <a href="#menu" className="skip-link">
         Skip to menu
       </a>
+      <StagingBanner />
       <header className="header" id="top">
         <Brand />
         <nav aria-label="Main navigation">
