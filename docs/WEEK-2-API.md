@@ -165,3 +165,24 @@ ignored local settings. The developer confirmed successful sign-in to the local
 administrator dashboard on October 31, 2026. Task 3 is complete locally. See
 `ADMIN-SETUP.md` and the local `python -m app.configure_admin` setup window for
 setup instructions. No hosted settings or production records have been changed.
+
+## Administrator photo controls
+
+Optional `image_url` columns were added in Alembic revision `0002` for both shops
+and menu items. Admin forms now select and preview a file before saving; existing
+images can be replaced or removed from the listing. Visitor shop cards, menu
+cards and the featured-menu carousel display stored photos, with illustration
+fallbacks for missing or broken photos.
+
+Authenticated `POST /api/stalls/{id}/image` and
+`POST /api/menu-items/{id}/image` accept raw JPEG/PNG/WebP image bodies. The backend
+validates actual image content, limits input to 5 MB and 16 megapixels, strips
+metadata, preserves transparency, resizes to at most 1600 pixels and uploads WebP
+to Supabase Storage. No live image service is called in automated API tests.
+
+The public photo bucket and its administrator-specific insert policy have been
+configured and checked in Supabase. No user photo has been fabricated or uploaded
+as part of browser testing: an isolated identity/storage fixture was used to
+verify UI selection, preview, persistence, display, removal and mobile layout.
+The local preview database was migrated in place, preserving existing records.
+See `ADMIN-SETUP.md` for setup and file-retention details.

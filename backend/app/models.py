@@ -16,6 +16,7 @@ class Stall(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), unique=True)
     location: Mapped[str] = mapped_column(String(200))
+    image_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     menu_items: Mapped[list['MenuItem']] = relationship(back_populates='stall')
 
@@ -27,6 +28,7 @@ class MenuItem(Base):
     stall_id: Mapped[int] = mapped_column(ForeignKey('stalls.id'), index=True)
     name: Mapped[str] = mapped_column(String(120))
     description: Mapped[str | None] = mapped_column(Text)
+    image_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     category: Mapped[str] = mapped_column(String(30))
     is_available: Mapped[bool] = mapped_column(Boolean, default=True)

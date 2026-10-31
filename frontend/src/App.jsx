@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import Photo from "./Photo.jsx";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -51,6 +52,17 @@ function Brand() {
 
 // Illustrations intentionally avoid implying photos of demonstration listings.
 function FoodArt({ item }) {
+  return (
+    <Photo
+      src={item.image_url}
+      alt={item.name}
+      className="food-photo"
+      fallback={<FoodIllustration item={item} />}
+    />
+  );
+}
+
+function FoodIllustration({ item }) {
   const name = item.name.toLowerCase();
   const vegetables = /tofu|vegetable|mushroom/.test(name);
   return (
@@ -736,7 +748,12 @@ export default function App() {
               {shops.map((entry, index) => (
                 <article className="shop-card" key={entry.id}>
                   <div className={`shop-symbol shop-${index % 3}`}>
-                    <Icon name="shop" width="27" height="27" />
+                    <Photo
+                      src={entry.image_url}
+                      alt={entry.name}
+                      className="shop-photo"
+                      fallback={<Icon name="shop" width="27" height="27" />}
+                    />
                   </div>
                   <div className="shop-info">
                     <h3>{cleanName(entry.name)}</h3>

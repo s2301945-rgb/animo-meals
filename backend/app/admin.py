@@ -4,7 +4,7 @@ from decimal import Decimal
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Response
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.auth import auth_config, require_admin
 from app.database import get_session
 from app.models import MenuItem, Stall
+from app.config import settings
 
 router = APIRouter()
 protected = APIRouter(dependencies=[Depends(require_admin)])
@@ -19,10 +20,23 @@ Db = Annotated[Session, Depends(get_session)]
 Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
 
 
+def validate_image_url(value):
+    if value is None:
+        return None
+    prefix = f'{settings.supabase_url.rstrip("/")}/storage/v1/object/public/animo-meals-images/'
+    if not value.startswith('https://') or not value.startswith(prefix) or len(value) > 2048:
+        raise ValueError('Use a photo uploaded through the administrator image control.')
+    return value
+
+
+ImageURL = Annotated[str | None, AfterValidator(validate_image_url)]
+
+
 class StallInput(BaseModel):
     model_config = ConfigDict(extra='forbid')
     name: Name
     location: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+    image_url: ImageURL = None
 
 
 class StallOut(StallInput):
@@ -36,6 +50,7 @@ class ItemInput(BaseModel):
     stall_id: Annotated[int, Field(gt=0, strict=True)]
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
     description: Annotated[str | None, StringConstraints(strip_whitespace=True, max_length=2000)] = None
+    image_url: ImageURL = None
     price: Annotated[Decimal, Field(gt=0, le=10000, decimal_places=2, allow_inf_nan=False)]
     category: Literal['Main dish', 'Drink', 'Snack', 'Side']
     is_available: Annotated[bool, Field(strict=True)] = True

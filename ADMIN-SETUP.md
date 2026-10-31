@@ -69,3 +69,40 @@ Browser CRUD verification uses separate disposable SQL tables and fictional
 test shops. Only Supabase's identity responses are mocked for that test; writes,
 reads, validation, relationships and delete conflicts use the real FastAPI routes.
 Real-account login must also be checked after project-key configuration.
+
+## Shop and menu photos
+
+In either an **Add** or **Edit** form, choose a file under **Photo (optional)**.
+The preview appears immediately; the upload happens when **Save changes** is
+clicked. Existing photos appear when editing. **Remove photo**, followed by save,
+removes it from the listing. Records without a photo use an illustration or shop
+icon; a failed image load also falls back safely.
+
+Supported input: JPEG, PNG or WebP, at most 5 MB and 16 megapixels. The backend
+decodes the actual image, checks its format, strips metadata, resizes its longest
+edge to at most 1,600 pixels and stores a WebP of at most 2 MB. Original filenames
+are not exposed. SVG and non-image uploads are rejected.
+
+Photos are stored in the public `animo-meals-images` Supabase Storage bucket;
+database records store the resulting URL. Visitors may view the photos. Uploads
+use the current administrator's access token and are protected by the backend
+and a bucket-specific INSERT policy for that user's UUID and folder. No
+service-role key is needed. Configure the bucket/policy once with the private
+Supabase PostgreSQL connection:
+
+```powershell
+python -m app.setup_image_storage
+```
+
+Apply Alembic migration `0002` to each application database before starting this
+version. Local preview was migrated without replacing its shop/menu records.
+Hosted application database migration will run with the normal deployment.
+
+A new record is saved before its photo uploads. If uploading fails, the form
+switches to editing that saved record and allows a retry without duplicating it.
+Old uploaded files are retained when a listing photo is replaced or removed;
+the display URL is changed immediately. Unreferenced files can later be cleaned
+up through Supabase Storage. This feature does not automatically delete objects.
+
+Reference: [Supabase bucket creation](https://supabase.com/docs/guides/storage/buckets/creating-buckets)
+and [Storage access control](https://supabase.com/docs/guides/storage/security/access-control).

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import "./admin.css";
+import Photo from "./Photo.jsx";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
 ).replace(/\/$/, "");
-const emptyShop = { name: "", location: "" };
+const emptyShop = { name: "", location: "", image_url: null };
 const emptyItem = {
   name: "",
   description: "",
@@ -12,6 +13,7 @@ const emptyItem = {
   category: "Main dish",
   stall_id: "",
   is_available: true,
+  image_url: null,
 };
 const money = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -39,14 +41,28 @@ export default function Admin() {
   const [configLoading, setConfigLoading] = useState(true);
   const [shopFilter, setShopFilter] = useState("");
   const [expiresAt, setExpiresAt] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState("");
   const lock = useRef(false);
   const formRef = useRef(null);
   const formOpen = Boolean(draft);
 
   useEffect(() => {
+    if (!photoFile) {
+      setPhotoPreview("");
+      return;
+    }
+    const url = URL.createObjectURL(photoFile);
+    setPhotoPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [photoFile]);
+
+  useEffect(() => {
     if (formOpen) {
       formRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
-      formRef.current?.querySelector("input")?.focus({ preventScroll: true });
+      formRef.current
+        ?.querySelector('input:not([type="file"])')
+        ?.focus({ preventScroll: true });
     }
   }, [formOpen, editing]);
 
@@ -119,6 +135,7 @@ export default function Admin() {
 
   function clearSession() {
     setToken("");
+    setPhotoFile(null);
     setDraft(null);
     setPendingDelete(null);
     setShops([]);
@@ -135,7 +152,8 @@ export default function Admin() {
       ...options,
       signal: AbortSignal.timeout(75000),
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type":
+          options.body instanceof File ? options.body.type : "application/json",
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
     });
@@ -250,6 +268,7 @@ export default function Admin() {
   }
 
   function startEdit(record = null) {
+    setPhotoFile(null);
     setEditing(record?.id ?? null);
     setPendingDelete(null);
     setError("");
@@ -257,7 +276,11 @@ export default function Admin() {
     setDraft(
       tab === "shops"
         ? record
-          ? { name: record.name, location: record.location }
+          ? {
+              name: record.name,
+              location: record.location,
+              image_url: record.image_url || null,
+            }
           : { ...emptyShop }
         : record
           ? {
@@ -267,6 +290,7 @@ export default function Admin() {
               category: record.category,
               stall_id: String(record.stall_id),
               is_available: record.is_available,
+              image_url: record.image_url || null,
             }
           : {
               ...emptyItem,
@@ -291,10 +315,25 @@ export default function Admin() {
             description: draft.description.trim() || null,
           };
     run(async () => {
-      await api(`${path}${editing ? `/${editing}` : ""}`, {
+      const saved = await api(`${path}${editing ? `/${editing}` : ""}`, {
         method: editing ? "PUT" : "POST",
         body: JSON.stringify(payload),
       });
+      if (photoFile) {
+        try {
+          await api(`${path}/${saved.id}/image`, {
+            method: "POST",
+            body: photoFile,
+          });
+        } catch (err) {
+          setEditing(saved.id);
+          await load().catch(() => {});
+          throw new Error(
+            `Record saved, but its photo could not be uploaded. You can retry Save changes without creating a duplicate. ${err.message}`,
+          );
+        }
+      }
+      setPhotoFile(null);
       setDraft(null);
       setNotice(
         "Saved successfully. Visitors will see the change when they refresh the menu.",
@@ -485,6 +524,65 @@ export default function Admin() {
                   {tab === "shops" ? "shop" : "menu item"}
                 </h2>
                 <fieldset disabled={busy} className="admin-fields">
+                  <div className="admin-wide photo-control">
+                    <label>
+                      Photo (optional)
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) return;
+                          if (
+                            !["image/jpeg", "image/png", "image/webp"].includes(
+                              file.type,
+                            ) ||
+                            file.size > 5 * 1024 * 1024
+                          ) {
+                            setError(
+                              "Choose a JPEG, PNG or WebP photo, 5 MB or smaller.",
+                            );
+                            event.target.value = "";
+                            return;
+                          }
+                          setPhotoFile(file);
+                          setError("");
+                        }}
+                      />
+                    </label>
+                    <small>
+                      JPEG, PNG or WebP · up to 5 MB and 16 megapixels. The
+                      photo uploads when you save.
+                    </small>
+                    {(photoPreview || draft.image_url) && (
+                      <div className="admin-photo-preview">
+                        <Photo
+                          src={photoPreview || draft.image_url}
+                          alt="Selected photo preview"
+                          loading="eager"
+                          fallback={
+                            <p>
+                              Photo preview unavailable. Choose another image.
+                            </p>
+                          }
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPhotoFile(null);
+                            setDraft({ ...draft, image_url: null });
+                            const input =
+                              formRef.current?.querySelector(
+                                'input[type="file"]',
+                              );
+                            if (input) input.value = "";
+                          }}
+                        >
+                          Remove photo
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <label>
                     Name
                     <input
@@ -662,6 +760,11 @@ export default function Admin() {
             <div className="admin-records">
               {records.map((record) => (
                 <article className="admin-record" key={record.id}>
+                  <Photo
+                    src={record.image_url}
+                    alt={`${record.name} photo`}
+                    className="admin-record-photo"
+                  />
                   <div>
                     <h3>{record.name}</h3>
                     {tab === "shops" ? (

@@ -229,6 +229,31 @@
   outline: 3px solid #d6b843;
   outline-offset: 3px;
 }
+.photo-control {
+  border-bottom: 1px solid #dce3d6;
+  padding-bottom: 20px;
+}
+.admin-photo-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+.admin-photo-preview img {
+  width: 180px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #dce3d6;
+}
+.admin-record-photo {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
 @media (max-width: 600px) {
   .admin-fields {
     grid-template-columns: 1fr;

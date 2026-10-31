@@ -15,6 +15,7 @@ from app.config import settings
 from app.database import get_session
 from app.models import MenuItem, Stall
 from app.admin import router as admin_router
+from app.images import router as image_router
 
 app = FastAPI(title='AnimoMeals API', version='0.1.0')
 app.add_middleware(
@@ -24,6 +25,7 @@ app.add_middleware(
     allow_headers=['Accept', 'Content-Type', 'Authorization'],
 )
 app.include_router(admin_router)
+app.include_router(image_router)
 Db = Annotated[Session, Depends(get_session)]
 
 
@@ -39,6 +41,7 @@ class MenuItemOut(BaseModel):
     stall_id: int
     name: str
     description: str | None
+    image_url: str | None
     price: Decimal
     category: str
     is_available: bool
@@ -62,7 +65,7 @@ def menu_items(
     if budget is not None:
         query = query.where(MenuItem.price <= budget)
     return [MenuItemOut(
-        id=item.id, stall_id=item.stall_id, name=item.name, description=item.description, price=item.price,
+        id=item.id, stall_id=item.stall_id, name=item.name, description=item.description, image_url=item.image_url, price=item.price,
         category=item.category, is_available=item.is_available, updated_at=item.updated_at,
         stall_name=stall.name, location=stall.location,
     ) for item, stall in session.execute(query)]
