@@ -13,7 +13,7 @@ shops, with empty menus ready for real data. The original three fictional shops
 and sixteen menu items were backed up privately before the tested replacement.
 Admin sign-in configuration matches the verified project; anonymous writes are
 blocked. Live browser, mobile, CORS and malformed-budget checks passed. The
-developer's private public-account login check is pending. Non-secret results:
+developer also confirmed successful private sign-in to the public admin dashboard. Non-secret results:
 [Week 2 production evidence](verification/week-2-production.json).
 
 ## Week 2 rollout procedure

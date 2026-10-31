@@ -3,8 +3,8 @@
 Implemented through `feature/week-2-admin-crud`, merged in PR #20 and deployed
 publicly on October 31, 2026. The original fictional production catalog was
 backed up and replaced by the five selected shops with empty menus. Local admin
-login and production sign-in configuration are verified; the developer's private
-production login check remains pending. Historical task checkpoints below retain
+login and production sign-in are verified, with the developer confirming access
+to the public dashboard. Historical task checkpoints below retain
 their original scope; see Task 6 and the production evidence for current status.
 
 ## Endpoints
@@ -236,6 +236,6 @@ layout and a ready admin login form. Production CORS passed; anonymous admin
 access, deletes and photo uploads returned 401, and an invalid budget returned 422.
 
 See `docs/verification/week-2-production.json`. No password, provider key or
-database connection string is included in the evidence. Private production
-account sign-in is left to the developer; authentication is not bypassed for
-automated release checks.
+database connection string is included in the evidence. The developer confirmed
+successful private sign-in to the production administrator dashboard.
+Authentication was not bypassed for automated release checks.

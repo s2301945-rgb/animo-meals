@@ -2,7 +2,7 @@
 
 ## Week 2 — Live
 
-Week 2 was merged through [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20) and automatically deployed. Open the [public website](https://animo-meals.vercel.app) or [administrator page](https://animo-meals.vercel.app/#admin). The release includes validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, automated API tests and isolated local staging. Real administrator sign-in was confirmed locally; the public sign-in configuration is verified and ready for the developer's private login check.
+Week 2 was merged through [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20) and automatically deployed. Open the [public website](https://animo-meals.vercel.app) or [administrator page](https://animo-meals.vercel.app/#admin). The release includes validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, automated API tests and isolated local staging. The developer confirmed real administrator sign-in both locally and on the public website.
 
 The [production pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/41171535799) passed frontend checks, backend checks and the Vercel deployment trigger. Its inspected `api-test-results` artifact contains **120 tests, zero failures, zero errors and zero skipped tests**. Render's live revision matched the merged commit. External identity, AI and storage calls are mocked in automated tests; CI uses an isolated SQLite database without production credentials.
 

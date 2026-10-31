@@ -59,7 +59,7 @@
     "production_admin_signin_form_ready": true,
     "javascript_errors": 0
   },
-  "real_public_admin_login": "awaiting developer confirmation",
+  "real_public_admin_login": "confirmed by developer",
   "catalog_backup": "stored privately in ignored backend/.production-backups/",
   "staging": "local frontend/backend with isolated PostgreSQL schema and photo bucket; shared Supabase Auth"
 }
