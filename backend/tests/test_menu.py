@@ -65,6 +65,13 @@ def test_health_confirms_database(client):
     assert client.get('/api/health').json() == {'status': 'ok', 'database': 'connected'}
 
 
+def test_release_metadata_exposes_only_environment_and_deployed_revision(client, monkeypatch):
+    monkeypatch.setenv('RENDER_GIT_COMMIT', 'a' * 40)
+    metadata = client.get('/api/environment').json()
+    assert set(metadata) == {'environment', 'revision'}
+    assert metadata['revision'] == 'a' * 40
+
+
 def test_database_failure_is_safe(client):
     def failed_session():
         raise SQLAlchemyError('private database connection details')

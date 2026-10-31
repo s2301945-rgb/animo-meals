@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 from decimal import Decimal
 from typing import Annotated
@@ -58,7 +59,7 @@ def health(session: Db):
 
 @app.get('/api/environment')
 def environment():
-    return {'environment': settings.app_env}
+    return {'environment': settings.app_env, 'revision': os.getenv('RENDER_GIT_COMMIT')}
 
 
 @app.get('/api/menu-items', response_model=list[MenuItemOut])

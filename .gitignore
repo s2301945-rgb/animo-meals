@@ -4,6 +4,7 @@
 !.env.example
 !.env.staging.example
 .staging-run/
+.production-backups/
 
 # Frontend dependencies and generated files
 node_modules/

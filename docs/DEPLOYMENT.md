@@ -1,5 +1,32 @@
 # Week 1 deployment
 
+## Week 2 rollout procedure
+
+Week 2 is prepared in pull request #20. Before merging, add the verified local
+`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` and `ADMIN_USER_ID` to Render's private
+Environment settings. The ignored `backend/.env.render` file contains only those
+three settings for bulk import; it does not contain the database password or Groq
+key. Existing production database/Groq values remain unchanged. The committed
+`render.yaml` declares equivalent placeholders.
+
+The production catalog is backed up privately by `python -m app.publish_catalog`
+without changing records. After the merged backend/frontend deploy successfully,
+`python -m app.publish_catalog --apply` removes only recognized fictional demo
+shops/items and adds missing selected shops without inventing meals or overwriting
+existing real-shop records. Unknown data under a demo shop stops this operation.
+The original backup stays in ignored `backend/.production-backups/`.
+
+Merge only a passing, reviewed PR head. The main-branch pipeline runs checks and
+triggers the existing Vercel deployment hook; Render deploys main after CI passes.
+Backend startup applies nullable image migration `0002` before listening.
+Verify `/api/environment` reports `production` and the actual merged commit SHA
+from Render's `RENDER_GIT_COMMIT`, `/api/health` confirms the database, public shop
+and menu reads work, CORS matches the public frontend, and anonymous mutations
+remain unauthorized. Then verify the public UI and admin sign-in configuration.
+
+This section describes the rollout procedure; it is not evidence that Week 2
+has already been deployed. Final verification must be recorded after deployment.
+
 The React frontend runs on Vercel Hobby. The FastAPI backend runs on Render Free,
 with the existing Supabase PostgreSQL database and Groq account.
 
