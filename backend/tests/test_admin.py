@@ -180,6 +180,28 @@ def test_budget_matches_updated_price(client):
     assert len(client.get('/api/menu-items?budget=75.51').json()) == 1
 
 
+def test_shop_rename_and_location_change_preserve_menu_assignment(client):
+    first = shop(client, 'First shop')
+    second = shop(client, 'Second shop')
+    for stall in (first, second):
+        assert client.post('/api/menu-items', headers=HEADERS, json=meal(stall['id'])).status_code == 201
+    assert client.put(f'/api/stalls/{first["id"]}', headers=HEADERS,
+                      json={'name': 'Renamed shop', 'location': 'New landmark'}).status_code == 200
+    items = client.get('/api/menu-items').json()
+    first_item = next(item for item in items if item['stall_id'] == first['id'])
+    second_item = next(item for item in items if item['stall_id'] == second['id'])
+    assert first_item['stall_name'] == 'Renamed shop'
+    assert first_item['location'] == 'New landmark'
+    assert second_item['stall_name'] == 'Second shop'
+    assert second_item['location'] == 'Test landmark'
+
+
+def test_empty_shops_are_visible_without_invented_menu_records(client):
+    stall = shop(client, 'Menu pending')
+    assert client.get('/api/stalls').json()[0]['id'] == stall['id']
+    assert client.get('/api/menu-items').json() == []
+
+
 def test_valid_admin_token_is_verified_with_provider(client):
     assert client.get('/api/admin/me', headers=HEADERS).json() == {'role': 'admin'}
     auth.httpx.get.assert_called_once_with(

@@ -1584,6 +1584,27 @@ footer p {
     font-size: 8px;
   }
 }
+.selected-shop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 22px;
+  margin-bottom: 28px;
+  border: 1px solid #cbdcc9;
+  border-radius: 14px;
+  background: #edf4e9;
+}
+.selected-shop h3 {
+  margin: 8px 0;
+}
+.selected-shop p:last-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
