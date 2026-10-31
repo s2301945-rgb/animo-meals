@@ -1,18 +1,20 @@
 # AnimoMeals: Your AI-Powered Canteen Meal Finder
 
-## Week 2 Progress — Feature Branch
+## Week 2 — Live
 
-Week 2 work is on [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20), which remains unmerged. Tasks 1–5 are complete: validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, API tests verified in GitHub Actions, and an isolated local staging environment. Real administrator sign-in was confirmed locally.
+Week 2 was merged through [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20) and automatically deployed. Open the [public website](https://animo-meals.vercel.app) or [administrator page](https://animo-meals.vercel.app/#admin). The release includes validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, automated API tests and isolated local staging. The developer confirmed real administrator sign-in both locally and on the public website.
 
-The [verified CI run](https://github.com/s2301945-rgb/animo-meals/actions/runs/41169686171) passed frontend lint/build and backend checks. Its downloadable `api-test-results` artifact contains **112 tests, zero failures, zero errors and zero skipped tests**. External identity, AI and storage calls are mocked in automated tests; CI uses its own SQLite database and no production credentials.
+The [production pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/41171535799) passed frontend checks, backend checks and the Vercel deployment trigger. Its inspected `api-test-results` artifact contains **120 tests, zero failures, zero errors and zero skipped tests**. Render's live revision matched the merged commit. External identity, AI and storage calls are mocked in automated tests; CI uses an isolated SQLite database without production credentials.
 
-Week 2 production deployment remains pending. The public site still runs the Week 1 version below. The development preview has the five selected shops and administrator-entered records; these have not been copied to production. [Local staging](STAGING.md) uses its own PostgreSQL schema/role, database credential and photo bucket, plus a visible staging banner. It shares the existing Supabase Auth project and has no public staging URL. The expanded backend suite now has 116 tests. See [Week 2 API and verification](docs/WEEK-2-API.md) and [Administrator setup](ADMIN-SETUP.md).
+Production now lists Maria Rosa, Pritong Manok, Nene’s, Crazy Crunch and Lola Barbz. Maria Rosa's location remains unconfirmed. Their menus were published empty, ready for verified items and prices. Fictional demo records were backed up before replacement, and local test entries were not copied into production. Public browser, API, mobile, CORS and authorization checks passed; see [production evidence](docs/verification/week-2-production.json).
+
+[Local staging](STAGING.md) keeps its own PostgreSQL schema/role, credential and photo bucket, with a visible staging banner. It shares the existing Supabase Auth project and has no public staging URL. See [Week 2 API and verification](docs/WEEK-2-API.md) and [Administrator setup](ADMIN-SETUP.md). Real menu datasets and the visitor AI recommendation feature remain later work.
 
 ## Week 1 Production Baseline
 
 The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
 
-Local development defaults to SQLite when DATABASE_URL is absent. The original laptop is now connected to Supabase PostgreSQL: migration 0001, three fictional stalls, and sixteen menu items are available after the latest seed. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response has passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD and meal-combination recommendations are not implemented yet. The frontend and backend are deployed; live verification is documented below. See [AI setup](AI-SETUP.md). The features below describe the intended completed project.
+Week 1 originally deployed migration 0001 with three fictional stalls and sixteen menu items. Those historical demo records were replaced by the selected-shop catalog in Week 2. Local development defaults to SQLite when DATABASE_URL is absent. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD is now implemented; visitor AI meal-combination recommendations remain planned. See [AI setup](AI-SETUP.md).
 
 ## Branch Strategy
 
@@ -24,7 +26,7 @@ Local development defaults to SQLite when DATABASE_URL is absent. The original l
 - [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
 - [Local setup and verification](RUN-LOCALLY.md)
 
-The [live Week 1 website](https://animo-meals.vercel.app) loads sixteen demonstration menu items from the [hosted backend](https://animo-meals-api.onrender.com/api/health) and Supabase. Live budget filtering has been verified. Render automatically deploys after the main branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
+The public website and hosted backend originally loaded sixteen demonstration menu items during Week 1; the current Week 2 catalog is described above. Budget filtering was verified against the historical demo dataset. Render automatically deploys after main-branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
 
 The hero carousel randomly highlights available meals and snacks priced at PHP 75 or below (or the applied budget, if lower), changing every seven seconds with a slow slide. Hover, keyboard focus, a hidden browser tab, and the Pause button stop autoplay. Reduced-motion preferences disable autoplay and animated transitions; manual arrows remain available. Clicking a highlighted item filters the menu to that listing.
 

@@ -1,9 +1,11 @@
 # Week 2, Task 1: CRUD API and request validation
 
-Local implementation on `feature/week-2-admin-crud`. Not deployed yet.
-Existing production menu data has not been changed. The admin UI has since been
-implemented and tested locally, with real-account sign-in confirmed by the
-developer; completing these local tasks does not claim Week 2 is complete.
+Implemented through `feature/week-2-admin-crud`, merged in PR #20 and deployed
+publicly on October 31, 2026. The original fictional production catalog was
+backed up and replaced by the five selected shops with empty menus. Local admin
+login and production sign-in are verified, with the developer confirming access
+to the public dashboard. Historical task checkpoints below retain
+their original scope; see Task 6 and the production evidence for current status.
 
 ## Endpoints
 
@@ -112,7 +114,8 @@ browser workflow. The developer has also confirmed real administrator login.
 
 ## Later tasks require the developer's approval
 
-1. Verify successful merges deploy automatically (Task 6).
+The Week 2 implementation and deployment tasks are complete. Real menu data and
+the Week 3 visitor AI feature remain later work, requiring the developer's direction.
 
 Real shop/menu datasets are pending. Do not assign fictional meals or prices to
 Maria Rosa, Pritong Manok, Nene's, Crazy Crunch, or Lola Barbz.
@@ -218,3 +221,21 @@ denied production table reads, a staging write with rollback, and unchanged
 production row counts. Browser checks verified the staging banner and rejection
 of a production backend mismatch. 116 backend tests and frontend lint/build pass.
 See `STAGING.md` for launch commands, safeguards and limitations.
+
+## Task 6: public deployment verified
+
+PR #20 merged as `e56da872116fb5ae41c5f02651c157ef4f0e9e67`. The main pipeline
+41171535799 passed frontend/backend checks and automatically triggered Vercel.
+Its artifact contains 120 passing tests with no failures, errors or skipped tests.
+Render served that exact merged revision with a healthy PostgreSQL connection.
+
+The backed-up catalog publishing operation removed only the recognized fictional
+demo data, leaving the five selected shops and no menu items at publication.
+The public browser verified shop names/locations, empty-menu selection, mobile
+layout and a ready admin login form. Production CORS passed; anonymous admin
+access, deletes and photo uploads returned 401, and an invalid budget returned 422.
+
+See `docs/verification/week-2-production.json`. No password, provider key or
+database connection string is included in the evidence. The developer confirmed
+successful private sign-in to the production administrator dashboard.
+Authentication was not bypassed for automated release checks.

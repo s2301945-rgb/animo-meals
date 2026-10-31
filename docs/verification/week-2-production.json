@@ -1,0 +1,65 @@
+{
+  "verified_at_utc": "2026-10-31T05:15:21.531632+00:00",
+  "release_revision": "e56da872116fb5ae41c5f02651c157ef4f0e9e67",
+  "frontend_url": "https://animo-meals.vercel.app",
+  "backend_url": "https://animo-meals-api.onrender.com",
+  "pull_request": "https://github.com/s2301945-rgb/animo-meals/pull/20",
+  "production_pipeline": "https://github.com/s2301945-rgb/animo-meals/actions/runs/41171535799",
+  "pipeline_jobs": {
+    "frontend": "success",
+    "backend": "success",
+    "deploy_frontend": "success"
+  },
+  "test_report": {
+    "artifact_name": "api-test-results",
+    "artifact_id": 13030693243,
+    "tests": 120,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "health": {
+    "status": "ok",
+    "database": "connected"
+  },
+  "shop_count": 5,
+  "menu_count_at_verification": 0,
+  "shops": [
+    {
+      "name": "Crazy Crunch",
+      "location": "Ground floor, MM Building"
+    },
+    {
+      "name": "Lola Barbz",
+      "location": "The Agora"
+    },
+    {
+      "name": "Maria Rosa",
+      "location": "Location to be confirmed"
+    },
+    {
+      "name": "Nene’s",
+      "location": "In front of Gate 5"
+    },
+    {
+      "name": "Pritong Manok",
+      "location": "USLS Stingers"
+    }
+  ],
+  "admin_configuration_ready": true,
+  "anonymous_admin_access": 401,
+  "anonymous_delete": 401,
+  "anonymous_photo_upload": 401,
+  "negative_budget": 422,
+  "production_cors": "verified",
+  "browser_checks": {
+    "public_shop_browsing": true,
+    "empty_menu_selection": true,
+    "mobile_layout": true,
+    "production_admin_signin_form_ready": true,
+    "javascript_errors": 0
+  },
+  "real_public_admin_login": "confirmed by developer",
+  "catalog_backup": "stored privately in ignored backend/.production-backups/",
+  "staging": "local frontend/backend with isolated PostgreSQL schema and photo bucket; shared Supabase Auth"
+}

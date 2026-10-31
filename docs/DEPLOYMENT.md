@@ -1,5 +1,21 @@
 # Week 1 deployment
 
+## Week 2 live verification — October 31, 2026
+
+[PR #20](https://github.com/s2301945-rgb/animo-meals/pull/20) merged and the
+[main pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/41171535799)
+passed all three jobs: frontend, backend and deployment trigger. Its test report
+contains 120 passing tests. The live Render `/api/environment` response matched
+merge `e56da872116fb5ae41c5f02651c157ef4f0e9e67`, and `/api/health` confirmed PostgreSQL.
+
+The [public frontend](https://animo-meals.vercel.app) now displays the five selected
+shops, with empty menus ready for real data. The original three fictional shops
+and sixteen menu items were backed up privately before the tested replacement.
+Admin sign-in configuration matches the verified project; anonymous writes are
+blocked. Live browser, mobile, CORS and malformed-budget checks passed. The
+developer also confirmed successful private sign-in to the public admin dashboard. Non-secret results:
+[Week 2 production evidence](verification/week-2-production.json).
+
 ## Week 2 rollout procedure
 
 Week 2 is prepared in pull request #20. Before merging, add the verified local
