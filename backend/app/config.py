@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     frontend_origin: str = 'http://localhost:5173'
     groq_api_key: SecretStr = SecretStr('')
     groq_model: str = 'openai/gpt-oss-20b'
+    supabase_url: str = ''
+    supabase_publishable_key: SecretStr = SecretStr('')
+    admin_user_id: str = ''
 
 
 settings = Settings()
