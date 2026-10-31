@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 from decimal import Decimal
 from typing import Annotated
@@ -14,14 +15,18 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.database import get_session
 from app.models import MenuItem, Stall
+from app.admin import router as admin_router
+from app.images import router as image_router
 
 app = FastAPI(title='AnimoMeals API', version='0.1.0')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_origin],
-    allow_methods=['GET'],
-    allow_headers=['Accept', 'Content-Type'],
+    allow_methods=['GET', 'POST', 'PUT', 'DELETE'],
+    allow_headers=['Accept', 'Content-Type', 'Authorization'],
 )
+app.include_router(admin_router)
+app.include_router(image_router)
 Db = Annotated[Session, Depends(get_session)]
 
 
@@ -34,8 +39,10 @@ async def database_error(request: Request, exc: SQLAlchemyError):
 
 class MenuItemOut(BaseModel):
     id: int
+    stall_id: int
     name: str
     description: str | None
+    image_url: str | None
     price: Decimal
     category: str
     is_available: bool
@@ -50,6 +57,11 @@ def health(session: Db):
     return {'status': 'ok', 'database': 'connected'}
 
 
+@app.get('/api/environment')
+def environment():
+    return {'environment': settings.app_env, 'revision': os.getenv('RENDER_GIT_COMMIT')}
+
+
 @app.get('/api/menu-items', response_model=list[MenuItemOut])
 def menu_items(
     session: Db,
@@ -59,7 +71,7 @@ def menu_items(
     if budget is not None:
         query = query.where(MenuItem.price <= budget)
     return [MenuItemOut(
-        id=item.id, name=item.name, description=item.description, price=item.price,
+        id=item.id, stall_id=item.stall_id, name=item.name, description=item.description, image_url=item.image_url, price=item.price,
         category=item.category, is_available=item.is_available, updated_at=item.updated_at,
         stall_name=stall.name, location=stall.location,
     ) for item, stall in session.execute(query)]

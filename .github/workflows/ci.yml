@@ -24,6 +24,12 @@ jobs:
       - run: npm run build
   backend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: sqlite:///ci.db
+      GROQ_API_KEY: ''
+      SUPABASE_URL: ''
+      SUPABASE_PUBLISHABLE_KEY: ''
+      ADMIN_USER_ID: ''
     defaults:
       run:
         working-directory: backend
@@ -40,7 +46,15 @@ jobs:
       - run: alembic upgrade head
       - run: python -m app.seed
       - run: python -m app.seed
-      - run: pytest -q
+      - name: Run API, authorization and image tests
+        run: pytest -q --junitxml=test-results/api-tests.xml
+      - name: Save API test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-results
+          path: backend/test-results/api-tests.xml
+          if-no-files-found: warn
   deploy-frontend:
     name: Deploy frontend after checks
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOYMENT_ENABLED == 'true'

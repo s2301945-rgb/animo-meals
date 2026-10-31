@@ -11,6 +11,16 @@
   --line: #dfe5d8;
   --gold: #efbd49;
 }
+.staging-banner {
+  padding: 12px 20px;
+  text-align: center;
+  background: #fff0b5;
+  border-bottom: 1px solid #d9bf68;
+  color: #57410d;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+}
 * {
   box-sizing: border-box;
 }
@@ -1583,6 +1593,45 @@ footer p {
   .carousel-note {
     font-size: 8px;
   }
+}
+.selected-shop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 22px;
+  margin-bottom: 28px;
+  border: 1px solid #cbdcc9;
+  border-radius: 14px;
+  background: #edf4e9;
+}
+.food-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-plate .food-photo {
+  height: 230px;
+  object-fit: cover;
+  border-radius: 24px;
+}
+.shop-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+.selected-shop h3 {
+  margin: 8px 0;
+}
+.selected-shop p:last-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
 }
 @media (prefers-reduced-motion: reduce) {
   html {

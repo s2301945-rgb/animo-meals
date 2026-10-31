@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Photo from "./Photo.jsx";
+import StagingBanner, { verifyStagingEnvironment } from "./Staging.jsx";
 
 const API = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
@@ -9,6 +11,7 @@ const pesos = new Intl.NumberFormat("en-PH", {
 });
 const categories = ["All items", "Main dish", "Drink", "Snack", "Side"];
 const cleanName = (name) => name.replace(/^Demo\s*[•·]\s*/i, "");
+const isDemoName = (name) => /^Demo\s*[•·]/i.test(name);
 
 function Icon({ name, ...props }) {
   const paths = {
@@ -50,6 +53,17 @@ function Brand() {
 
 // Illustrations intentionally avoid implying photos of demonstration listings.
 function FoodArt({ item }) {
+  return (
+    <Photo
+      src={item.image_url}
+      alt={item.name}
+      className="food-photo"
+      fallback={<FoodIllustration item={item} />}
+    />
+  );
+}
+
+function FoodIllustration({ item }) {
   const name = item.name.toLowerCase();
   const vegetables = /tofu|vegetable|mushroom/.test(name);
   return (
@@ -352,7 +366,10 @@ function MenuCarousel({ items, budget, onSelect }) {
           <Icon name="shop" />
         </span>
         <span>
-          <small>{item.category.toUpperCase()} · DEMO MENU</small>
+          <small>
+            {item.category.toUpperCase()}
+            {isDemoName(item.stall_name) ? " · DEMO MENU" : " · LISTED MENU"}
+          </small>
           <strong>{item.name}</strong>
           <span>{cleanName(item.stall_name)}</span>
         </span>
@@ -470,7 +487,7 @@ function MenuCarousel({ items, budget, onSelect }) {
           : "Random picks every 7 seconds · pauses on hover or focus"}
       </span>
       <span className="illustration-label">
-        Food illustrations · fictional demonstration menus
+        Illustrations are not actual food photos
       </span>
     </section>
   );
@@ -479,7 +496,7 @@ function MenuCarousel({ items, budget, onSelect }) {
 export default function App() {
   const [items, setItems] = useState([]);
   const [catalog, setCatalog] = useState([]);
-  const catalogLoaded = useRef(false);
+  const [shopRecords, setShopRecords] = useState([]);
   const [status, setStatus] = useState("loading");
   const [attempt, setAttempt] = useState(0);
   const [query, setQuery] = useState("");
@@ -496,32 +513,35 @@ export default function App() {
     let cancelled = false;
     const timeout = setTimeout(() => controller.abort(), 75000);
     setStatus("loading");
-    fetch(
-      `${API}/api/menu-items${budget ? `?budget=${encodeURIComponent(budget)}` : ""}`,
-      { signal: controller.signal },
-    )
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Menu request failed");
-        const data = await response.json();
-        if (!Array.isArray(data)) throw new Error("Unexpected menu response");
-        let fullCatalog = budget ? null : data;
-        // A visitor can choose a budget before the initial menu has loaded.
-        // Keep shop counts and starting prices based on the complete catalog.
-        if (budget && !catalogLoaded.current) {
-          const catalogResponse = await fetch(`${API}/api/menu-items`, {
-            signal: controller.signal,
-          });
-          if (!catalogResponse.ok) throw new Error("Shop menu request failed");
-          fullCatalog = await catalogResponse.json();
-          if (!Array.isArray(fullCatalog))
-            throw new Error("Unexpected shop menu response");
-        }
+    async function readList(path) {
+      const response = await fetch(`${API}${path}`, {
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("Menu request failed");
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error("Unexpected menu response");
+      return data;
+    }
+    // Read shop records directly: a shop exists even before its first menu item.
+    // Always refresh the full catalog so shop summaries do not depend on budget.
+    const isolationCheck = verifyStagingEnvironment(API, controller.signal);
+    const fullCatalogRequest = isolationCheck.then(() =>
+      readList("/api/menu-items"),
+    );
+    Promise.all([
+      budget
+        ? isolationCheck.then(() =>
+            readList(`/api/menu-items?budget=${encodeURIComponent(budget)}`),
+          )
+        : fullCatalogRequest,
+      fullCatalogRequest,
+      isolationCheck.then(() => readList("/api/stalls")),
+    ])
+      .then(([data, fullCatalog, stalls]) => {
         if (!cancelled) {
           setItems(data);
-          if (fullCatalog) {
-            setCatalog(fullCatalog);
-            catalogLoaded.current = true;
-          }
+          setCatalog(fullCatalog);
+          setShopRecords(stalls);
           setStatus("ready");
         }
       })
@@ -570,22 +590,23 @@ export default function App() {
     setAttempt((current) => current + 1);
     scrollToMenu();
   }
-  const shops = [...new Set(catalog.map((item) => item.stall_name))].map(
-    (name) => {
-      const menu = catalog.filter((item) => item.stall_name === name);
-      return {
-        name,
-        location: menu[0].location,
-        count: menu.length,
-        min: Math.min(...menu.map((item) => Number(item.price))),
-      };
-    },
-  );
+  const shops = shopRecords.map((record) => {
+    const menu = catalog.filter((item) => item.stall_id === record.id);
+    return {
+      ...record,
+      count: menu.length,
+      min: menu.length
+        ? Math.min(...menu.map((item) => Number(item.price)))
+        : null,
+    };
+  });
+  const selectedShop = shops.find((entry) => String(entry.id) === shop);
+  const hasDemoShops = shops.some((entry) => isDemoName(entry.name));
   const visible = items
     .filter(
       (item) =>
         (category === "All items" || item.category === category) &&
-        (!shop || item.stall_name === shop) &&
+        (!shop || String(item.stall_id) === shop) &&
         (!availableOnly || item.is_available) &&
         `${item.name} ${item.stall_name} ${item.description || ""}`
           .toLowerCase()
@@ -606,6 +627,7 @@ export default function App() {
       <a href="#menu" className="skip-link">
         Skip to menu
       </a>
+      <StagingBanner />
       <header className="header" id="top">
         <Brand />
         <nav aria-label="Main navigation">
@@ -690,18 +712,24 @@ export default function App() {
             budget={budget}
             onSelect={(item) => {
               setQuery(item.name);
-              setShop(item.stall_name);
+              setShop(String(item.stall_id));
               setCategory("All items");
               setAvailableOnly(true);
             }}
           />
         </section>
         <aside className="notice">
-          <span className="demo-pill">DEMO EDITION</span>
+          <span className="demo-pill">
+            {hasDemoShops ? "DEMO EDITION" : "MENU UPDATES"}
+          </span>
           <p>
-            Explore with sample menus. Shop names, locations, prices, and
-            availability are fictional. AI meal suggestions are coming in a
-            later version.
+            {hasDemoShops
+              ? "Listings marked Demo contain fictional shop and menu data. "
+              : "Shop locations are based on information provided for this project. "}
+            {status === "ready" && !catalog.length
+              ? "Menus and prices have not been added yet. "
+              : "Confirm current prices and availability at the shop. "}
+            AI meal suggestions are coming in a later version.
           </p>
         </aside>
         <section
@@ -717,15 +745,22 @@ export default function App() {
             <p className="section-caption">
               Browse a shop, then explore its menu.
               <br />
-              Demonstration listings for now.
+              {hasDemoShops
+                ? "Demonstration listings for now."
+                : "Menus will appear as they are added."}
             </p>
           </div>
           {shops.length > 0 ? (
             <div className="shop-grid">
               {shops.map((entry, index) => (
-                <article className="shop-card" key={entry.name}>
+                <article className="shop-card" key={entry.id}>
                   <div className={`shop-symbol shop-${index % 3}`}>
-                    <Icon name="shop" width="27" height="27" />
+                    <Photo
+                      src={entry.image_url}
+                      alt={entry.name}
+                      className="shop-photo"
+                      fallback={<Icon name="shop" width="27" height="27" />}
+                    />
                   </div>
                   <div className="shop-info">
                     <h3>{cleanName(entry.name)}</h3>
@@ -734,8 +769,9 @@ export default function App() {
                       {entry.location}
                     </p>
                     <span>
-                      {entry.count} listed items · From{" "}
-                      {pesos.format(entry.min)}
+                      {entry.count
+                        ? `${entry.count} listed ${entry.count === 1 ? "item" : "items"} · From ${pesos.format(entry.min)}`
+                        : "Menu not added yet"}
                     </span>
                   </div>
                   <button
@@ -743,7 +779,7 @@ export default function App() {
                     aria-label={`View ${cleanName(entry.name)} menu`}
                     onClick={() => {
                       clearFilters();
-                      setShop(entry.name);
+                      setShop(String(entry.id));
                       scrollToMenu();
                     }}
                   >
@@ -756,7 +792,9 @@ export default function App() {
             <p className="shop-placeholder">
               {status === "error"
                 ? "Shop details will appear when the menu connection is restored."
-                : "Getting the shops ready…"}
+                : status === "ready"
+                  ? "No shops listed yet. Check back soon."
+                  : "Getting the shops ready…"}
             </p>
           )}
         </section>
@@ -765,6 +803,25 @@ export default function App() {
           className="menu-section"
           aria-labelledby="menu-title"
         >
+          {selectedShop && (
+            <div
+              className="selected-shop"
+              role="region"
+              aria-label="Selected shop"
+            >
+              <div>
+                <p className="eyebrow">BROWSING THIS SHOP</p>
+                <h3>{cleanName(selectedShop.name)}</h3>
+                <p>
+                  <Icon name="pin" width="16" height="16" />{" "}
+                  {selectedShop.location}
+                </p>
+              </div>
+              <button className="clear-button" onClick={() => setShop("")}>
+                Browse all shops <Icon name="close" width="14" height="14" />
+              </button>
+            </div>
+          )}
           <div className="section-heading">
             <div>
               <p className="eyebrow">SOMETHING FOR YOUR APPETITE</p>
@@ -820,7 +877,10 @@ export default function App() {
                   {shop && (
                     <>
                       {" "}
-                      at <strong>{cleanName(shop)}</strong>
+                      at{" "}
+                      <strong>
+                        {cleanName(selectedShop?.name || "selected shop")}
+                      </strong>
                     </>
                   )}
                 </>
@@ -873,9 +933,15 @@ export default function App() {
           {status === "ready" && !visible.length && (
             <div className="state-box">
               <Icon name="search" width="32" height="32" />
-              <h3>No matches on the menu just yet.</h3>
+              <h3>
+                {selectedShop?.count === 0 || !catalog.length
+                  ? "This shop’s menu is on its way."
+                  : "No matches on the menu just yet."}
+              </h3>
               <p>
-                Try a bigger budget, another category, or a different search.
+                {selectedShop?.count === 0 || !catalog.length
+                  ? "No meals or prices have been listed for this shop yet. Browse another shop while its menu is being added."
+                  : "Try a bigger budget, another category, or a different search."}
               </p>
               <button className="primary-button" onClick={clearFilters}>
                 Show all food <Icon name="arrow" />
@@ -901,7 +967,7 @@ export default function App() {
                   <div className="card-content">
                     <button
                       className="stall-name"
-                      onClick={() => setShop(item.stall_name)}
+                      onClick={() => setShop(String(item.stall_id))}
                     >
                       {cleanName(item.stall_name)}{" "}
                       <span aria-hidden="true">↗</span>
@@ -939,7 +1005,9 @@ export default function App() {
                           day: "numeric",
                           year: "numeric",
                         })}{" "}
-                        · Demo
+                        {isDemoName(item.stall_name)
+                          ? " · Demo"
+                          : " · Availability may vary"}
                       </small>
                     </div>
                   </div>
@@ -996,6 +1064,7 @@ export default function App() {
             <p>A little planning. A better lunch.</p>
           </div>
           <div className="footer-links">
+            <a href="#admin">Administrator</a>
             <a href="#menu">Find food</a>
             <a href="#shops">Browse shops</a>
             <a href="#how">How it works</a>
