@@ -28,8 +28,6 @@ jobs:
       DATABASE_URL: sqlite:///ci.db
       GROQ_API_KEY: ''
       SUPABASE_URL: ''
-      SUPABASE_PUBLISHABLE_KEY: ''
-      ADMIN_USER_ID: ''
     defaults:
       run:
         working-directory: backend
@@ -46,7 +44,7 @@ jobs:
       - run: alembic upgrade head
       - run: python -m app.seed
       - run: python -m app.seed
-      - name: Run API, authorization and image tests
+      - name: Run catalog, meal recommendation and visitor CRUD tests
         run: pytest -q --junitxml=test-results/api-tests.xml
       - name: Save API test report
         if: always()

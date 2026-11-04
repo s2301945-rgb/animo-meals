@@ -1,107 +1,87 @@
-# AnimoMeals: Your AI-Powered Canteen Meal Finder
+# AnimoMeals · AI Food Budget Recommender
 
-## Week 2 — Live
+AnimoMeals helps students choose meals from five recorded local shop menus based on their budget and food preferences. A visitor can describe what they want, compare meal combinations, and save favorite combinations as **My Meal Boxes**. No visitor account or administrator dashboard is required.
 
-Week 2 was merged through [pull request #20](https://github.com/s2301945-rgb/animo-meals/pull/20) and automatically deployed. Open the [public website](https://animo-meals.vercel.app) or [administrator page](https://animo-meals.vercel.app/#admin). The release includes validated shop/menu CRUD, database-backed shop browsing, administrator screens and photo controls, automated API tests and isolated local staging. The developer confirmed real administrator sign-in both locally and on the public website.
+## Revised scope — November 4, 2026
 
-The [production pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/41171535799) passed frontend checks, backend checks and the Vercel deployment trigger. Its inspected `api-test-results` artifact contains **120 tests, zero failures, zero errors and zero skipped tests**. Render's live revision matched the merged commit. External identity, AI and storage calls are mocked in automated tests; CI uses an isolated SQLite database without production credentials.
+The former administrator app has been retired. Shop and menu editing, administrator login, and photo-upload endpoints are removed. The developer maintains a small curated menu dataset through an offline import command. This avoids daily vendor checks; it does not eliminate the need to occasionally correct recorded prices.
 
-Production now lists Maria Rosa, Pritong Manok, Nene’s, Crazy Crunch and Lola Barbz. Maria Rosa's location remains unconfirmed. Their menus were published empty, ready for verified items and prices. Fictional demo records were backed up before replacement, and local test entries were not copied into production. Public browser, API, mobile, CORS and authorization checks passed; see [production evidence](docs/verification/week-2-production.json).
+We list regular menu offerings, not live stock. Prices and availability must be confirmed at the shop. We do not claim food quality, nutrition, distance, current stock, or complete ingredient/allergen knowledge. Unknown spice details are excluded when a visitor requests non-spicy meals. Menu data is due from the developer; we do not invent meals or prices to fill empty screens.
 
-[Local staging](STAGING.md) keeps its own PostgreSQL schema/role, credential and photo bucket, with a visible staging banner. It shares the existing Supabase Auth project and has no public staging URL. See [Week 2 API and verification](docs/WEEK-2-API.md) and [Administrator setup](ADMIN-SETUP.md). Real menu datasets and the visitor AI recommendation feature remain later work.
+| Selected shop | Location supplied for this project |
+| --- | --- |
+| Maria Rosa | Location to be confirmed |
+| Pritong Manok | USLS Stingers |
+| Nene’s | In front of Gate 5 |
+| Crazy Crunch | Ground floor, MM Building |
+| Lola Barbz | The Agora |
 
-## Week 1 Production Baseline
+## Visitor flow
 
-The local foundation includes a React menu page, FastAPI endpoints, two related database tables, a saved Alembic migration, fictional seed records, and automated checks. See [Run locally](RUN-LOCALLY.md) for beginner-friendly commands.
+1. Enter a budget in Philippine pesos, optionally with a natural-language meal preference.
+2. Groq extracts structured preferences. The backend validates them and rejects a conflicting budget.
+3. The backend selects recorded combinations and adds exact decimal prices. It never asks the AI to invent a menu or calculate the bill.
+4. Compare up to six combinations, with item prices, shop locations, totals and remaining budget.
+5. Save a suggestion to My Meal Boxes, view it later, rename it, or delete it.
 
-Week 1 originally deployed migration 0001 with three fictional stalls and sixteen menu items. Those historical demo records were replaced by the selected-shop catalog in Week 2. Local development defaults to SQLite when DATABASE_URL is absent. Groq structured extraction and a backend smoke-test command are implemented; a real Groq response passed all six labeled smoke-sample checks. Non-secret evidence is saved in [docs/verification/ai-provider.json](docs/verification/ai-provider.json). Administrator CRUD is now implemented; visitor AI meal-combination recommendations remain planned. See [AI setup](AI-SETUP.md).
+Each suggestion contains one main dish or snack, optionally one side and one requested drink. One shop per suggestion is the default; multiple shops are allowed only when the visitor explicitly permits it. Results are ordered by lowest total, not by unsupported food-quality scores. An empty preference box performs price comparison without an AI call. An empty catalog never calls the provider.
 
-## Branch Strategy
+## CRUD without an admin
 
-`main` holds reviewed changes. Work happens on descriptive feature branches, such as `feature/week-1-app`, and enters `main` through a pull request. The solo developer reviews the diff and validation results before merging. GitHub Actions runs install, lint, build, migration, and backend checks on pull requests.
+| Operation | Visitor action | API |
+| --- | --- | --- |
+| Create | Save a suggested meal box | POST /api/plans |
+| Read | Open their saved boxes | GET /api/plans and GET /api/plans/{id} |
+| Update | Rename a box, such as Monday Lunch | PUT /api/plans/{id} |
+| Delete | Remove an unwanted box | DELETE /api/plans/{id} |
 
-## Backlog and Consultation
+Saved boxes live in the database. A cryptographically random browser-held bearer key identifies the visitor; only its SHA-256 hash is stored in the database. Visitors cannot read or alter boxes belonging to another key. The key stays in this site's local browser storage and is sent only to the configured backend. Anyone using that browser can access the same boxes. Clearing site data loses access; there is no password recovery or cross-device sync. This is intended for low-sensitivity meal plans, not personal or medical records. Up to 20 boxes can be saved per browser key.
 
-- [All project issues](https://github.com/s2301945-rgb/animo-meals/issues)
-- [Week 1 milestone](https://github.com/s2301945-rgb/animo-meals/milestone/1)
-- [Local setup and verification](RUN-LOCALLY.md)
+Saved items are snapshots of recorded names, shop details and prices. A later dataset update does not silently change an earlier meal box. Prices are rechecked when saving a new box.
 
-The public website and hosted backend originally loaded sixteen demonstration menu items during Week 1; the current Week 2 catalog is described above. Budget filtering was verified against the historical demo dataset. Render automatically deploys after main-branch checks pass. The real Groq provider call and its evidence are complete. See [deployment setup and verification](docs/DEPLOYMENT.md). The backend AI command is implemented; a frontend AI interface is later work.
+## Technology stack
 
-The hero carousel randomly highlights available meals and snacks priced at PHP 75 or below (or the applied budget, if lower), changing every seven seconds with a slow slide. Hover, keyboard focus, a hidden browser tab, and the Pause button stop autoplay. Reduced-motion preferences disable autoplay and animated transitions; manual arrows remain available. Clicking a highlighted item filters the menu to that listing.
+| Part | Technology |
+| --- | --- |
+| Frontend | React, Vite, JavaScript, CSS |
+| Backend REST API | Python, FastAPI, Pydantic |
+| Database | Supabase PostgreSQL; SQLite for isolated local tests |
+| Database access and migrations | SQLAlchemy, Psycopg, Alembic |
+| AI | Groq API, configured GPT-OSS model, HTTPX |
+| Checks | Pytest, Ruff, ESLint, GitHub Actions |
+| Hosting | Vercel frontend, Render backend |
 
-Six additional fictional items are included in the repeatable seed: egg fried rice (PHP 45), pancit bihon (PHP 50), mushroom rice bowl (PHP 60), fish fillet with rice (PHP 70), tuna pandesal (PHP 35), and cheese sandwich (PHP 30). Seeding adds missing records without overwriting existing prices or availability.
+Supabase Auth is no longer used. Existing hosted images may still display as public URLs; visitor image uploads are not part of this scope. Existing private hosting variables can remain unused without exposing them through the API. Service plans and AI quotas remain subject to provider limits.
 
-### Week 1 consultation evidence (original ten-item dataset)
+## Architecture
 
-- [Passing pull-request checks](https://github.com/s2301945-rgb/animo-meals/pull/16/checks).
-- [Successful production pipeline](https://github.com/s2301945-rgb/animo-meals/actions/runs/40729505099): frontend, backend, then frontend deployment all succeeded for `c105cca`.
-- [Vercel production deployment](https://vercel.com/s2301945-rgb/animo-meals/9EG5yPo8pngE85u4hbT1crAiJ5rL): Ready, created by Deploy Hook from the same commit.
-- [Render automatic deployment](https://dashboard.render.com/web/srv-dbh28nfb9u1s739got00/deploys/dep-dbh28sbd9pos73c3huk0): succeeded after main-branch checks.
-- [Database migration](backend/alembic/versions/0001_create_menu.py): revision `0001` applied to Supabase; hosted health and menu reads confirm connectivity.
-- [Live verification results](docs/verification/live-deployment.json): ten items, six within PHP 50, correct frontend origin, and HTTP 422 for an invalid budget.
-- [Real AI provider evidence](docs/verification/ai-provider.json): all six smoke-sample semantic checks passed.
+```mermaid
+flowchart LR
+  V[Visitor website] --> A[FastAPI backend]
+  A --> G[Groq: extract preferences]
+  G --> A
+  A --> P[(PostgreSQL: shops, menus, meal boxes)]
+  D[Developer menu dataset] --> I[Offline validated import]
+  I --> P
+```
 
-AnimoMeals is an AI-assisted application designed to help La Salle students discover budget-friendly canteen meals tailored to their preferences. Simply input your budget and food desires, such as "I have ₱100 and want a non-spicy chicken meal with a drink," and AnimoMeals will suggest meal combinations from recorded menus. You'll see prices, stall locations, and your remaining budget at a glance.
+Tables: `stalls` → `menu_items`, and `saved_plans` → `saved_plan_items`. Migration 0003 adds meal boxes while preserving existing catalog records. The internal legacy `is_available` column is exposed as `is_listed`; it means inclusion in the recorded catalog, never real-time stock.
 
+## Setup, API and menu data
 
+- [Run locally](RUN-LOCALLY.md)
+- [AI behavior and checks](AI-SETUP.md)
+- [API reference](docs/API.md)
+- [Menu dataset guide](docs/MENU-DATA.md)
+- [Scope change and course requirements](docs/REVISED-SCOPE.md)
+- [Local staging](STAGING.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Current backlog](BACKLOG.md)
 
-## Project Goals
+The hosted project uses [the public website](https://animo-meals.vercel.app) and [backend](https://animo-meals-api.onrender.com). A local branch is not automatically deployed; verify the main-branch pipeline and `/api/environment` after publication. The earlier Week 1 and Week 2 verification files are historical evidence of the previous scope, not proof of this revision's deployment.
 
-*   Empower students to compare affordable canteen meal options.
-*   Utilize AI to interpret natural language budgets and food preferences.
-*   Calculate optimal meal combinations based on recorded prices.
-*   Provide administrators with tools to manage stalls, menu items, and availability.
-*   Develop a complete, end-to-end application (frontend, backend, database).
+## Solo developer and branch strategy
 
-AnimoMeals prioritizes affordability and preference matching. Please note that the application does not assess food quality or nutritional value without supporting data.
+**LANCE FRANCIS M. GARGARITANO · BSCS 4B** handles planning, frontend, backend, database, AI integration, testing, and deployment.
 
-## Developer and Responsibilities
-
-This project is an individual endeavor.
-
-**Developer:** LANCE FRANCIS M. GARGARITANO
-**Course/Section:** BSCS 4B
-
-| Role                      | Responsibility                                                                 |
-| :------------------------ | :----------------------------------------------------------------------------- |
-| Project Lead              | Manage project scope, backlog, schedule, and documentation                     |
-| Frontend Developer        | Build responsive user interfaces and integrate with the backend                |
-| Backend Developer         | Implement REST APIs, data validation, AI integration, and meal logic           |
-| Database Developer        | Design database schemas, manage migrations, and populate demonstration data    |
-| Tester and Deployment Maintainer | Verify application behavior, configure automated checks, and manage deployment |
-
-## Technology Stack
-
-| Part                | Technology          | Purpose                                                              |
-| :------------------ | :------------------ | :------------------------------------------------------------------- |
-| Frontend            | React + Vite        | Interactive user interface, development server, and production builds |
-| Styling             | CSS                 | Responsive layouts and visual design                                 |
-| Backend             | Python + FastAPI    | REST API, validation, AI requests, and recommendation logic          |
-| Database            | Supabase PostgreSQL | Persistent relational data storage                                   |
-| Database Access     | SQLAlchemy          | ORM for Python database interaction                                  |
-| Migrations          | Alembic             | Track and apply database schema changes                              |
-| AI Provider         | Groq API   | Extract structured preferences with Groq-hosted GPT-OSS 20B                  |
-| Frontend Hosting    | Vercel Hobby        | Host the frontend application                                        |
-| Backend Hosting     | Render Free         | Host the backend application                                         |
-| Repository & Automation | GitHub + GitHub Actions | Source control, issue tracking, CI/CD, and deployment automation     |
-
-The project aims to utilize free service plans within their usage limits. Availability and limitations are subject to the current terms of each provider.
-
-## Initial Scope
-
-The first version of AnimoMeals will focus on a single campus and a curated selection of canteen stalls.
-
-### Student Features
-
-*   Browse available menu items and stall details.
-*   Input budget and food preferences.
-*   Utilize natural language for search queries.
-*   Compare various meal combinations within their budget.
-*   View item prices, total costs, remaining budget, and last update times.
-*   Receive clear feedback when no matching combinations are found.
-
-### Administrator Features
-
-*   Create, view, update, and delete stall information.
-*   **Note:** Menu prices and availability require manual updates. Listings will display their last update time, and confirmation at the stall is recommended. Free hosting may experience pauses or slow wake-up times; the deployed application will be verified before consultations and defenses.
+Work is developed on descriptive feature branches and reviewed through pull requests into `main`. Pull-request CI installs dependencies, lints, builds, migrates an isolated test database, and runs mocked-provider API tests. Main-branch deployments follow passing checks. Real `.env` files and provider keys stay out of Git. No external AI requests run in CI.

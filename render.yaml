@@ -25,9 +25,5 @@ services:
         value: openai/gpt-oss-20b
       - key: SUPABASE_URL
         sync: false
-      - key: SUPABASE_PUBLISHABLE_KEY
-        sync: false
-      - key: ADMIN_USER_ID
-        sync: false
       - key: IMAGE_STORAGE_BUCKET
         value: animo-meals-images

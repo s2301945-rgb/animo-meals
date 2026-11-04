@@ -1,50 +1,25 @@
-# Week 1 AI verification with Groq
+# AI setup and behavior
 
-## Provider choice
+The existing backend Groq integration is reused. The configured model is `openai/gpt-oss-20b`; change `GROQ_MODEL` privately if needed. `GROQ_API_KEY` belongs only in backend `.env` or the host's private environment settings. No OpenAI API key is needed for this Groq-hosted model.
 
-Groq is the chosen provider for the backend text extraction task. The user's existing Gemini project reports that its free tier is unavailable. Groq publishes free-plan limits for `openai/gpt-oss-20b`, which supports strict structured output. This is a Groq-hosted model: an OpenAI API key is not used.
+The visitor sends a budget and an optional preference description to `POST /api/recommendations`. Groq extracts structured budget, preferred food, drink requirement, non-spicy preference, same-shop preference and exclusions. Pydantic validates the response. If a description states a budget different from the budget field, the visitor must correct it. The entered budget is never silently increased.
 
-References:
-- https://console.groq.com/docs/rate-limits
-- https://console.groq.com/docs/structured-outputs
+The backend matches words against recorded menu names/descriptions, selects combinations and calculates exact decimal totals. Matching is deliberately conservative; aliases include manok/chicken, kanin/rice, baboy/pork and isda/fish. This is not semantic knowledge of every recipe. Exclusions filter recorded mentions only; incomplete ingredient information prevents any allergy-safety guarantee. Non-spicy requests require explicit non-spicy or mild information in the listing.
 
-Use a free Groq account without upgrading billing. Free quotas are limited; account availability must be verified by a real request. The command makes one request and never retries automatically.
+No AI call is made for empty menus, no affordable recorded items, or blank preferences. Blank preferences use recorded-price comparison. No fabricated recommendations appear if there is no match.
 
-## What is implemented
+Provider timeouts, unavailable quota, malformed responses and authentication failures show safe messages. Visitors can retry or clear preferences for price-only comparison. The endpoint is limited to six requests per client and thirty total requests per minute per backend process; there are no automatic provider retries. This is a small single-process guard, not a distributed quota service. A shared network may share limits.
 
-- A backend-only extraction function returns a validated budget, preferred food, drink requirement, spicy-food exclusion, same-stall preference, and ingredient exclusions.
-- Missing preferences remain null rather than guessed.
-- Invalid input, missing keys, authentication failures, quota limits, timeouts, malformed responses, and incomplete output have safe error messages.
-- Automated tests use mock responses and never consume real API quota.
-- There is no public paid-call endpoint or frontend AI button in this Week 1 increment.
+## Manual provider smoke test
 
-## Configure and make one real test call
-
-Create a project key yourself in https://console.groq.com/keys. Give it a recognizable name such as AnimoMeals. An expiration date is recommended; do not paste the key into chat or commit it.
-
-From the repository root in PowerShell:
+The original Week 1 verification command remains available from `backend`:
 
 ```powershell
-cd backend
-.\.venv\Scripts\python.exe -m app.ai_smoke_test --configure --output ../../ai-provider-verification.json
+.venv/Scripts/python.exe -m app.ai_smoke_test --output ../../ai-provider-verification.json
 ```
 
-At the hidden prompt, paste the key and press Enter. The command sends a fictional meal request to Groq. After a successful, validated response, it saves `GROQ_API_KEY` and `GROQ_MODEL` in the ignored `backend/.env` while preserving the database configuration. On failure, the new key is not saved.
+`--configure` prompts privately for a replacement key. Never paste credentials into chat or Git. Do not run real provider calls in CI.
 
-The evidence file contains only the sample request, extracted fields, provider, model, timestamp, and validation status. A successful provider connection does not prove accuracy across all possible requests. Inspect the extracted fields and later evaluate a labeled set of student requests.
+[Historical provider evidence](docs/verification/ai-provider.json) records one successful sample, not overall extraction accuracy. Automated tests mock provider responses and verify extraction validation, exact budget boundaries, empty catalogs, unavailable listings, ownership of saved boxes and provider failures. [Evaluation examples](docs/evaluation-cases.json) provide a small manual acceptance set; no new live evaluation score is claimed.
 
-After configuration, rerun a test without entering the key:
-
-```powershell
-.\.venv\Scripts\python.exe -m app.ai_smoke_test --output ../../ai-provider-verification.json
-```
-
-Do not run real provider calls in CI. Manual menu browsing continues to work without an AI key.
-
-## Verified result
-
-A real Groq request succeeded on October 28, 2026. The fixed sample passed all six checks: budget, chicken preference, drink, non-spicy requirement, same-stall preference, and pork exclusion. See [saved evidence](docs/verification/ai-provider.json). The initial trial had a non-spicy interpretation error; the instructions and semantic validation were corrected before this successful rerun. This is one smoke sample, not a broad accuracy evaluation.
-
-## Remaining work
-
-The Week 1 AI connection requirement has been verified, with non-secret evidence saved. Full preference-review UI, an authenticated or rate-limited API route, and meal-combination recommendations are later features. Deployment remains a separate Week 1 task.
+Provider references: [structured outputs](https://console.groq.com/docs/structured-outputs), [rate limits](https://console.groq.com/docs/rate-limits).

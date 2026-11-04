@@ -1,0 +1,12 @@
+{
+  "purpose": "Manual acceptance cases; use supplied menu data. No live evaluation score is claimed.",
+  "cases": [
+    {"budget": "100.00", "preferences": "Chicken with rice and a drink from one shop", "checks": ["Extract chicken/rice and drink", "Use one shop", "Total no greater than 100", "Use only recorded items"]},
+    {"budget": "75.00", "preferences": "Non-spicy chicken, no pork", "checks": ["avoid_spicy true", "Exclude pork mentions", "Exclude unknown spice details", "No matches is valid if catalog lacks confirmed details"]},
+    {"budget": "100.00", "preferences": "I have 200 pesos", "checks": ["Reject conflicting budget with 422"]},
+    {"budget": "0", "preferences": "Anything", "checks": ["Reject invalid budget before provider call"]},
+    {"budget": "1.00", "preferences": "A meal", "checks": ["No fabricated cheap meal", "No provider call if no recorded item fits"]},
+    {"budget": "100.00", "preferences": "", "checks": ["Recorded-price comparison without provider call"]},
+    {"budget": "100.00", "preferences": "Manok at kanin, may tubig", "checks": ["Review Tagalog preference extraction", "Only suggest combinations supported by recorded descriptions"]}
+  ]
+}

@@ -1,3 +1,5 @@
+> Historical Week 1/2 documentation: administrator features below were retired in the November 4 revision. See [current scope](REVISED-SCOPE.md), [current API](API.md), and [README](../README.md). Historical verification is not evidence of the revised release.
+
 # Week 2, Task 1: CRUD API and request validation
 
 Implemented through `feature/week-2-admin-crud`, merged in PR #20 and deployed

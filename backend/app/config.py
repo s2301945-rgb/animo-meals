@@ -18,8 +18,6 @@ class Settings(BaseSettings):
     groq_api_key: SecretStr = SecretStr('')
     groq_model: str = 'openai/gpt-oss-20b'
     supabase_url: str = ''
-    supabase_publishable_key: SecretStr = SecretStr('')
-    admin_user_id: str = ''
     app_env: Literal['development', 'test', 'staging', 'production'] = 'development'
     database_schema: str = ''
     image_storage_bucket: Literal['animo-meals-images', 'animo-meals-images-staging'] = 'animo-meals-images'

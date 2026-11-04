@@ -1,0 +1,9 @@
+{
+  "shops": [
+    {"name": "Maria Rosa", "menu_items": []},
+    {"name": "Pritong Manok", "menu_items": []},
+    {"name": "Nene’s", "menu_items": []},
+    {"name": "Crazy Crunch", "menu_items": []},
+    {"name": "Lola Barbz", "menu_items": []}
+  ]
+}
