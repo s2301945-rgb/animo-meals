@@ -11,8 +11,8 @@ const pesos = new Intl.NumberFormat("en-PH", {
   currency: "PHP",
 });
 const categories = ["All items", "Main dish", "Drink", "Snack", "Side"];
-const cleanName = (name) => name.replace(/^Demo\s*[â€¢Â·]\s*/i, "");
-const isDemoName = (name) => /^Demo\s*[â€¢Â·]/i.test(name);
+const cleanName = (name) => name.replace(/^Demo\s*[•·]\s*/i, "");
+const isDemoName = (name) => /^Demo\s*[•·]/i.test(name);
 
 function Icon({ name, ...props }) {
   const paths = {
@@ -369,7 +369,7 @@ function MenuCarousel({ items, budget, onSelect }) {
         <span>
           <small>
             {item.category.toUpperCase()}
-            {isDemoName(item.stall_name) ? " Â· DEMO MENU" : " Â· LISTED MENU"}
+            {isDemoName(item.stall_name) ? " · DEMO MENU" : " · LISTED MENU"}
           </small>
           <strong>{item.name}</strong>
           <span>{cleanName(item.stall_name)}</span>
@@ -417,11 +417,11 @@ function MenuCarousel({ items, budget, onSelect }) {
     >
       <div className="hero-arc" />
       <div className="stage-top">
-        <span className="stage-star">âœ¦</span>
+        <span className="stage-star">✦</span>
         <span>
           A LITTLE BUDGET INSPIRATION
           <br />
-          <strong>Recorded picks Â· {pesos.format(limit)} and under</strong>
+          <strong>Recorded picks · {pesos.format(limit)} and under</strong>
         </span>
       </div>
       <div
@@ -481,15 +481,15 @@ function MenuCarousel({ items, budget, onSelect }) {
             {reducedMotion
               ? "Autoplay off"
               : paused
-                ? "â–¶ Resume"
-                : "â…¡ Pause"}
+                ? "▶ Resume"
+                : "Ⅱ Pause"}
           </button>
         </div>
       )}
       <span className="carousel-note">
         {reducedMotion
           ? "Use the arrows to browse at your pace."
-          : "Random picks every 7 seconds Â· pauses on hover or focus"}
+          : "Random picks every 7 seconds · pauses on hover or focus"}
       </span>
       <span className="illustration-label">
         Illustrations are not actual food photos
@@ -587,7 +587,7 @@ export default function App() {
         Number(amount) > 10000)
     ) {
       setBudgetError(
-        "Enter â‚±0.01â€“â‚±10,000, with up to two decimal places.",
+        "Enter ₱0.01–₱10,000, with up to two decimal places.",
       );
       return;
     }
@@ -650,7 +650,7 @@ export default function App() {
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-copy">
             <p className="eyebrow">
-              <span className="little-star">âœ¦</span> GOOD FOOD. SMARTER
+              <span className="little-star">✦</span> GOOD FOOD. SMARTER
               SPENDING.
             </p>
             <h1 id="hero-title">
@@ -672,7 +672,7 @@ export default function App() {
               <div
                 className={`budget-controls ${budgetError ? "invalid" : ""}`}
               >
-                <span aria-hidden="true">â‚±</span>
+                <span aria-hidden="true">₱</span>
                 <input
                   id="budget"
                   inputMode="decimal"
@@ -701,7 +701,7 @@ export default function App() {
               <span>A quick starting point</span>
               {[50, 75, 100].map((value) => (
                 <button key={value} onClick={() => findFood(String(value))}>
-                  â‚±{value}
+                  ₱{value}
                 </button>
               ))}
             </div>
@@ -777,7 +777,7 @@ export default function App() {
                     </p>
                     <span>
                       {entry.count
-                        ? `${entry.count} listed ${entry.count === 1 ? "item" : "items"} Â· From ${pesos.format(entry.min)}`
+                        ? `${entry.count} listed ${entry.count === 1 ? "item" : "items"} · From ${pesos.format(entry.min)}`
                         : "Menu not added yet"}
                     </span>
                   </div>
@@ -801,7 +801,7 @@ export default function App() {
                 ? "Shop details will appear when the menu connection is restored."
                 : status === "ready"
                   ? "No shops listed yet. Check back soon."
-                  : "Getting the shops readyâ€¦"}
+                  : "Getting the shops ready…"}
             </p>
           )}
         </section>
@@ -840,7 +840,7 @@ export default function App() {
                 aria-label="Search food or shops"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search food or shopsâ€¦"
+                placeholder="Search food or shops…"
               />
             </label>
           </div>
@@ -914,7 +914,7 @@ export default function App() {
           {status === "loading" && (
             <div className="loading-state" role="status">
               <div className="loading-dot" />
-              <h3>Finding your next food stopâ€¦</h3>
+              <h3>Finding your next food stop…</h3>
               <p>
                 The first visit can take about a minute while the menu service
                 wakes up.
@@ -926,7 +926,7 @@ export default function App() {
               <Icon name="shop" width="32" height="32" />
               <h3>The menu is taking a little break.</h3>
               <p>
-                We couldnâ€™t retrieve the listings. Check your connection and
+                We couldn’t retrieve the listings. Check your connection and
                 try again in a moment.
               </p>
               <button
@@ -942,7 +942,7 @@ export default function App() {
               <Icon name="search" width="32" height="32" />
               <h3>
                 {selectedShop?.count === 0 || !catalog.length
-                  ? "This shopâ€™s menu is on its way."
+                  ? "This shop’s menu is on its way."
                   : "No matches on the menu just yet."}
               </h3>
               <p>
@@ -977,7 +977,7 @@ export default function App() {
                       onClick={() => setShop(String(item.stall_id))}
                     >
                       {cleanName(item.stall_name)}{" "}
-                      <span aria-hidden="true">â†—</span>
+                      <span aria-hidden="true">↗</span>
                     </button>
                     <h3>{item.name}</h3>
                     <p className="description">
@@ -1013,8 +1013,8 @@ export default function App() {
                           year: "numeric",
                         })}{" "}
                         {isDemoName(item.stall_name)
-                          ? " Â· Demo"
-                          : " Â· Confirm at the shop"}
+                          ? " · Demo"
+                          : " · Confirm at the shop"}
                       </small>
                     </div>
                   </div>

@@ -64,7 +64,7 @@ async function request(path, { method = "GET", body, owned = false } = {}) {
       throw new Error("The meal service took too long. Please try again.");
     if (error instanceof TypeError)
       throw new Error(
-        "We couldnâ€™t connect to the meal service. Check your connection and try again.",
+        "We couldn’t connect to the meal service. Check your connection and try again.",
       );
     throw error;
   } finally {
@@ -80,7 +80,7 @@ function MealLines({ items }) {
           <div>
             <strong>{item.name}</strong>
             <span>
-              {item.shop_name} Â· {item.location}
+              {item.shop_name} · {item.location}
             </span>
           </div>
           <b>{money(item.price)}</b>
@@ -115,7 +115,7 @@ function SavedBox({ plan, onChange, onError }) {
   return (
     <article className="meal-box">
       <span className="box-kicker">
-        MY MEAL BOX Â· SAVED{" "}
+        MY MEAL BOX · SAVED{" "}
         {new Date(plan.created_at).toLocaleDateString("en-PH")}
       </span>
       {editing ? (
@@ -246,7 +246,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
       Number(budget) > 10000
     ) {
       setError(
-        "Enter a budget from â‚±0.01 to â‚±10,000, with up to two decimal places.",
+        "Enter a budget from ₱0.01 to ₱10,000, with up to two decimal places.",
       );
       return;
     }
@@ -297,7 +297,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
         <div className="section-heading">
           <div>
             <p className="eyebrow">YOUR BUDGET. YOUR APPETITE.</p>
-            <h2 id="planner-title">Letâ€™s build your meal box.</h2>
+            <h2 id="planner-title">Let’s build your meal box.</h2>
           </div>
           <p className="section-caption">
             Meal ideas from recorded local menus. <br />
@@ -306,7 +306,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
         </div>
         <form className="planner-form" onSubmit={recommend}>
           <label htmlFor="planner-budget">
-            Your budget (â‚±)
+            Your budget (₱)
             <input
               id="planner-budget"
               inputMode="decimal"
@@ -328,7 +328,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
               maxLength={1000}
               rows={3}
               disabled={busy}
-              placeholder="Chicken with rice and a drink, from one shopâ€¦"
+              placeholder="Chicken with rice and a drink, from one shop…"
             />
             <span className="planner-small" id="preference-help">
               AI understands your preferences. Leave blank to compare recorded
@@ -336,7 +336,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
             </span>
           </label>
           <button className="primary-button" disabled={busy}>
-            {busy ? "Finding meal ideasâ€¦" : "Suggest my meals âœ¦"}
+            {busy ? "Finding meal ideas…" : "Suggest my meals ✦"}
           </button>
         </form>
         {busy && (
@@ -360,20 +360,20 @@ export default function MealPlanner({ budget, onBudgetChange }) {
             <h3 className="planner-result-title">{result.message}</h3>
             {result.preferences && (
               <p className="planner-small">
-                Budget: {money(result.budget)} Â· Food:{" "}
-                {result.preferences.preferred_food || "Any listed meal"} Â·{" "}
+                Budget: {money(result.budget)} · Food:{" "}
+                {result.preferences.preferred_food || "Any listed meal"} ·{" "}
                 {result.preferences.include_drink
                   ? "With a drink"
                   : "No drink required"}{" "}
-                Â·{" "}
+                ·{" "}
                 {result.preferences.prefer_same_stall === false
                   ? "Multiple shops allowed"
                   : "One shop per suggestion"}
                 {result.preferences.avoid_spicy
-                  ? " Â· Explicitly non-spicy listings only"
+                  ? " · Explicitly non-spicy listings only"
                   : ""}
                 {result.preferences.exclusions.length > 0
-                  ? ` Â· Avoid listed mentions of: ${result.preferences.exclusions.join(", ")}`
+                  ? ` · Avoid listed mentions of: ${result.preferences.exclusions.join(", ")}`
                   : ""}
               </p>
             )}
@@ -384,7 +384,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
                   key={suggestion.items.map((item) => item.id).join("-")}
                 >
                   <span className="box-kicker">
-                    OPTION {String(index + 1).padStart(2, "0")} Â· WITHIN{" "}
+                    OPTION {String(index + 1).padStart(2, "0")} · WITHIN{" "}
                     {money(result.budget)}
                   </span>
                   <h3>A little more for your allowance.</h3>
@@ -399,7 +399,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
                     disabled={saving !== null}
                     onClick={() => saveBox(suggestion, index)}
                   >
-                    {saving === index ? "Savingâ€¦" : "Save meal box"}
+                    {saving === index ? "Saving…" : "Save meal box"}
                   </button>
                 </article>
               ))}
@@ -440,7 +440,7 @@ export default function MealPlanner({ budget, onBudgetChange }) {
           </div>
         )}
         {savedLoading ? (
-          <p role="status">Opening your meal boxesâ€¦</p>
+          <p role="status">Opening your meal boxes…</p>
         ) : (
           !plans.length && (
             <p className="planner-empty">
