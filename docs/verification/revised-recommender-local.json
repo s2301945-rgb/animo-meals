@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-04",
+  "scope": "Visitor AI Food Budget Recommender and My Meal Boxes; admin retired",
+  "backend_tests": {
+    "tests": 82,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "providers_mocked_in_tests": true,
+  "browser_checks": [
+    "recommendation API to UI",
+    "database save/view/rename/reload/delete",
+    "delete cancellation",
+    "browser ownership isolation",
+    "legacy admin redirect",
+    "390px layout without overflow",
+    "empty result"
+  ],
+  "browser_data": "isolated SQLite fictional fixture; no production writes",
+  "migration": "0003; isolated upgrade/downgrade/upgrade verified",
+  "production_data_changed": false,
+  "real_menu_dataset": "pending user supply",
+  "live_revision_deployment": "not claimed by this local verification"
+}

@@ -1,72 +1,54 @@
-# Run AnimoMeals on your laptop
+# Run AnimoMeals locally
 
-## What works now
+Commands below use PowerShell. Open the repository folder in VS Code.
 
-React displays menu records read from a database by FastAPI. You can search food/stalls, filter categories, and request individual items within a budget. The sample stalls, prices, and locations are fictional. A backend-only Groq extraction function and verification command are available; frontend AI and meal-combination recommendations are not implemented yet. See AI-SETUP.md.
-
-Local development uses a real SQLite file, `backend/animomeals.db`, so no cloud account is required to try the app. Supabase PostgreSQL remains the planned deployment database. Both use the same SQLAlchemy models and Alembic migration; the original laptop now has a verified Supabase connection configured in its ignored backend/.env file.
-
-## 1. Open the project
-
-Open this repository folder in VS Code. Select **Terminal → New Terminal**. All commands below are PowerShell commands from the repository root unless indicated otherwise. Close/reopen VS Code after installing Node.js and Python.
-
-## 2. Start the backend
+## Backend
 
 ```powershell
 cd backend
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m alembic upgrade head
-.\.venv\Scripts\python.exe -m app.seed
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+.venv/Scripts/python.exe -m pip install -r requirements.txt
+.venv/Scripts/python.exe -m alembic upgrade head
+.venv/Scripts/python.exe -m app.shop_catalog
+.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Leave this terminal running. API docs: http://localhost:8000/docs
+Without a private `.env`, the app uses local SQLite. An existing `.env` may point to Supabase; check the intended environment privately before importing data or applying migrations. The five selected shops start with blank menus. Do not run the old `app.seed` against production: it creates fictional demonstration menus for tests only.
 
-The virtual environment and initial local database have already been created on the original laptop. Running the migration and seed again is safe. Existing menu records are not overwritten by the seed command.
+## Frontend
 
-## 3. Start the frontend
-
-Open a second terminal at the repository root:
+Open a second terminal from the repository root:
 
 ```powershell
 cd frontend
-$env:NODE_USE_SYSTEM_CA = '1'
 npm.cmd ci
 npm.cmd run dev
 ```
 
-Open **http://localhost:5173**. Keep both terminals running. Use **Ctrl+C** in each to stop.
+Open http://localhost:5173. API documentation: http://localhost:8000/docs. Stop servers with Ctrl+C.
 
-The certificate setting uses Windows trusted certificates for npm requests on this laptop; HTTPS certificate verification remains enabled.
+The frontend defaults to `http://localhost:8000`. Configure `VITE_API_BASE_URL` in an ignored frontend `.env` if needed. Match the backend's `FRONTEND_ORIGIN` to the website's exact origin. Vite variables are public; database passwords and Groq keys belong only on the backend.
 
-## 4. Try the working flow
+## Try the revision
 
-1. Check that sixteen demonstration items load from the backend after running the latest seed.
-2. Enter a budget of `75` and select **Find food**.
-3. Choose a category or search for `chicken`.
-4. Clear search, choose **All items**, and clear the budget to restore every item.
-5. Enter `1` as the budget to verify the empty-results message.
+1. Browse the five selected shops. Empty menus are expected until real data arrives.
+2. Enter a budget and request suggestions. An empty catalog returns a clear message and makes no AI call.
+3. Import the supplied menu dataset using [MENU-DATA.md](docs/MENU-DATA.md).
+4. Try a budget-only request, then a request with preferences using the privately configured Groq key.
+5. Save a suggestion, open My Meal Boxes, rename it, reload, and delete it.
+6. Open a separate browser profile: the first profile's meal boxes must not appear there.
 
-## Configuration
-
-The backend loads `backend/.env` if present. Without it, it uses local SQLite. Do not copy the example PostgreSQL placeholder into `.env` unless you are ready to enter your real database settings.
-
-The frontend defaults to `http://localhost:8000`. Override it with `VITE_API_BASE_URL` in `frontend/.env`. The backend allows the origin configured by `FRONTEND_ORIGIN` (default `http://localhost:5173`). Restart servers after changing configuration.
-
-For Supabase, use its supplied connection method with the psycopg driver, configure SSL as required, then run the same migration and seed commands against that database. Do not commit passwords or API keys. An AI key is not needed for menu browsing. The Groq smoke test requires its own backend key.
+No admin account, publishable-key setup window or administrator password is needed.
 
 ## Checks
 
-Frontend: `npm.cmd run lint` and `npm.cmd run build` from `frontend`.
+From `backend`:
 
-Backend: `.\.venv\Scripts\python.exe -m ruff check .` and `.\.venv\Scripts\python.exe -m pytest -q` from `backend`.
+```powershell
+.venv/Scripts/python.exe -m ruff check .
+.venv/Scripts/python.exe -m pytest -q
+```
 
-GitHub Actions runs install, lint, frontend build, backend import checks, migration/seed smoke checks, and API tests on pull requests to main. CI does not contact an AI provider.
+From `frontend`: `npm.cmd run lint` and `npm.cmd run build`.
 
-## Still required for Week 1
-
-- Supabase PostgreSQL was configured and verified on the original laptop; new checkouts need their own private configuration.
-- Verify one real Groq request from the backend using AI-SETUP.md.
-- Deploy a live frontend/backend through a pipeline after successful checks.
-- Collect consultation evidence. A running local app alone does not satisfy the live URL requirement.
+Tests use isolated SQLite and mocked AI responses. They do not consume live Groq quota or modify the hosted catalog. [Staging instructions](STAGING.md) describe the separate local PostgreSQL environment.

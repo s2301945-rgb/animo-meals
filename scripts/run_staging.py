@@ -42,7 +42,7 @@ def main():
                 '--strictPort', '--mode', 'staging'], cwd=ROOT / 'frontend', env=env,
                 stdout=frontend_log, stderr=subprocess.STDOUT, creationflags=flags))
             print('Staging site: http://127.0.0.1:5177', flush=True)
-            print('Staging admin: http://127.0.0.1:5177/#admin', flush=True)
+            print('Staging meal boxes: http://127.0.0.1:5177/#meal-boxes', flush=True)
             print('Ctrl+C stops staging. Logs: .staging-run/', flush=True)
             while all(child.poll() is None for child in children):
                 time.sleep(1)

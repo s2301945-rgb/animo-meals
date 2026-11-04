@@ -1,9 +1,11 @@
 # Project setup
 
-Initial setup was merged through PR #1. GitHub Issues #2–#12 track the project, with #2–#8 assigned to the Week 1 milestone.
+Start with [RUN-LOCALLY.md](RUN-LOCALLY.md). The current project is a visitor-facing AI food budget recommender with My Meal Boxes CRUD. There is no admin application or login setup.
 
-Follow [RUN-LOCALLY.md](RUN-LOCALLY.md) to run the React frontend and FastAPI backend, apply the local database migration, and seed fictional menu records.
+- Backend: migrate through revision 0003; run `app.shop_catalog` to add selected shops without inventing meals.
+- Frontend: install dependencies and set the public backend URL if needed.
+- AI: reuse the private Groq configuration; see [AI-SETUP.md](AI-SETUP.md).
+- Menus: import the supplied dataset using [docs/MENU-DATA.md](docs/MENU-DATA.md).
+- Use descriptive branches, pull requests, and passing checks before deployment.
 
-Only `.env.example` files belong in Git. Real `.env` files are ignored. Database credentials and AI keys belong exclusively in backend configuration.
-
-Use feature branches and pull requests for changes. Local SQLite allows development without cloud accounts. Supabase PostgreSQL verification, a real Gemini request, and pipeline-triggered live deployment remain Week 1 tasks.
+Only `.env.example` files belong in Git. Real database credentials, Groq keys, browser keys and backup data stay private. Historical Week 1 and Week 2 files describe earlier milestones.

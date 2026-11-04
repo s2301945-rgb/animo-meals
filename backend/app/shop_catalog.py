@@ -1,4 +1,4 @@
-"""Add the five user-supplied shops without inventing meals or replacing admin edits."""
+"""Add the five user-supplied shops without inventing meals or replacing existing catalog edits."""
 from sqlalchemy import select
 
 from app.database import SessionLocal

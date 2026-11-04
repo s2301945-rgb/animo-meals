@@ -21,8 +21,8 @@ def main():
         print('Existing staging settings retained; no credentials were rotated.')
         return
     source = make_url(settings.database_url)
-    if source.get_backend_name() != 'postgresql' or not settings.admin_user_id:
-        raise ValueError('Configure the existing Supabase project and administrator first.')
+    if source.get_backend_name() != 'postgresql':
+        raise ValueError('Configure the existing Supabase PostgreSQL connection first.')
     password = secrets.token_urlsafe(36)
     engine = create_engine(source, connect_args={'connect_timeout': 10})
     with engine.begin() as connection:
@@ -43,8 +43,7 @@ def main():
         'DATABASE_SCHEMA': SCHEMA, 'FRONTEND_ORIGIN': 'http://127.0.0.1:5177',
         'IMAGE_STORAGE_BUCKET': 'animo-meals-images-staging',
         'SUPABASE_URL': settings.supabase_url,
-        'SUPABASE_PUBLISHABLE_KEY': settings.supabase_publishable_key.get_secret_value(),
-        'ADMIN_USER_ID': settings.admin_user_id, 'GROQ_API_KEY': '',
+        'GROQ_API_KEY': '',
     }
     for key, value in values.items():
         set_key(target, key, value)

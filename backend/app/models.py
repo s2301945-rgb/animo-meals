@@ -36,3 +36,26 @@ class MenuItem(Base):
         DateTime(timezone=True), default=utc_now, onupdate=utc_now
     )
     stall: Mapped[Stall] = relationship(back_populates='menu_items')
+
+
+class SavedPlan(Base):
+    __tablename__ = 'saved_plans'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_hash: Mapped[str] = mapped_column(String(64), index=True)
+    title: Mapped[str] = mapped_column(String(100))
+    budget: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    items: Mapped[list['SavedPlanItem']] = relationship(
+        cascade='all, delete-orphan', back_populates='plan', order_by='SavedPlanItem.id')
+
+
+class SavedPlanItem(Base):
+    __tablename__ = 'saved_plan_items'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    plan_id: Mapped[int] = mapped_column(ForeignKey('saved_plans.id', ondelete='CASCADE'), index=True)
+    # Snapshot of listed prices: old plans must not silently change after a dataset update.
+    name: Mapped[str] = mapped_column(String(120))
+    shop_name: Mapped[str] = mapped_column(String(100))
+    location: Mapped[str] = mapped_column(String(200))
+    price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    plan: Mapped[SavedPlan] = relationship(back_populates='items')

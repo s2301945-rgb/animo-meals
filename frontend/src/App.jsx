@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Photo from "./Photo.jsx";
+import MealPlanner from "./MealPlanner.jsx";
 import StagingBanner, { verifyStagingEnvironment } from "./Staging.jsx";
 
 const API = (
@@ -292,7 +293,7 @@ function MenuCarousel({ items, budget, onSelect }) {
     () =>
       items.filter(
         (item) =>
-          item.is_available &&
+          item.is_listed &&
           ["Main dish", "Snack"].includes(item.category) &&
           Number(item.price) <= limit,
       ),
@@ -404,7 +405,7 @@ function MenuCarousel({ items, budget, onSelect }) {
   return (
     <section
       className="hero-stage menu-carousel"
-      aria-label="Affordable available menu highlights"
+      aria-label="Recorded budget menu highlights"
       aria-roledescription="carousel"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -420,7 +421,7 @@ function MenuCarousel({ items, budget, onSelect }) {
         <span>
           A LITTLE BUDGET INSPIRATION
           <br />
-          <strong>Available picks · {pesos.format(limit)} and under</strong>
+          <strong>Recorded picks · {pesos.format(limit)} and under</strong>
         </span>
       </div>
       <div
@@ -444,7 +445,7 @@ function MenuCarousel({ items, budget, onSelect }) {
             <p>
               {items.length
                 ? "Try a larger budget or browse the full menu below."
-                : "Available meal and snack listings will appear here."}
+                : "Recorded meal and snack listings will appear here."}
             </p>
           </div>
         )}
@@ -477,7 +478,11 @@ function MenuCarousel({ items, budget, onSelect }) {
             aria-pressed={paused}
             disabled={reducedMotion || eligible.length < 2}
           >
-            {reducedMotion ? "Autoplay off" : paused ? "▶ Resume" : "Ⅱ Pause"}
+            {reducedMotion
+              ? "Autoplay off"
+              : paused
+                ? "▶ Resume"
+                : "Ⅱ Pause"}
           </button>
         </div>
       )}
@@ -503,7 +508,7 @@ export default function App() {
   const [category, setCategory] = useState("All items");
   const [shop, setShop] = useState("");
   const [sort, setSort] = useState("default");
-  const [availableOnly, setAvailableOnly] = useState(false);
+  const [listedOnly, setListedOnly] = useState(false);
   const [budget, setBudget] = useState("");
   const [draftBudget, setDraftBudget] = useState("");
   const [budgetError, setBudgetError] = useState("");
@@ -560,7 +565,7 @@ export default function App() {
     setQuery("");
     setCategory("All items");
     setShop("");
-    setAvailableOnly(false);
+    setListedOnly(false);
     setBudget("");
     setDraftBudget("");
     setBudgetError("");
@@ -581,7 +586,9 @@ export default function App() {
         Number(amount) <= 0 ||
         Number(amount) > 10000)
     ) {
-      setBudgetError("Enter ₱0.01–₱10,000, with up to two decimal places.");
+      setBudgetError(
+        "Enter ₱0.01–₱10,000, with up to two decimal places.",
+      );
       return;
     }
     setBudgetError("");
@@ -607,7 +614,7 @@ export default function App() {
       (item) =>
         (category === "All items" || item.category === category) &&
         (!shop || String(item.stall_id) === shop) &&
-        (!availableOnly || item.is_available) &&
+        (!listedOnly || item.is_listed) &&
         `${item.name} ${item.stall_name} ${item.description || ""}`
           .toLowerCase()
           .includes(query.toLowerCase().trim()),
@@ -620,7 +627,7 @@ export default function App() {
           : 0,
     );
   const filtered =
-    budget || query || shop || category !== "All items" || availableOnly;
+    budget || query || shop || category !== "All items" || listedOnly;
 
   return (
     <>
@@ -631,9 +638,9 @@ export default function App() {
       <header className="header" id="top">
         <Brand />
         <nav aria-label="Main navigation">
-          <a href="#menu">Find food</a>
+          <a href="#recommendations">AI meal finder</a>
           <a href="#shops">Browse shops</a>
-          <a href="#how">How it works</a>
+          <a href="#meal-boxes">My Meal Boxes</a>
         </nav>
         <span className="campus">
           <span /> Made for student budgets
@@ -651,8 +658,8 @@ export default function App() {
               <br />A <em>good meal.</em>
             </h1>
             <p className="intro">
-              Your next lunch starts here. Explore canteen menus, compare
-              prices, and find a little more room in your allowance.
+              Your AI food budget recommender. Tell us your budget and appetite,
+              compare recorded local meals, and save your own meal boxes.
             </p>
             <form
               className="budget-form"
@@ -678,11 +685,11 @@ export default function App() {
                   aria-invalid={!!budgetError}
                 />
                 <button type="submit">
-                  Find food <Icon name="arrow" />
+                  Browse prices <Icon name="arrow" />
                 </button>
               </div>
               <p id="budget-help">
-                See individual items within your budget. No account needed.
+                Browse prices here, or describe your appetite to the AI below.
               </p>
               {budgetError && (
                 <p className="validation" id="budget-error" role="alert">
@@ -714,10 +721,11 @@ export default function App() {
               setQuery(item.name);
               setShop(String(item.stall_id));
               setCategory("All items");
-              setAvailableOnly(true);
+              setListedOnly(true);
             }}
           />
         </section>
+        <MealPlanner budget={draftBudget} onBudgetChange={setDraftBudget} />
         <aside className="notice">
           <span className="demo-pill">
             {hasDemoShops ? "DEMO EDITION" : "MENU UPDATES"}
@@ -729,7 +737,7 @@ export default function App() {
             {status === "ready" && !catalog.length
               ? "Menus and prices have not been added yet. "
               : "Confirm current prices and availability at the shop. "}
-            AI meal suggestions are coming in a later version.
+            Suggestions use recorded regular menus, not live stock information.
           </p>
         </aside>
         <section
@@ -743,8 +751,7 @@ export default function App() {
               <h2 id="shops-title">Find your lunch spot.</h2>
             </div>
             <p className="section-caption">
-              Browse a shop, then explore its menu.
-              <br />
+              Browse a shop, then explore its menu. <br />
               {hasDemoShops
                 ? "Demonstration listings for now."
                 : "Menus will appear as they are added."}
@@ -892,10 +899,10 @@ export default function App() {
               <label>
                 <input
                   type="checkbox"
-                  checked={availableOnly}
-                  onChange={(event) => setAvailableOnly(event.target.checked)}
+                  checked={listedOnly}
+                  onChange={(event) => setListedOnly(event.target.checked)}
                 />{" "}
-                Listed available only
+                Regular menu items only
               </label>
               {filtered && (
                 <button className="clear-button" onClick={clearFilters}>
@@ -919,8 +926,8 @@ export default function App() {
               <Icon name="shop" width="32" height="32" />
               <h3>The menu is taking a little break.</h3>
               <p>
-                We couldn’t retrieve the listings. Check your connection and try
-                again in a moment.
+                We couldn’t retrieve the listings. Check your connection and
+                try again in a moment.
               </p>
               <button
                 className="primary-button"
@@ -957,10 +964,10 @@ export default function App() {
                   >
                     <FoodArt item={item} />
                     <span
-                      className={`availability ${item.is_available ? "" : "unavailable"}`}
+                      className={`availability ${item.is_listed ? "" : "unavailable"}`}
                     >
                       <span />
-                      {item.is_available ? "Listed available" : "Unavailable"}
+                      {item.is_listed ? "Regular menu" : "Not currently listed"}
                     </span>
                     <span className="category-label">{item.category}</span>
                   </div>
@@ -999,7 +1006,7 @@ export default function App() {
                         {item.location}
                       </span>
                       <small>
-                        Updated{" "}
+                        Recorded{" "}
                         {new Date(item.updated_at).toLocaleDateString("en-PH", {
                           month: "short",
                           day: "numeric",
@@ -1007,7 +1014,7 @@ export default function App() {
                         })}{" "}
                         {isDemoName(item.stall_name)
                           ? " · Demo"
-                          : " · Availability may vary"}
+                          : " · Confirm at the shop"}
                       </small>
                     </div>
                   </div>
@@ -1025,8 +1032,7 @@ export default function App() {
               in three little steps.
             </h2>
             <p>
-              Start with your budget.
-              <br />
+              Start with your budget. <br />
               Leave with a little more choice.
             </p>
           </div>
@@ -1035,17 +1041,17 @@ export default function App() {
               [
                 "01",
                 "Set your budget",
-                "Enter what you want to spend. We’ll show the individual items within that amount.",
+                "Enter what you want to spend and describe the food you would like.",
               ],
               [
                 "02",
-                "Explore the menus",
-                "Browse by shop, search for a favorite, or sort from the lowest price.",
+                "Get meal ideas",
+                "AI interprets your preferences. We calculate combinations using recorded menu prices.",
               ],
               [
                 "03",
-                "Choose your next stop",
-                "Compare prices and locations. Confirm the current price and availability at the shop.",
+                "Save your meal box",
+                "Save a favorite combination, give it a name, and confirm prices and availability at the shop.",
               ],
             ].map(([number, title, text]) => (
               <div className="step" key={number}>
@@ -1064,7 +1070,7 @@ export default function App() {
             <p>A little planning. A better lunch.</p>
           </div>
           <div className="footer-links">
-            <a href="#admin">Administrator</a>
+            <a href="#meal-boxes">My Meal Boxes</a>
             <a href="#menu">Find food</a>
             <a href="#shops">Browse shops</a>
             <a href="#how">How it works</a>
