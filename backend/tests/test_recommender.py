@@ -1,13 +1,18 @@
 from decimal import Decimal
+import json
+from functools import partial
 
 from fastapi.testclient import TestClient
+import httpx
+from pydantic import SecretStr
 import pytest
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
 from app import limits, recommendations
-from app.ai import AIError, MealPreferences
+from app.ai import MealPreferences, extract_preferences
+from app.config import Settings
 from app.database import Base, get_session
 from app.import_menu import Dataset, apply_dataset
 from app.main import app
@@ -52,10 +57,30 @@ def preferences(**overrides):
         'include_drink': True, 'avoid_spicy': True, 'prefer_same_stall': True, 'exclusions': ['pork']} | overrides))
 
 
-def test_ai_interpretation_becomes_exact_budget_combination(db_client, monkeypatch):
+def mock_groq(monkeypatch, handler):
+    config = Settings(_env_file=None, groq_api_key=SecretStr('test-key'))
+    monkeypatch.setattr(recommendations, 'extract_preferences', partial(
+        extract_preferences, config=config, transport=httpx.MockTransport(handler)))
+
+
+@pytest.mark.parametrize('prompt,food', [
+    ('Chicken rice, non-spicy, and water', 'chicken rice'),
+    ('Manok at kanin na hindi maanghang, may tubig', 'manok at kanin'),
+])
+def test_ai_interpretation_becomes_exact_budget_combination(db_client, monkeypatch, prompt, food):
     client, _ = db_client
-    monkeypatch.setattr(recommendations, 'extract_preferences', lambda _: preferences())
-    response = client.post('/api/recommendations', json={'budget': '85.50', 'preferences': 'Chicken rice, non-spicy, and water'})
+
+    def provider(request):
+        payload = json.loads(request.content)
+        assert payload['messages'][-1] == {'role': 'user', 'content': prompt}
+        assert payload['response_format']['json_schema']['strict'] is True
+        return httpx.Response(200, json={'choices': [{
+            'finish_reason': 'stop',
+            'message': {'content': preferences(preferred_food=food).model_dump_json()},
+        }]})
+
+    mock_groq(monkeypatch, provider)
+    response = client.post('/api/recommendations', json={'budget': '85.50', 'preferences': prompt})
     assert response.status_code == 200
     result = response.json()
     assert result['status'] == 'ok'
@@ -126,13 +151,23 @@ def test_bad_recommendation_budget(db_client, budget):
     assert db_client[0].post('/api/recommendations', json={'budget': budget}).status_code == 422
 
 
-@pytest.mark.parametrize('code', ['timeout', 'provider', 'invalid_output', 'authentication', 'rate_limit'])
-def test_provider_failures_are_safe(db_client, monkeypatch, code):
-    def fail(_):
-        raise AIError(code, 'private provider body')
-    monkeypatch.setattr(recommendations, 'extract_preferences', fail)
+@pytest.mark.parametrize('failure,expected', [('timeout', 503), (500, 503), (200, 503),
+                                             (401, 503), (429, 429)])
+def test_provider_failures_are_safe(db_client, monkeypatch, failure, expected):
+    def provider(request):
+        if failure == 'timeout':
+            raise httpx.ReadTimeout('private transport details', request=request)
+        if failure == 200:
+            return httpx.Response(200, json={'choices': [{
+                'finish_reason': 'stop',
+                'message': {'content': 'private malformed provider output'},
+            }]})
+        return httpx.Response(failure, text='private provider body')
+
+    mock_groq(monkeypatch, provider)
     response = db_client[0].post('/api/recommendations', json={'budget': 100, 'preferences': 'chicken'})
-    assert response.status_code == (429 if code == 'rate_limit' else 503)
+    assert response.status_code == expected
+    assert 'clear the preference box' in response.json()['detail']
     assert 'private' not in response.text
 
 

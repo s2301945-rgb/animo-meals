@@ -20,6 +20,12 @@ The original Week 1 verification command remains available from `backend`:
 
 `--configure` prompts privately for a replacement key. Never paste credentials into chat or Git. Do not run real provider calls in CI.
 
-[Historical provider evidence](docs/verification/ai-provider.json) records one successful sample, not overall extraction accuracy. Automated tests mock provider responses and verify extraction validation, exact budget boundaries, empty catalogs, unavailable listings, ownership of saved boxes and provider failures. [Evaluation examples](docs/evaluation-cases.json) provide a small manual acceptance set; no new live evaluation score is claimed.
+## Week 3 consultation
+
+The recommender sends a structured request to Groq, validates its reply, and matches the extracted preferences against recorded menu items. The backend adds the listed prices and checks the budget before returning suggestions to the browser.
+
+The live evaluation used an isolated test menu with chicken at PHP 60.50, rice at PHP 15.00, and water at PHP 10.00. Three checks passed. The English prompt matched the PHP 85.50 budget exactly, the Tagalog prompt left PHP 14.50 from a PHP 100 budget, and a request with conflicting budgets returned HTTP 422. A local browser also showed the PHP 85.50 suggestion and saved it as a Meal Box. The initial evaluation caught a dropped rice preference and a Tagalog conjunction treated as a food term. The fixes passed the same scenarios on rerun. [Live evaluation results](docs/verification/week-3-live-evaluation.json)
+
+CI runs the recommendation endpoint with mocked Groq HTTP responses. The tests exercise the real response parser and backend matching, including timeouts, provider errors, malformed output, rate limits, and the price-only fallback guidance. [Evaluation examples](docs/evaluation-cases.json)
 
 Provider references: [structured outputs](https://console.groq.com/docs/structured-outputs), [rate limits](https://console.groq.com/docs/rate-limits).

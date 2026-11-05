@@ -37,7 +37,7 @@ def normalized(text):
 def candidate_matches(combo, preferences):
     text = normalized(' '.join(f'{item.name} {item.description or ""}' for item, _ in combo))
     if preferences.preferred_food:
-        ignored = {'with', 'and', 'a', 'an', 'the', 'meal', 'food', 'dish', 'some', 'or'}
+        ignored = {'with', 'and', 'a', 'an', 'the', 'meal', 'food', 'dish', 'some', 'or', 'at'}
         terms = set(normalized(preferences.preferred_food).split()) - ignored
         if terms and not terms.issubset(set(text.split())):
             return False
