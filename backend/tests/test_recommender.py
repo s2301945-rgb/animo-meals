@@ -66,9 +66,17 @@ def mock_groq(monkeypatch, handler):
 @pytest.mark.parametrize('prompt,food', [
     ('Chicken rice, non-spicy, and water', 'chicken rice'),
     ('Manok at kanin na hindi maanghang, may tubig', 'manok at kanin'),
+    ('Manok kag kan-on, may tubig. Indi maanghang kag wala sing baboy.',
+     'manok kag kan-on kag tubig'),
+    ('Manok ug kan-on nga naay tubig. Ayaw og halang ug baboy.',
+     'manok ug kan-on ug tubig'),
 ])
 def test_ai_interpretation_becomes_exact_budget_combination(db_client, monkeypatch, prompt, food):
-    client, _ = db_client
+    client, engine = db_client
+    if 'tubig' in food:
+        with Session(engine) as session:
+            session.add(MenuItem(stall_id=1, name='Cola', price=Decimal('5.00'), category='Drink'))
+            session.commit()
 
     def provider(request):
         payload = json.loads(request.content)
