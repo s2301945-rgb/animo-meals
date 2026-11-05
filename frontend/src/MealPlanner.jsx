@@ -51,13 +51,17 @@ async function request(path, { method = "GET", body, owned = false } = {}) {
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
     if (response.status === 204) return null;
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
     if (!response.ok)
       throw new Error(
-        typeof data.detail === "string"
+        typeof data?.detail === "string"
           ? data.detail
-          : "Check your budget and meal details, then try again.",
+          : response.status >= 500
+            ? "The meal service is temporarily unavailable. Please try again."
+            : "Check your budget and meal details, then try again.",
       );
+    if (data === null)
+      throw new Error("The meal service sent an unreadable response. Please try again.");
     return data;
   } catch (error) {
     if (error.name === "AbortError")

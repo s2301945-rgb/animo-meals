@@ -151,6 +151,29 @@ def test_bad_recommendation_budget(db_client, budget):
     assert db_client[0].post('/api/recommendations', json={'budget': budget}).status_code == 422
 
 
+def test_malformed_request_omits_submitted_values(db_client):
+    client, _ = db_client
+    response = client.post('/api/recommendations', content=b'{"private-sentinel":',
+                           headers={'Content-Type': 'application/json'})
+    assert response.status_code == 422
+    assert response.json() == {'detail': 'The request contains invalid JSON.'}
+    response = client.post('/api/recommendations', json={'budget': 'private-sentinel'})
+    assert response.status_code == 422
+    assert 'budget' in response.json()['detail']
+    assert 'private-sentinel' not in response.text
+
+
+def test_oversized_stream_is_rejected_before_json_parsing(db_client, monkeypatch):
+    from app.request_limit import MAX_BODY_BYTES
+
+    monkeypatch.setattr(recommendations, 'extract_preferences', lambda _: pytest.fail('No AI call expected'))
+    chunks = iter([b'x' * MAX_BODY_BYTES, b'x'])
+    response = db_client[0].post('/api/recommendations', content=chunks,
+                                 headers={'Content-Type': 'application/json'})
+    assert response.status_code == 413
+    assert 'too large' in response.json()['detail']
+
+
 @pytest.mark.parametrize('failure,expected', [('timeout', 503), (500, 503), (200, 503),
                                              (401, 503), (429, 429)])
 def test_provider_failures_are_safe(db_client, monkeypatch, failure, expected):

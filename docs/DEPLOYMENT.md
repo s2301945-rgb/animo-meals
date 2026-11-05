@@ -29,6 +29,8 @@ Frontend/backend free-host cold starts can delay verification. Avoid claiming a 
 
 ## Rollback plan
 
-Redeploy the previous reviewed application commit on both hosts. Migration 0003 is additive; the earlier app can run with its unused saved-box tables still present. Downgrading that migration deletes saved boxes, so do not downgrade it automatically. A production rollback exercise and final tagged release remain Week 4 work.
+Redeploy the previous verified frontend and backend revisions. Keep database migration 0003 in place to preserve saved boxes. Verify the backend revision, database health, shop listing, and a saved box before restoring the candidate. Downgrading migration 0003 deletes saved boxes.
+
+The Week 4 rehearsal ran the candidate, the previous production backend, and the candidate again against the same isolated database. The shop and saved box survived all three phases. [Rollback and Git history audit](verification/week-4-audit.json)
 
 Historical evidence for the earlier administrator release is retained under docs/verification and in pull requests #20/#21. It does not prove deployment of this revised application.

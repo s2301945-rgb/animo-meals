@@ -76,6 +76,7 @@ Tables: `stalls` → `menu_items`, and `saved_plans` → `saved_plan_items`. Mig
 - [Scope change and course requirements](docs/REVISED-SCOPE.md)
 - [Local staging](STAGING.md)
 - [Deployment](docs/DEPLOYMENT.md)
+- [Changelog](CHANGELOG.md)
 - [Current backlog](BACKLOG.md)
 
 The hosted project uses [the public website](https://animo-meals.vercel.app) and [backend](https://animo-meals-api.onrender.com). A local branch is not automatically deployed; verify the main-branch pipeline and `/api/environment` after publication. The earlier Week 1 and Week 2 verification files are historical evidence of the previous scope, not proof of this revision's deployment.

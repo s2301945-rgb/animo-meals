@@ -109,9 +109,17 @@ def recommend(data: RecommendationInput, request: Request,
         try:
             preferences = extract_preferences(data.preferences)
         except AIError as error:
-            status = 429 if error.code == 'rate_limit' else 503
-            raise HTTPException(status, 'AI preferences could not be processed. Please try again, '
-                                'or clear the preference box to compare recorded prices only.') from None
+            message = {
+                'timeout': 'The AI took too long to respond.',
+                'rate_limit': 'The AI service is busy.',
+                'invalid_output': 'The AI returned a response we could not use.',
+            }.get(error.code, 'The AI service is temporarily unavailable.')
+            rate_limited = error.code == 'rate_limit'
+            raise HTTPException(
+                429 if rate_limited else 503,
+                f'{message} Try again later, or clear the preference box to compare recorded prices only.',
+                headers={'Retry-After': '60'} if rate_limited else None,
+            ) from None
         if preferences.budget_php is not None and Decimal(str(preferences.budget_php)) != data.budget:
             raise HTTPException(422, 'The budget in your description differs from the budget field. Please make them match.')
     preferences.budget_php = float(data.budget)

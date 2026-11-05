@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Query, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -17,8 +18,10 @@ from app.database import get_session
 from app.models import MenuItem, Stall
 from app.recommendations import router as recommendation_router
 from app.plans import router as plan_router
+from app.request_limit import RequestBodyLimit
 
-app = FastAPI(title='AnimoMeals · AI Food Budget Recommender', version='0.2.0')
+app = FastAPI(title='AnimoMeals · AI Food Budget Recommender', version='1.0.0')
+app.add_middleware(RequestBodyLimit)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_origin],
@@ -28,6 +31,17 @@ app.add_middleware(
 app.include_router(recommendation_router)
 app.include_router(plan_router)
 Db = Annotated[Session, Depends(get_session)]
+
+
+@app.exception_handler(RequestValidationError)
+async def invalid_request(request: Request, exc: RequestValidationError):
+    detail = 'Check your input and try again.'
+    errors = exc.errors()
+    if any(error['type'] == 'json_invalid' for error in errors):
+        detail = 'The request contains invalid JSON.'
+    elif any(error['loc'][-1:] == ('budget',) for error in errors):
+        detail = 'Enter a budget from 0.01 to 10,000 pesos with up to two decimal places.'
+    return JSONResponse(status_code=422, content={'detail': detail})
 
 
 @app.exception_handler(SQLAlchemyError)
