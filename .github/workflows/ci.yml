@@ -19,7 +19,7 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
+      - run: npm ci --no-audit --no-fund
       - run: npm run lint
       - run: npm run build
   backend:
@@ -42,8 +42,6 @@ jobs:
       - run: ruff check .
       - run: python -m compileall -q app
       - run: alembic upgrade head
-      - run: python -m app.seed
-      - run: python -m app.seed
       - name: Run catalog, meal recommendation and visitor CRUD tests
         run: pytest -q --junitxml=test-results/api-tests.xml
       - name: Save API test report

@@ -1,6 +1,6 @@
 # REST API · revised visitor scope
 
-All prices are decimal strings in responses. Budget inputs must be positive, no more than PHP 10,000 and have at most two decimal places. Request bodies reject unknown fields.
+All prices are decimal strings in responses. Budget inputs must be positive, no more than PHP 10,000 and have at most two decimal places. Preference descriptions allow up to 1,000 characters. JSON write requests have a 16 KiB body limit and reject unknown fields.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
@@ -33,6 +33,6 @@ IDs must come from the actual catalog; illustrative IDs above are not seed data.
 
 All `/api/plans` requests require `Authorization: Bearer <64 lowercase hexadecimal characters>`, generated from 32 cryptographically random bytes by the browser. Only a hash is stored. Access is scoped by this hash on every operation. Another key receives 404 for a guessed box ID. Plans are private to possession of the key, not a named human account. Responses are `Cache-Control: no-store`.
 
-Status codes: 401 missing/invalid browser key; 404 missing/not-owned plan; 409 changed catalog prices/items or 20-box limit; 422 malformed request or conflicting budgets; 429 request/provider quota; 503 database or AI service unavailable. Old `/api/admin/*`, photo uploads and catalog writes are not registered.
+Errors include a readable `detail` string. The API returns 401 for an invalid browser key, 404 for a missing or inaccessible plan, 409 for catalog changes or the 20-box limit, 413 for an oversized request, 422 for invalid input or conflicting budgets, 429 for rate limits, and 503 for database or AI failures. Validation messages omit submitted values. An AI failure also explains how to switch to price-only comparison.
 
 Provider requests: six per client and thirty globally per minute per process. Plan creation: twenty per client and 120 globally per minute per process. Client identity uses the connection's remote address; shared networks may share limits. Changing browser keys does not bypass the client/global request guard. No raw IPs or preference text are persisted by these guards.

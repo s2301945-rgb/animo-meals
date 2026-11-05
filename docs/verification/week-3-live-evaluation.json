@@ -1,0 +1,74 @@
+{
+  "verified_at_utc": "2026-11-05T14:04:52.166083+00:00",
+  "model": "openai/gpt-oss-20b",
+  "provider": "Groq",
+  "environment": "isolated SQLite fixture through the FastAPI recommendation route",
+  "cases": [
+    {
+      "case": "english",
+      "budget": "85.50",
+      "prompt": "Chicken with rice and water, non-spicy, no pork, all from one shop.",
+      "status": 200,
+      "preferences": {
+        "budget_php": 85.5,
+        "preferred_food": "chicken rice",
+        "include_drink": true,
+        "avoid_spicy": true,
+        "prefer_same_stall": true,
+        "exclusions": [
+          "pork"
+        ]
+      },
+      "checks": {
+        "status": true,
+        "drink": true,
+        "same_shop": true,
+        "catalog_combination": true,
+        "exact_total": true,
+        "remaining": true,
+        "non_spicy": true,
+        "exclude_pork": true
+      }
+    },
+    {
+      "case": "tagalog",
+      "budget": "100.00",
+      "prompt": "Gusto ko ng manok at kanin na may tubig, sa iisang stall lang.",
+      "status": 200,
+      "preferences": {
+        "budget_php": 100,
+        "preferred_food": "manok kanin",
+        "include_drink": true,
+        "avoid_spicy": null,
+        "prefer_same_stall": true,
+        "exclusions": []
+      },
+      "checks": {
+        "status": true,
+        "drink": true,
+        "same_shop": true,
+        "catalog_combination": true,
+        "exact_total": true,
+        "remaining": true
+      }
+    },
+    {
+      "case": "conflicting-budget",
+      "budget": "100.00",
+      "prompt": "My maximum budget is 200 pesos. I want chicken.",
+      "status": 422,
+      "preferences": {},
+      "checks": {
+        "status": true,
+        "budget_conflict": true
+      }
+    }
+  ],
+  "browser": {
+    "environment": "local frontend, FastAPI, real Groq, synthetic SQLite menu",
+    "budget": "100.00",
+    "total": "85.50",
+    "remaining": "14.50",
+    "saved_meal_box_verified": true
+  }
+}
