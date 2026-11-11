@@ -336,7 +336,8 @@ export default function MealPlanner({ budget, onBudgetChange }) {
             />
             <span className="planner-small" id="preference-help">
               Write in English, Tagalog, Hiligaynon (Ilonggo), or Cebuano
-              (Bisaya). Leave blank to compare recorded prices only.
+              (Bisaya). Common typos are okay. Leave blank to compare recorded
+              prices only.
             </span>
           </label>
           <button className="primary-button" disabled={busy}>
