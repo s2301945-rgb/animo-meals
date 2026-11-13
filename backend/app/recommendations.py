@@ -28,16 +28,19 @@ class RecommendationInput(BaseModel):
 
 
 def normalized(text):
-    words = re.findall(r'[a-z0-9]+', text.lower())
+    text = re.sub(r'\bkan[\s-]+on\b', 'rice', text.lower())
+    words = re.findall(r'[a-z0-9]+', text)
     aliases = {'manok': 'chicken', 'baboy': 'pork', 'kanin': 'rice', 'isda': 'fish',
-               'itlog': 'egg', 'tubig': 'water', 'maanghang': 'spicy'}
+               'kanon': 'rice', 'itlog': 'egg', 'tubig': 'water', 'maanghang': 'spicy', 'halang': 'spicy',
+               'hamburger': 'burger', 'hamborger': 'burger', 'yumburger': 'yumburger burger'}
     return ' '.join(aliases.get(word, word) for word in words)
 
 
 def candidate_matches(combo, preferences):
     text = normalized(' '.join(f'{item.name} {item.description or ""}' for item, _ in combo))
     if preferences.preferred_food:
-        ignored = {'with', 'and', 'a', 'an', 'the', 'meal', 'food', 'dish', 'some', 'or', 'at'}
+        ignored = {'with', 'and', 'a', 'an', 'the', 'meal', 'food', 'dish', 'some', 'or',
+                   'at', 'kag', 'ug', 'nga', 'may', 'naay'}
         terms = set(normalized(preferences.preferred_food).split()) - ignored
         if terms and not terms.issubset(set(text.split())):
             return False
@@ -51,9 +54,10 @@ def candidate_matches(combo, preferences):
             if item.category not in ('Main dish', 'Snack'):
                 continue
             description = normalized(f'{item.name} {item.description or ""}')
-            if not re.search(r'\b(non spicy|not spicy|mild|no chili)\b', description):
+            mild = r'\b(non spicy|not spicy|indi spicy|dili spicy|mild|no chili)\b'
+            if not re.search(mild, description):
                 return False
-            if re.search(r'\b(hot|chili|spicy)\b', re.sub(r'\b(non spicy|not spicy|no chili)\b', '', description)):
+            if re.search(r'\b(hot|chili|spicy)\b', re.sub(mild, '', description)):
                 return False
     return True
 

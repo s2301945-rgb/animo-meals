@@ -332,10 +332,11 @@ export default function MealPlanner({ budget, onBudgetChange }) {
               maxLength={1000}
               rows={3}
               disabled={busy}
-              placeholder="Chicken with rice and a drink, from one shop…"
+              placeholder="Chicken with rice, or manok kag kan-on…"
             />
             <span className="planner-small" id="preference-help">
-              AI understands your preferences. Leave blank to compare recorded
+              Write in English, Tagalog, Hiligaynon (Ilonggo), or Cebuano
+              (Bisaya). Common typos are okay. Leave blank to compare recorded
               prices only.
             </span>
           </label>
