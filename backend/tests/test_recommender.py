@@ -100,6 +100,30 @@ def test_ai_interpretation_becomes_exact_budget_combination(db_client, monkeypat
     assert 'live stock' in result['notice']
 
 
+@pytest.mark.parametrize('food,expected', [
+    ('hamburger', ['Burger McDo', 'Yumburger Solo']),
+    ('hamborger', ['Burger McDo', 'Yumburger Solo']),
+    ('yumburger', ['Yumburger Solo']),
+])
+def test_burger_aliases_match_catalog_names(db_client, monkeypatch, food, expected):
+    client, engine = db_client
+    with Session(engine) as session:
+        session.add_all([
+            MenuItem(stall_id=1, name='Burger McDo', price=54, category='Main dish'),
+            MenuItem(stall_id=2, name='Yumburger Solo', price=56, category='Main dish'),
+        ])
+        session.commit()
+    monkeypatch.setattr(recommendations, 'extract_preferences', lambda _: preferences(
+        preferred_food=food, include_drink=None, avoid_spicy=None, exclusions=[]))
+    result = client.post('/api/recommendations', json={
+        'budget': '100', 'preferences': 'gusto ko hamborger',
+    })
+    assert result.status_code == 200
+    standalone = [pick['items'][0]['name'] for pick in result.json()['suggestions']
+                  if len(pick['items']) == 1]
+    assert standalone == expected
+
+
 def test_one_cent_over_budget_and_unknown_spice_are_not_guessed(db_client, monkeypatch):
     client, engine = db_client
     monkeypatch.setattr(recommendations, 'extract_preferences', lambda _: preferences())

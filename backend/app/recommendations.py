@@ -31,7 +31,8 @@ def normalized(text):
     text = re.sub(r'\bkan[\s-]+on\b', 'rice', text.lower())
     words = re.findall(r'[a-z0-9]+', text)
     aliases = {'manok': 'chicken', 'baboy': 'pork', 'kanin': 'rice', 'isda': 'fish',
-               'kanon': 'rice', 'itlog': 'egg', 'tubig': 'water', 'maanghang': 'spicy', 'halang': 'spicy'}
+               'kanon': 'rice', 'itlog': 'egg', 'tubig': 'water', 'maanghang': 'spicy', 'halang': 'spicy',
+               'hamburger': 'burger', 'hamborger': 'burger', 'yumburger': 'yumburger burger'}
     return ' '.join(aliases.get(word, word) for word in words)
 
 
