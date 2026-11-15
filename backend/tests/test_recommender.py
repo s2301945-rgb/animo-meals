@@ -124,6 +124,26 @@ def test_burger_aliases_match_catalog_names(db_client, monkeypatch, food, expect
     assert standalone == expected
 
 
+def test_bundled_drink_satisfies_preference_without_buying_another(db_client, monkeypatch):
+    client, engine = db_client
+    with Session(engine) as session:
+        session.add_all([
+            MenuItem(stall_id=2, name='Sisig with Rice and a Drink', price=120, category='Main dish'),
+            MenuItem(stall_id=2, name='Sisig with Rice without a Drink', price=90, category='Main dish'),
+        ])
+        session.commit()
+    monkeypatch.setattr(recommendations, 'extract_preferences', lambda _: preferences(
+        preferred_food='sisig rice', avoid_spicy=None, exclusions=[]))
+    result = client.post('/api/recommendations', json={
+        'budget': '120', 'preferences': 'sisig with rice and a drink',
+    })
+    assert result.status_code == 200
+    picks = result.json()['suggestions']
+    assert len(picks) == 1
+    assert [item['name'] for item in picks[0]['items']] == ['Sisig with Rice and a Drink']
+    assert picks[0]['total'] == '120.00'
+
+
 def test_one_cent_over_budget_and_unknown_spice_are_not_guessed(db_client, monkeypatch):
     client, engine = db_client
     monkeypatch.setattr(recommendations, 'extract_preferences', lambda _: preferences())
