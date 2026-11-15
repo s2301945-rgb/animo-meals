@@ -67,15 +67,22 @@ def build_suggestions(rows, budget, preferences):
     drinks = [row for row in rows if row[0].category == 'Drink']
     sides = [row for row in rows if row[0].category == 'Side']
     # One base, optionally one side and one drink. No duplicate items or invented portions.
-    drink_options = drinks if preferences.include_drink else [None]
     def candidates():
         for base in bases:
             # Restrict each product before generating combinations; do not build a giant result list.
             same_shop = preferences.prefer_same_stall is not False
             allowed_sides = [None] if base[0].category == 'Snack' else [None, *(
                 side for side in sides if not same_shop or side[1].id == base[1].id)]
-            allowed_drinks = [drink for drink in drink_options if drink is None
-                              or not same_shop or drink[1].id == base[1].id]
+            # A drink included in a listed combo already counts toward the preference.
+            bundled_drink = re.search(
+                r'\b(?:with|and|w) (?:an? )?(?:small |regular |medium |large )?'
+                r'(?:drinks?|orange juice|water|cola|coke|iced tea)$',
+                normalized(base[0].name),
+            )
+            allowed_drinks = [None]
+            if preferences.include_drink and not bundled_drink:
+                allowed_drinks = [drink for drink in drinks
+                                  if not same_shop or drink[1].id == base[1].id]
             for side, drink in product(allowed_sides, allowed_drinks):
                 combo = [row for row in (base, side, drink) if row is not None]
                 total = sum((item.price for item, _ in combo), Decimal('0.00'))
