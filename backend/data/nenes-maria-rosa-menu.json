@@ -1,0 +1,32 @@
+{
+  "shops": [
+    {
+      "name": "Nene’s",
+      "menu_items": [
+        {
+          "name": "Sisig with Rice and a Drink",
+          "price": "120.00",
+          "category": "Main dish",
+          "description": "Sisig served with rice and a drink."
+        },
+        {
+          "name": "Spare Ribs with Rice and a Drink",
+          "price": "120.00",
+          "category": "Main dish",
+          "description": "Spare ribs served with rice and a drink."
+        }
+      ]
+    },
+    {
+      "name": "Maria Rosa",
+      "menu_items": [
+        {
+          "name": "Hungarian Sausage with Rice and Fries",
+          "price": "100.00",
+          "category": "Main dish",
+          "description": "Hungarian sausage served with rice and fries."
+        }
+      ]
+    }
+  ]
+}
