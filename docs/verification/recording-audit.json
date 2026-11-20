@@ -1,0 +1,18 @@
+{
+  "history_scan": {
+    "reachable_git_blobs_scanned": 248,
+    "matches": 0,
+    "scope": "Configured local secrets and recognizable token formats across reachable Git refs"
+  },
+  "rollback": {
+    "environment": "isolated SQLite database, previous release checked out from Git archive",
+    "previous_release": "20b8a09f68b6ff61e5bf709e7309888d0fbd4aaa",
+    "phases": [
+      "candidate",
+      "rollback",
+      "restore"
+    ],
+    "schema_revision_preserved": "0003",
+    "shop_and_saved_box_preserved": true
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "verified_at_utc": "2026-11-20T12:56:37.590207+00:00",
+  "shops": 9,
+  "menu_items": 28,
+  "datasets": {
+    "campus-menu.json": 5,
+    "la-salle-delivery-menu.json": 8,
+    "potato-corner-menu.json": 12,
+    "unnamed-rice-bowls.json": 3
+  },
+  "source": "Public production API; prices and names preserved",
+  "unconfirmed": [
+    "Unnamed shop name and location",
+    "Maria Rosa location and menu",
+    "Pritong Manok menu",
+    "Potato Corner USLS Agora counter prices"
+  ]
+}

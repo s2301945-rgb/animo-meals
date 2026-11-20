@@ -4,7 +4,7 @@
 
 A solo admin cannot reliably ask every vendor about changing menus and stock. The revised AnimoMeals is an **AI Food Budget Recommender** for visitors, based on a small recorded catalog of regular meals. There is no administrator role. The developer imports menu data occasionally; visitors confirm price and actual availability at the shop.
 
-The five selected shops remain. Menus are intentionally blank pending the user's Monday dataset. Existing database catalog records are preserved by migration; no local test item is automatically copied to production.
+The original five campus shops remain alongside Jollibee, McDonald's, Potato Corner, and a shop whose name is pending. The production snapshot contains 9 shops and 28 recorded menu items. Maria Rosa and Pritong Manok await menus. Existing records are preserved by migrations. The checked-in datasets mirror published records, including delivery-price and campus-price limitations.
 
 ## Requirement mapping
 

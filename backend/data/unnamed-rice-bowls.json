@@ -4,17 +4,17 @@
       "name": "",
       "menu_items": [
         {
+          "name": "Chicken Pastil Rice Bowl",
+          "price": "50.00",
+          "category": "Main dish"
+        },
+        {
           "name": "Pork Sisig Rice Bowl",
           "price": "50.00",
           "category": "Main dish"
         },
         {
           "name": "Siomai Rice Bowl",
-          "price": "50.00",
-          "category": "Main dish"
-        },
-        {
-          "name": "Chicken Pastil Rice Bowl",
           "price": "50.00",
           "category": "Main dish"
         }

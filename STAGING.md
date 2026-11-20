@@ -27,3 +27,7 @@ $env:ANIMOMEALS_ENV_FILE='.env.staging'
 ```
 
 The importer does not copy production data or overwrite locations/photos. Production and development are separate environments; no claim is made that a user-entered local test menu is present elsewhere.
+
+## Recording preparation verified on November 20, 2026
+
+The restricted staging schema is at migration 0003 and contains the nine-shop, 28-item recorded snapshot. API checks passed for creating, viewing, renaming, isolating, and deleting a temporary meal box. [Staging evidence](docs/verification/recording-staging.json)

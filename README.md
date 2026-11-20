@@ -1,12 +1,12 @@
 # AnimoMeals · AI Food Budget Recommender
 
-AnimoMeals helps students choose meals from five recorded local shop menus based on their budget and food preferences. A visitor can describe what they want, compare meal combinations, and save favorite combinations as **My Meal Boxes**. No visitor account or administrator dashboard is required.
+AnimoMeals helps students choose meals from recorded local shop menus based on their budget and food preferences. A visitor can describe what they want, compare meal combinations, and save favorite combinations as **My Meal Boxes**. No visitor account or administrator dashboard is required.
 
 ## Revised scope — November 4, 2026
 
 The former administrator app has been retired. Shop and menu editing, administrator login, and photo-upload endpoints are removed. The developer maintains a small curated menu dataset through an offline import command. This avoids daily vendor checks; it does not eliminate the need to occasionally correct recorded prices.
 
-We list regular menu offerings, not live stock. Prices and availability must be confirmed at the shop. We do not claim food quality, nutrition, distance, current stock, or complete ingredient/allergen knowledge. Unknown spice details are excluded when a visitor requests non-spicy meals. Menu data is due from the developer; we do not invent meals or prices to fill empty screens.
+We list regular menu offerings, not live stock. Prices and availability must be confirmed at the shop. We do not claim food quality, nutrition, distance, current stock, or complete ingredient/allergen knowledge. Unknown spice details are excluded when a visitor requests non-spicy meals. The published catalog currently contains 9 shops and 28 items. The developer updates the recorded menus when reliable information is supplied.
 
 | Selected shop | Location supplied for this project |
 | --- | --- |
@@ -15,6 +15,12 @@ We list regular menu offerings, not live stock. Prices and availability must be 
 | Nene’s | In front of Gate 5 |
 | Crazy Crunch | Ground floor, MM Building |
 | Lola Barbz | The Agora |
+| Jollibee - Bacolod La Salle | La Salle Avenue, Bacolod |
+| McDonald's - North Drive La Salle | North Drive La Salle, Bacolod |
+| Potato Corner - USLS Agora | Inside Lasalle, AGORA |
+| Shop name pending | Location to be confirmed |
+
+The pending shop has a blank database name at the developer's request. Maria Rosa and Pritong Manok await menus. Potato Corner's recorded prices use the North Drive delivery menu as a reference and need confirmation at USLS Agora. [Catalog snapshot](docs/verification/catalog-snapshot.json)
 
 ## Visitor flow
 
@@ -78,6 +84,7 @@ Tables: `stalls` → `menu_items`, and `saved_plans` → `saved_plan_items`. Mig
 - [Deployment](docs/DEPLOYMENT.md)
 - [Changelog](CHANGELOG.md)
 - [Current backlog](BACKLOG.md)
+- [Video recording checklist](docs/RECORDING.md)
 
 The hosted project uses [the public website](https://animo-meals.vercel.app) and [backend](https://animo-meals-api.onrender.com). A local branch is not automatically deployed; verify the main-branch pipeline and `/api/environment` after publication. The earlier Week 1 and Week 2 verification files are historical evidence of the previous scope, not proof of this revision's deployment.
 
@@ -85,4 +92,4 @@ The hosted project uses [the public website](https://animo-meals.vercel.app) and
 
 **LANCE FRANCIS M. GARGARITANO · BSCS 4B** handles planning, frontend, backend, database, AI integration, testing, and deployment.
 
-Work is developed on descriptive feature branches and reviewed through pull requests into `main`. Pull-request CI installs dependencies, lints, builds, migrates an isolated test database, and runs mocked-provider API tests. Main-branch deployments follow passing checks. Real `.env` files and provider keys stay out of Git. No external AI requests run in CI.
+Work is developed on descriptive feature branches and reviewed through pull requests into `main`. The public repository requires passing frontend and backend checks, an up-to-date branch and resolved review conversations. These protections apply to administrators. The instructor confirmed that solo developers can merge their own PRs after required checks pass. Pull-request CI installs dependencies, lints, builds, migrates an isolated test database, and runs mocked-provider API tests. Main-branch deployments follow passing checks. Real `.env` files and provider keys stay out of Git. No external AI requests run in CI.

@@ -1,0 +1,129 @@
+{
+  "health": {
+    "status": 200,
+    "data": {
+      "status": "ok",
+      "database": "connected"
+    }
+  },
+  "environment": {
+    "status": 200,
+    "data": {
+      "environment": "production",
+      "revision": "9bbb519488b5e92d15c57c03f75a4d0a86963968"
+    }
+  },
+  "stalls": {
+    "status": 200
+  },
+  "menu-items": {
+    "status": 200
+  },
+  "catalog": [
+    {
+      "shop": "",
+      "location": "Location to be confirmed",
+      "listed_items": 3
+    },
+    {
+      "shop": "Crazy Crunch",
+      "location": "Ground floor, MM Building",
+      "listed_items": 2
+    },
+    {
+      "shop": "Jollibee - Bacolod La Salle",
+      "location": "La Salle Avenue, Bacolod \u00b7 Foodpanda menu prices",
+      "listed_items": 3
+    },
+    {
+      "shop": "Lola Barbz",
+      "location": "The Agora",
+      "listed_items": 1
+    },
+    {
+      "shop": "Maria Rosa",
+      "location": "Location to be confirmed",
+      "listed_items": 0
+    },
+    {
+      "shop": "McDonald's - North Drive La Salle",
+      "location": "North Drive La Salle, Bacolod \u00b7 Foodpanda menu prices",
+      "listed_items": 5
+    },
+    {
+      "shop": "Nene\u2019s",
+      "location": "In front of Gate 5",
+      "listed_items": 2
+    },
+    {
+      "shop": "Potato Corner - USLS Agora",
+      "location": "Inside Lasalle, AGORA",
+      "listed_items": 12
+    },
+    {
+      "shop": "Pritong Manok",
+      "location": "USLS Stingers",
+      "listed_items": 0
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "status": 200,
+      "passed": true,
+      "preferred_food": "chicken rice",
+      "suggestions": 2,
+      "message": "A little planning, more room in your budget."
+    },
+    {
+      "language": "Tagalog",
+      "status": 200,
+      "passed": true,
+      "preferred_food": "chicken rice",
+      "suggestions": 2,
+      "message": "A little planning, more room in your budget."
+    },
+    {
+      "language": "Hiligaynon",
+      "status": 200,
+      "passed": true,
+      "preferred_food": "chicken rice",
+      "suggestions": 2,
+      "message": "A little planning, more room in your budget."
+    },
+    {
+      "language": "Bisaya",
+      "status": 200,
+      "passed": true,
+      "preferred_food": "chicken rice",
+      "suggestions": 2,
+      "message": "A little planning, more room in your budget."
+    },
+    {
+      "language": "Typo",
+      "status": 200,
+      "passed": true,
+      "preferred_food": "chicken",
+      "suggestions": 6,
+      "message": "A little planning, more room in your budget."
+    }
+  ],
+  "invalid_budget": {
+    "status": 422,
+    "passed": true
+  },
+  "price_only": {
+    "status": 200,
+    "passed": true
+  },
+  "plans_without_key": {
+    "status": 401,
+    "passed": true
+  },
+  "removed_admin": {
+    "status": 404,
+    "passed": true
+  },
+  "verified_at_utc": "2026-11-20T12:58:45.834274+00:00",
+  "acceptance_criteria": "Each language example returns at least one recorded option within PHP 100; totals equal the sum of item prices. Five examples are a smoke evaluation."
+}

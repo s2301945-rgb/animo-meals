@@ -1,0 +1,18 @@
+{
+  "verified_at_utc": "2026-11-20T13:09:46.594629+00:00",
+  "repository": "https://github.com/s2301945-rgb/animo-meals",
+  "visibility": "public",
+  "branch": "main",
+  "required_checks": [
+    "frontend",
+    "backend"
+  ],
+  "branch_must_be_up_to_date": true,
+  "required_approvals": 0,
+  "dismiss_stale_approvals": true,
+  "administrators_included": true,
+  "conversation_resolution": true,
+  "force_pushes_allowed": false,
+  "deletion_allowed": false,
+  "reviewer_status": "Instructor confirmed solo developers do not need PR approvals. Required automated checks remain enforced."
+}

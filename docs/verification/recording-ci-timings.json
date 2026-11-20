@@ -1,0 +1,34 @@
+{
+  "before": {
+    "run": 42041966473,
+    "parallel_jobs_span_seconds": 24.0,
+    "frontend_seconds": 15.0,
+    "frontend_steps_seconds": {
+      "Run npm ci": 4.0
+    },
+    "backend_seconds": 24.0,
+    "backend_steps_seconds": {
+      "Run python -m app.seed": 0.0
+    },
+    "seed_invocations": 2
+  },
+  "after": {
+    "run": 42042961394,
+    "parallel_jobs_span_seconds": 26.0,
+    "frontend_seconds": 14.0,
+    "frontend_steps_seconds": {
+      "Run npm ci --no-audit --no-fund": 2.0
+    },
+    "backend_seconds": 25.0,
+    "backend_steps_seconds": {},
+    "seed_invocations": 0
+  },
+  "after_test_report": {
+    "artifact_name": "api-test-results",
+    "artifact_id": 13421688026,
+    "tests": 85,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

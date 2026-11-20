@@ -31,9 +31,9 @@ The frontend defaults to `http://localhost:8000`. Configure `VITE_API_BASE_URL` 
 
 ## Try the revision
 
-1. Browse the five selected shops. Empty menus are expected until real data arrives.
+1. Browse the selected shops. A fresh local database begins with five empty shop menus.
 2. Enter a budget and request suggestions. An empty catalog returns a clear message and makes no AI call.
-3. Import the supplied menu dataset using [MENU-DATA.md](docs/MENU-DATA.md).
+3. Import the reviewed snapshots using [MENU-DATA.md](docs/MENU-DATA.md). The four files are campus-menu.json, la-salle-delivery-menu.json, potato-corner-menu.json, and unnamed-rice-bowls.json under backend/data. Together they reproduce the recorded nine-shop, 28-item catalog.
 4. Try a budget-only request, then a request with preferences using the privately configured Groq key.
 5. Save a suggestion, open My Meal Boxes, rename it, reload, and delete it.
 6. Open a separate browser profile: the first profile's meal boxes must not appear there.
