@@ -1,8 +1,9 @@
 .planner-section {
-  max-width: 1328px;
-  margin: auto;
-  padding: 64px 48px;
-  scroll-margin-top: 20px;
+  padding: 48px 0;
+}
+.meal-finder {
+  padding-top: 0;
+  padding-bottom: 12px;
 }
 .planner-section > p {
   color: var(--muted);
@@ -11,12 +12,11 @@
 }
 .planner-form {
   display: grid;
-  grid-template-columns: minmax(150px, 0.6fr) minmax(220px, 2fr);
-  gap: 24px;
-  padding: 28px;
-  background: #f0f4e9;
-  border: 1px solid var(--line);
-  border-radius: 20px;
+  gap: 14px;
+  max-width: 480px;
+}
+.planner-form .quick-budgets {
+  margin: -5px 0 2px;
 }
 .planner-form label,
 .meal-box label {
@@ -75,7 +75,7 @@
 .meal-box {
   min-width: 0;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 14px;
   padding: 26px;
   background: #fffef9;
   overflow-wrap: anywhere;
@@ -130,31 +130,128 @@
 .planner-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 8px;
   align-items: center;
   margin-top: 20px;
 }
 .planner-empty {
-  padding: 28px;
-  border: 1px dashed #bcc9b5;
-  border-radius: 14px;
+  padding: 32px 0;
+  border-top: 1px solid var(--line);
+}
+.planner-empty p {
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 52ch;
 }
 .saved-boxes {
   border-top: 1px solid var(--line);
+}
+.box-shortcut {
+  display: block;
+  margin: -6px 0 24px;
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.box-shortcut span {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+.collection-intro {
+  margin: -8px 0 24px;
+}
+.collection-toolbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.storage-help {
+  max-width: 52ch;
+}
+.storage-help summary {
+  cursor: pointer;
+  color: var(--green);
+  min-height: 44px;
+  padding: 10px 0;
+}
+.storage-help p {
+  line-height: 1.7;
+  margin: 4px 0 16px;
+}
+.saved-date,
+.box-summary {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.saved-date {
+  margin: 0;
+}
+.saved-meal-box h3 {
+  font-family: Manrope, sans-serif;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  margin: 12px 0 8px;
+}
+.saved-meal-box .box-summary {
+  margin: 0 0 20px;
+}
+.secondary-button,
+.delete-button {
+  border: 1px solid #bbc8b8;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--green);
+  padding: 10px 14px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.secondary-button:hover {
+  background: #edf3e6;
+}
+.delete-button {
+  color: #963520;
+  border-color: #dcbeaf;
+}
+.delete-button:hover {
+  background: #fff0e9;
+}
+.delete-confirmation {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #dcbeaf;
+  color: #963520;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.meal-total {
+  font-variant-numeric: tabular-nums;
+}
+button:disabled {
+  opacity: 0.65;
+  transform: none;
 }
 textarea:focus-visible {
   outline: 3px solid #b7801a;
   outline-offset: 4px;
 }
 @media (max-width: 760px) {
-  .planner-section {
-    padding: 42px 22px;
+  .saved-boxes {
+    padding: 32px 0;
   }
-  .planner-form,
   .meal-box-grid {
     grid-template-columns: 1fr;
   }
-  .planner-form,
   .meal-box {
     padding: 20px;
   }

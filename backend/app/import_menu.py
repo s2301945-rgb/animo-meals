@@ -10,7 +10,7 @@ from sqlalchemy import select
 from app.database import SessionLocal
 from app.models import MenuItem, Stall
 from app.recommendations import Budget
-from app.shop_catalog import SHOPS
+from app.shop_catalog import CATALOG_LOCATIONS
 
 Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
 
@@ -32,8 +32,8 @@ class DatasetShop(BaseModel):
     @field_validator('name')
     @classmethod
     def known_shop(cls, value):
-        if value not in dict(SHOPS):
-            raise ValueError('Use one of the five selected shop names.')
+        if value not in CATALOG_LOCATIONS:
+            raise ValueError('Use a shop name from the catalog.')
         return value
 
     @field_validator('menu_items')
@@ -47,7 +47,7 @@ class DatasetShop(BaseModel):
 
 class Dataset(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    shops: list[DatasetShop] = Field(min_length=1, max_length=5)
+    shops: list[DatasetShop] = Field(min_length=1, max_length=len(CATALOG_LOCATIONS))
 
     @field_validator('shops')
     @classmethod
@@ -61,7 +61,7 @@ def apply_dataset(session, dataset):
     for source in dataset.shops:
         stall = session.scalar(select(Stall).where(Stall.name == source.name))
         if stall is None:
-            stall = Stall(name=source.name, location=dict(SHOPS)[source.name])
+            stall = Stall(name=source.name, location=CATALOG_LOCATIONS[source.name])
             session.add(stall)
             session.flush()
         for entry in source.menu_items:

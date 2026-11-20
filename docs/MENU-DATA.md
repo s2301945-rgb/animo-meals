@@ -21,3 +21,7 @@ After reviewing the dataset and intended database, append `--apply` to write it 
 `app.shop_catalog` adds missing selected shops without adding meals. The old `app.seed` is strictly fictional local/test data; never use it for production menus. Alembic revision 0003 preserves all existing catalog records.
 
 Photo uploads are outside the revised scope. Existing public photos can continue to render. Price recommendation logic does not depend on photos. Maria Rosa's location remains unconfirmed; confirm it before changing the recorded location through a reviewed developer data update.
+
+`backend/data/potato-corner-menu.json` lists Potato Corner items under USLS Agora using North Drive's Foodpanda menu as a reference. Confirm current offerings and counter prices at USLS Agora. [Potato Corner North Drive](https://www.foodpanda.ph/restaurant/mjnw/potato-corner-north-drive)
+
+The La Salle delivery dataset includes selected items from two Bacolod branches. It records Foodpanda item prices, or the starting price where the menu lists variants. Delivery fees, minimum order amounts, and promotions are separate. Check the branch for counter prices. [Jollibee Bacolod La Salle](https://www.foodpanda.ph/restaurant/r9ql/jollibee-bacolod-la-salle) · [McDonald's North Drive La Salle](https://www.foodpanda.ph/restaurant/r8sy/mcdonalds-north-drive-la-salle)

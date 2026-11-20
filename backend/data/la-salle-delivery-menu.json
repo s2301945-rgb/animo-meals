@@ -1,0 +1,26 @@
+{
+  "shops": [
+    {
+      "name": "Jollibee - Bacolod La Salle",
+      "menu_items": [
+        {"name": "Yumburger Solo", "price": "56.00", "category": "Main dish", "description": "Beef burger. Foodpanda starting item price. Delivery fees excluded."},
+        {"name": "Jolly Spaghetti Solo", "price": "80.00", "category": "Main dish", "description": "Spaghetti with red sauce, hotdog pieces, and cheese. Foodpanda starting item price. Delivery fees excluded."},
+        {"name": "1pc Burger Steak Solo", "price": "87.00", "category": "Main dish", "description": "Beef patty, mushroom gravy, and rice. Foodpanda starting item price. Delivery fees excluded."},
+        {"name": "1pc Chickenjoy Solo", "price": "106.00", "category": "Main dish", "description": "One piece of fried chicken. Foodpanda starting item price. Delivery fees excluded."},
+        {"name": "Extra Rice", "price": "48.00", "category": "Side", "description": "Foodpanda item price. Delivery fees excluded."},
+        {"name": "Coke Float", "price": "87.00", "category": "Drink", "description": "Cola topped with vanilla soft serve. Foodpanda item price. Delivery fees excluded."}
+      ]
+    },
+    {
+      "name": "McDonald's - North Drive La Salle",
+      "menu_items": [
+        {"name": "Burger McDo", "price": "54.00", "category": "Main dish", "description": "Solo burger. Foodpanda item price. Delivery fees excluded."},
+        {"name": "Cheesy Burger McDo", "price": "72.00", "category": "Main dish", "description": "Solo cheeseburger. Foodpanda item price. Delivery fees excluded."},
+        {"name": "Crispy Chicken Sandwich", "price": "73.00", "category": "Main dish", "description": "Solo chicken sandwich. Foodpanda item price. Delivery fees excluded."},
+        {"name": "1-pc. Chicken McDo", "price": "99.00", "category": "Main dish", "description": "Solo fried chicken. Foodpanda item price. Delivery fees excluded."},
+        {"name": "Crispy Chicken Fillet", "price": "91.00", "category": "Main dish", "description": "Solo chicken fillet. Foodpanda starting item price. Delivery fees excluded."},
+        {"name": "Regular Fries", "price": "72.00", "category": "Side", "description": "Foodpanda item price. Delivery fees excluded."}
+      ]
+    }
+  ]
+}

@@ -288,7 +288,8 @@ function FoodIllustration({ item }) {
 }
 
 function MenuCarousel({ items, budget, onSelect }) {
-  const limit = budget ? Math.min(Number(budget), 75) : 75;
+  const amount = Number(budget);
+  const limit = amount > 0 && amount <= 10000 ? amount : 75;
   const eligible = useMemo(
     () =>
       items.filter(
@@ -417,12 +418,7 @@ function MenuCarousel({ items, budget, onSelect }) {
     >
       <div className="hero-arc" />
       <div className="stage-top">
-        <span className="stage-star">✦</span>
-        <span>
-          A LITTLE BUDGET INSPIRATION
-          <br />
-          <strong>Recorded picks · {pesos.format(limit)} and under</strong>
-        </span>
+        <strong>Menu picks up to {pesos.format(limit)}</strong>
       </div>
       <div
         className="carousel-window"
@@ -486,11 +482,6 @@ function MenuCarousel({ items, budget, onSelect }) {
           </button>
         </div>
       )}
-      <span className="carousel-note">
-        {reducedMotion
-          ? "Use the arrows to browse at your pace."
-          : "Random picks every 7 seconds · pauses on hover or focus"}
-      </span>
       <span className="illustration-label">
         Illustrations are not actual food photos
       </span>
@@ -511,6 +502,7 @@ export default function App() {
   const [listedOnly, setListedOnly] = useState(false);
   const [budget, setBudget] = useState("");
   const [draftBudget, setDraftBudget] = useState("");
+  const [menuBudget, setMenuBudget] = useState("");
   const [budgetError, setBudgetError] = useState("");
 
   useEffect(() => {
@@ -567,7 +559,7 @@ export default function App() {
     setShop("");
     setListedOnly(false);
     setBudget("");
-    setDraftBudget("");
+    setMenuBudget("");
     setBudgetError("");
     setSort("default");
   }
@@ -593,7 +585,7 @@ export default function App() {
     }
     setBudgetError("");
     setBudget(amount);
-    setDraftBudget(amount);
+    setMenuBudget(amount);
     setAttempt((current) => current + 1);
     scrollToMenu();
   }
@@ -631,449 +623,336 @@ export default function App() {
 
   return (
     <>
-      <a href="#menu" className="skip-link">
-        Skip to menu
+      <a href="#recommendations" className="skip-link">
+        Skip to meal finder
       </a>
       <StagingBanner />
       <header className="header" id="top">
         <Brand />
         <nav aria-label="Main navigation">
-          <a href="#recommendations">AI meal finder</a>
-          <a href="#shops">Browse shops</a>
-          <a href="#meal-boxes">My Meal Boxes</a>
+          <a href="#recommendations">Meal finder</a>
+          <a href="#shops">Browse menus</a>
+          <a className="nav-collection" href="#meal-boxes">My Meal Boxes</a>
         </nav>
-        <span className="campus">
-          <span /> Made for student budgets
-        </span>
       </header>
       <main>
-        <section className="hero" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              <span className="little-star">✦</span> GOOD FOOD. SMARTER
-              SPENDING.
+        <MealPlanner
+          budget={draftBudget}
+          onBudgetChange={setDraftBudget}
+          highlights={
+            <MenuCarousel
+              items={catalog}
+              budget={draftBudget}
+              onSelect={(item) => {
+                clearFilters();
+                setQuery(item.name);
+                setShop(String(item.stall_id));
+                setListedOnly(true);
+              }}
+            />
+          }
+        >
+          <section
+            id="shops"
+            className="shops-section"
+            aria-labelledby="shops-title"
+          >
+            <div className="section-heading">
+              <h2 id="shops-title">Browse shops</h2>
+              <a className="text-link" href="#menu">
+                See menu <Icon name="arrow" />
+              </a>
+            </div>
+            {shops.length > 0 ? (
+              <div className="shop-grid">
+                {shops.map((entry, index) => (
+                  <article className="shop-card" key={entry.id}>
+                    <div className={`shop-symbol shop-${index % 3}`}>
+                      <Photo
+                        src={entry.image_url}
+                        alt={entry.name}
+                        className="shop-photo"
+                        fallback={<Icon name="shop" width="27" height="27" />}
+                      />
+                    </div>
+                    <div className="shop-info">
+                      <h3>{cleanName(entry.name)}</h3>
+                      <p>
+                        <Icon name="pin" width="14" height="14" />
+                        {entry.location}
+                      </p>
+                      <span>
+                        {entry.count
+                          ? `${entry.count} listed ${entry.count === 1 ? "item" : "items"} · From ${pesos.format(entry.min)}`
+                          : "Menu not added yet"}
+                      </span>
+                    </div>
+                    <button
+                      className="shop-link"
+                      aria-label={`View ${cleanName(entry.name)} menu`}
+                      onClick={() => {
+                        clearFilters();
+                        setShop(String(entry.id));
+                        scrollToMenu();
+                      }}
+                    >
+                      <Icon name="arrow" />
+                    </button>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="shop-placeholder">
+                {status === "error"
+                  ? "Shop details will appear when the menu connection is restored."
+                  : status === "ready"
+                    ? "No shops listed yet. Check back soon."
+                    : "Getting the shops ready…"}
+              </p>
+            )}
+          </section>
+          <section
+            id="menu"
+            className="menu-section"
+            aria-labelledby="menu-title"
+          >
+            <div className="section-heading">
+              <div>
+                <h2 id="menu-title">
+                  {selectedShop ? cleanName(selectedShop.name) : "All menu items"}
+                </h2>
+                {selectedShop && (
+                  <p className="section-caption menu-location">
+                    <Icon name="pin" width="16" height="16" /> {selectedShop.location}
+                  </p>
+                )}
+              </div>
+              <label className="search">
+                <Icon name="search" />
+                <input
+                  aria-label="Search food or shops"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search food or shops…"
+                />
+              </label>
+            </div>
+            <p className="section-caption menu-guidance">
+              {hasDemoShops && "Demo listings use fictional data. "}
+              Prices are recorded. Confirm current prices and availability at the shop.
             </p>
-            <h1 id="hero-title">
-              A little budget.
-              <br />A <em>good meal.</em>
-            </h1>
-            <p className="intro">
-              Your AI food budget recommender. Tell us your budget and appetite,
-              compare recorded local meals, and save your own meal boxes.
-            </p>
+            <div className="filter-row">
+              <div className="tabs" aria-label="Food categories">
+                {categories.map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => setCategory(value)}
+                    aria-pressed={category === value}
+                    className={category === value ? "active" : ""}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+              <label className="sort-label">
+                Sort by
+                <select
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value)}
+                >
+                  <option value="default">Shop order</option>
+                  <option value="price">Lowest price</option>
+                  <option value="name">Food name</option>
+                </select>
+              </label>
+            </div>
             <form
-              className="budget-form"
+              className="menu-budget"
               onSubmit={(event) => {
                 event.preventDefault();
-                findFood(draftBudget);
+                findFood(menuBudget);
               }}
             >
-              <label htmlFor="budget">How much are you spending?</label>
-              <div
-                className={`budget-controls ${budgetError ? "invalid" : ""}`}
-              >
-                <span aria-hidden="true">₱</span>
-                <input
-                  id="budget"
-                  inputMode="decimal"
-                  value={draftBudget}
-                  onChange={(event) => setDraftBudget(event.target.value)}
-                  placeholder="100.00"
-                  aria-describedby={
-                    budgetError ? "budget-error" : "budget-help"
-                  }
-                  aria-invalid={!!budgetError}
-                />
-                <button type="submit">
-                  Browse prices <Icon name="arrow" />
-                </button>
-              </div>
-              <p id="budget-help">
-                Browse prices here, or describe your appetite to the AI below.
-              </p>
+              <label htmlFor="budget">Maximum price (₱)</label>
+              <input
+                id="budget"
+                inputMode="decimal"
+                value={menuBudget}
+                onChange={(event) => setMenuBudget(event.target.value)}
+                placeholder="Any price"
+                aria-describedby={budgetError ? "budget-error" : undefined}
+                aria-invalid={!!budgetError}
+              />
+              <button className="clear-button" type="submit">Apply</button>
               {budgetError && (
                 <p className="validation" id="budget-error" role="alert">
                   {budgetError}
                 </p>
               )}
             </form>
-            <div className="quick-budgets">
-              <span>A quick starting point</span>
-              {[50, 75, 100].map((value) => (
-                <button key={value} onClick={() => findFood(String(value))}>
-                  ₱{value}
-                </button>
-              ))}
-            </div>
-            <div className="hero-proof">
-              <span>
-                <Icon name="check" /> Prices you can compare
-              </span>
-              <span>
-                <Icon name="check" /> Menus in one place
-              </span>
-            </div>
-          </div>
-          <MenuCarousel
-            items={catalog}
-            budget={budget}
-            onSelect={(item) => {
-              setQuery(item.name);
-              setShop(String(item.stall_id));
-              setCategory("All items");
-              setListedOnly(true);
-            }}
-          />
-        </section>
-        <MealPlanner budget={draftBudget} onBudgetChange={setDraftBudget} />
-        <aside className="notice">
-          <span className="demo-pill">
-            {hasDemoShops ? "DEMO EDITION" : "MENU UPDATES"}
-          </span>
-          <p>
-            {hasDemoShops
-              ? "Listings marked Demo contain fictional shop and menu data. "
-              : "Shop locations are based on information provided for this project. "}
-            {status === "ready" && !catalog.length
-              ? "Menus and prices have not been added yet. "
-              : "Confirm current prices and availability at the shop. "}
-            Suggestions use recorded regular menus, not live stock information.
-          </p>
-        </aside>
-        <section
-          id="shops"
-          className="shops-section"
-          aria-labelledby="shops-title"
-        >
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">A FEW PLACES TO START</p>
-              <h2 id="shops-title">Find your lunch spot.</h2>
-            </div>
-            <p className="section-caption">
-              Browse a shop, then explore its menu. <br />
-              {hasDemoShops
-                ? "Demonstration listings for now."
-                : "Menus will appear as they are added."}
-            </p>
-          </div>
-          {shops.length > 0 ? (
-            <div className="shop-grid">
-              {shops.map((entry, index) => (
-                <article className="shop-card" key={entry.id}>
-                  <div className={`shop-symbol shop-${index % 3}`}>
-                    <Photo
-                      src={entry.image_url}
-                      alt={entry.name}
-                      className="shop-photo"
-                      fallback={<Icon name="shop" width="27" height="27" />}
-                    />
-                  </div>
-                  <div className="shop-info">
-                    <h3>{cleanName(entry.name)}</h3>
-                    <p>
-                      <Icon name="pin" width="14" height="14" />
-                      {entry.location}
-                    </p>
-                    <span>
-                      {entry.count
-                        ? `${entry.count} listed ${entry.count === 1 ? "item" : "items"} · From ${pesos.format(entry.min)}`
-                        : "Menu not added yet"}
-                    </span>
-                  </div>
-                  <button
-                    className="shop-link"
-                    aria-label={`View ${cleanName(entry.name)} menu`}
-                    onClick={() => {
-                      clearFilters();
-                      setShop(String(entry.id));
-                      scrollToMenu();
-                    }}
-                  >
-                    <Icon name="arrow" />
+            <div className="results-toolbar">
+              <p className="result-count" aria-live="polite">
+                {status === "ready" ? (
+                  <>
+                    <strong>{visible.length}</strong>{" "}
+                    {visible.length === 1 ? "item" : "items"}
+                    {budget && (
+                      <>
+                        {" "}
+                        within <strong>{pesos.format(budget)}</strong>
+                      </>
+                    )}
+                    {shop && (
+                      <>
+                        {" "}
+                        at{" "}
+                        <strong>
+                          {cleanName(selectedShop?.name || "selected shop")}
+                        </strong>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  "Getting your menu ready"
+                )}
+              </p>
+              <div className="result-options">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={listedOnly}
+                    onChange={(event) => setListedOnly(event.target.checked)}
+                  />{" "}
+                  Listed items only
+                </label>
+                {filtered && (
+                  <button className="clear-button" onClick={clearFilters}>
+                    Clear filters <Icon name="close" width="14" height="14" />
                   </button>
-                </article>
-              ))}
+                )}
+              </div>
             </div>
-          ) : (
-            <p className="shop-placeholder">
-              {status === "error"
-                ? "Shop details will appear when the menu connection is restored."
-                : status === "ready"
-                  ? "No shops listed yet. Check back soon."
-                  : "Getting the shops ready…"}
-            </p>
-          )}
-        </section>
-        <section
-          id="menu"
-          className="menu-section"
-          aria-labelledby="menu-title"
-        >
-          {selectedShop && (
-            <div
-              className="selected-shop"
-              role="region"
-              aria-label="Selected shop"
-            >
-              <div>
-                <p className="eyebrow">BROWSING THIS SHOP</p>
-                <h3>{cleanName(selectedShop.name)}</h3>
+            {status === "loading" && (
+              <div className="loading-state" role="status">
+                <div className="loading-dot" />
+                <h3>Finding your next food stop…</h3>
                 <p>
-                  <Icon name="pin" width="16" height="16" />{" "}
-                  {selectedShop.location}
+                  The first visit can take about a minute while the menu service
+                  wakes up.
                 </p>
               </div>
-              <button className="clear-button" onClick={() => setShop("")}>
-                Browse all shops <Icon name="close" width="14" height="14" />
-              </button>
-            </div>
-          )}
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">SOMETHING FOR YOUR APPETITE</p>
-              <h2 id="menu-title">What sounds good?</h2>
-            </div>
-            <label className="search">
-              <Icon name="search" />
-              <input
-                aria-label="Search food or shops"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search food or shops…"
-              />
-            </label>
-          </div>
-          <div className="filter-row">
-            <div className="tabs" aria-label="Food categories">
-              {categories.map((value) => (
+            )}
+            {status === "error" && (
+              <div className="state-box" role="alert">
+                <Icon name="shop" width="32" height="32" />
+                <h3>The menu is taking a little break.</h3>
+                <p>
+                  We couldn’t retrieve the listings. Check your connection and
+                  try again in a moment.
+                </p>
                 <button
-                  key={value}
-                  onClick={() => setCategory(value)}
-                  aria-pressed={category === value}
-                  className={category === value ? "active" : ""}
+                  className="primary-button"
+                  onClick={() => setAttempt((value) => value + 1)}
                 >
-                  {value}
+                  Try again <Icon name="arrow" />
                 </button>
-              ))}
-            </div>
-            <label className="sort-label">
-              Sort by
-              <select
-                value={sort}
-                onChange={(event) => setSort(event.target.value)}
-              >
-                <option value="default">Shop order</option>
-                <option value="price">Lowest price</option>
-                <option value="name">Food name</option>
-              </select>
-            </label>
-          </div>
-          <div className="results-toolbar">
-            <p className="result-count" aria-live="polite">
-              {status === "ready" ? (
-                <>
-                  <strong>{visible.length}</strong>{" "}
-                  {visible.length === 1 ? "item" : "items"}
-                  {budget && (
-                    <>
-                      {" "}
-                      within <strong>{pesos.format(budget)}</strong>
-                    </>
-                  )}
-                  {shop && (
-                    <>
-                      {" "}
-                      at{" "}
-                      <strong>
-                        {cleanName(selectedShop?.name || "selected shop")}
-                      </strong>
-                    </>
-                  )}
-                </>
-              ) : (
-                "Getting your menu ready"
-              )}
-            </p>
-            <div className="result-options">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={listedOnly}
-                  onChange={(event) => setListedOnly(event.target.checked)}
-                />{" "}
-                Regular menu items only
-              </label>
-              {filtered && (
-                <button className="clear-button" onClick={clearFilters}>
-                  Clear filters <Icon name="close" width="14" height="14" />
-                </button>
-              )}
-            </div>
-          </div>
-          {status === "loading" && (
-            <div className="loading-state" role="status">
-              <div className="loading-dot" />
-              <h3>Finding your next food stop…</h3>
-              <p>
-                The first visit can take about a minute while the menu service
-                wakes up.
-              </p>
-            </div>
-          )}
-          {status === "error" && (
-            <div className="state-box" role="alert">
-              <Icon name="shop" width="32" height="32" />
-              <h3>The menu is taking a little break.</h3>
-              <p>
-                We couldn’t retrieve the listings. Check your connection and
-                try again in a moment.
-              </p>
-              <button
-                className="primary-button"
-                onClick={() => setAttempt((value) => value + 1)}
-              >
-                Try again <Icon name="arrow" />
-              </button>
-            </div>
-          )}
-          {status === "ready" && !visible.length && (
-            <div className="state-box">
-              <Icon name="search" width="32" height="32" />
-              <h3>
-                {selectedShop?.count === 0 || !catalog.length
-                  ? "This shop’s menu is on its way."
-                  : "No matches on the menu just yet."}
-              </h3>
-              <p>
-                {selectedShop?.count === 0 || !catalog.length
-                  ? "No meals or prices have been listed for this shop yet. Browse another shop while its menu is being added."
-                  : "Try a bigger budget, another category, or a different search."}
-              </p>
-              <button className="primary-button" onClick={clearFilters}>
-                Show all food <Icon name="arrow" />
-              </button>
-            </div>
-          )}
-          {status === "ready" && (
-            <div className="menu-grid">
-              {visible.map((item) => (
-                <article className="menu-card" key={item.id}>
-                  <div
-                    className={`food-visual ${item.category.toLowerCase().replace(" ", "-")}`}
-                  >
-                    <FoodArt item={item} />
-                    <span
-                      className={`availability ${item.is_listed ? "" : "unavailable"}`}
-                    >
-                      <span />
-                      {item.is_listed ? "Regular menu" : "Not currently listed"}
-                    </span>
-                    <span className="category-label">{item.category}</span>
-                  </div>
-                  <div className="card-content">
-                    <button
-                      className="stall-name"
-                      onClick={() => setShop(String(item.stall_id))}
-                    >
-                      {cleanName(item.stall_name)}{" "}
-                      <span aria-hidden="true">↗</span>
-                    </button>
-                    <h3>{item.name}</h3>
-                    <p className="description">
-                      {item.description ||
-                        "Ask the shop for more details about this item."}
-                    </p>
-                    <div className="card-bottom">
-                      <strong>{pesos.format(item.price)}</strong>
-                      {budget && (
-                        <span className="remaining">
-                          {pesos.format(
-                            Math.max(
-                              0,
-                              Math.round(
-                                (Number(budget) - Number(item.price)) * 100,
-                              ) / 100,
-                            ),
-                          )}{" "}
-                          left
-                        </span>
-                      )}
-                    </div>
-                    <div className="card-meta">
-                      <span>
-                        <Icon name="pin" width="15" height="15" />
-                        {item.location}
-                      </span>
-                      <small>
-                        Recorded{" "}
-                        {new Date(item.updated_at).toLocaleDateString("en-PH", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}{" "}
-                        {isDemoName(item.stall_name)
-                          ? " · Demo"
-                          : " · Confirm at the shop"}
-                      </small>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
-        <section id="how" className="how-section" aria-labelledby="how-title">
-          <div>
-            <p className="eyebrow">LESS GUESSWORK. MORE GOOD FOOD.</p>
-            <h2 id="how-title">
-              A better lunch,
-              <br />
-              in three little steps.
-            </h2>
-            <p>
-              Start with your budget. <br />
-              Leave with a little more choice.
-            </p>
-          </div>
-          <div className="steps">
-            {[
-              [
-                "01",
-                "Set your budget",
-                "Enter what you want to spend and describe the food you would like.",
-              ],
-              [
-                "02",
-                "Get meal ideas",
-                "AI interprets your preferences. We calculate combinations using recorded menu prices.",
-              ],
-              [
-                "03",
-                "Save your meal box",
-                "Save a favorite combination, give it a name, and confirm prices and availability at the shop.",
-              ],
-            ].map(([number, title, text]) => (
-              <div className="step" key={number}>
-                <span>{number}</span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </div>
               </div>
-            ))}
-          </div>
-        </section>
+            )}
+            {status === "ready" && !visible.length && (
+              <div className="state-box">
+                <Icon name="search" width="32" height="32" />
+                <h3>
+                  {selectedShop?.count === 0 || !catalog.length
+                    ? "This shop’s menu is on its way."
+                    : "No matches on the menu just yet."}
+                </h3>
+                <p>
+                  {selectedShop?.count === 0 || !catalog.length
+                    ? "No meals or prices have been listed for this shop yet. Browse another shop while its menu is being added."
+                    : "Try a bigger budget, another category, or a different search."}
+                </p>
+                <button className="primary-button" onClick={clearFilters}>
+                  Show all food <Icon name="arrow" />
+                </button>
+              </div>
+            )}
+            {status === "ready" && (
+              <div className="menu-grid">
+                {visible.map((item) => (
+                  <article className="menu-card" key={item.id}>
+                    <div
+                      className={`food-visual ${item.category.toLowerCase().replace(" ", "-")}`}
+                    >
+                      <FoodArt item={item} />
+                      {!item.is_listed && (
+                        <span className="availability unavailable"><span /> Unlisted</span>
+                      )}
+                      <span className="category-label">{item.category}</span>
+                    </div>
+                    <div className="card-content">
+                      <button
+                        className="stall-name"
+                        onClick={() => setShop(String(item.stall_id))}
+                      >
+                        {cleanName(item.stall_name)}{" "}
+                        <span aria-hidden="true">↗</span>
+                      </button>
+                      <h3>{item.name}</h3>
+                      {item.description && <p className="description">{item.description}</p>}
+                      <div className="card-bottom">
+                        <strong>{pesos.format(item.price)}</strong>
+                        {budget && (
+                          <span className="remaining">
+                            {pesos.format(
+                              Math.max(
+                                0,
+                                Math.round(
+                                  (Number(budget) - Number(item.price)) * 100,
+                                ) / 100,
+                              ),
+                            )}{" "}
+                            left
+                          </span>
+                        )}
+                      </div>
+                      <div className="card-meta">
+                        <span>
+                          <Icon name="pin" width="15" height="15" />
+                          {item.location}
+                        </span>
+                        <small>
+                          Recorded{" "}
+                          {new Date(item.updated_at).toLocaleDateString("en-PH", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}{" "}
+                          {isDemoName(item.stall_name) && " · Demo"}
+                        </small>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </MealPlanner>
+        <details id="how" className="how-guide">
+          <summary>How AnimoMeals works</summary>
+          <p>
+            AI reads your food preferences. AnimoMeals checks recorded menu prices
+            against your budget. Save the combinations you want to try in My Meal
+            Boxes.
+          </p>
+        </details>
         <footer>
           <div>
             <Brand />
-            <p>A little planning. A better lunch.</p>
           </div>
           <div className="footer-links">
             <a href="#meal-boxes">My Meal Boxes</a>
-            <a href="#menu">Find food</a>
+            <a href="#recommendations">Meal finder</a>
             <a href="#shops">Browse shops</a>
-            <a href="#how">How it works</a>
           </div>
           <p className="footer-note">
             Independent student project

@@ -12,6 +12,14 @@ SHOPS = [
     ('Lola Barbz', 'The Agora'),
 ]
 
+# Optional catalog entries are created only when their menu data is imported.
+CATALOG_LOCATIONS = dict(SHOPS) | {
+    '': 'Location to be confirmed',  # User-supplied rice bowls; shop name pending.
+    'Jollibee - Bacolod La Salle': 'La Salle Avenue, Bacolod · Foodpanda menu prices',
+    "McDonald's - North Drive La Salle": 'North Drive La Salle, Bacolod · Foodpanda menu prices',
+    'Potato Corner - USLS Agora': 'Inside Lasalle, AGORA',
+}
+
 
 def seed_shops():
     added = 0
