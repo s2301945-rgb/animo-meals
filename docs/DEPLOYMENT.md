@@ -25,6 +25,14 @@ After merging to main, GitHub Actions runs checks and triggers the existing priv
 
 Existing unused Supabase Auth variables, Auth accounts and old Storage objects are not automatically deleted. They do not enable old endpoints in the revised app. Do not publish `.env.render` or browser ownership keys.
 
+## Main-branch protection
+
+The public repository requires the frontend and backend checks, an up-to-date branch, one approving review, and resolved conversations before merge. Administrators are included. The recording-preparation PR must pass the same rules. [Verified settings](verification/recording-repository-rules.json)
+
+## Supabase Data API configuration
+
+The backend connects directly to PostgreSQL. The disabled Supabase Data API produced repeated missing-schema log entries. On November 20, 2026, the documented empty-schema workaround was applied using pgrst_no_exposed_schemas and the authenticator role's pgrst.db_schemas setting, followed by a PostgREST reload. Database connectivity and public API health passed afterward. Follow Supabase's reversal steps if the Data API is re-enabled. [Supabase troubleshooting guide](https://supabase.com/kb/troubleshooting/schema-pg_pgrst_no_exposed_schemas-does-not-exist)
+
 Frontend/backend free-host cold starts can delay verification. Avoid claiming a successful deployment until the public endpoints and site have been checked.
 
 ## Rollback plan

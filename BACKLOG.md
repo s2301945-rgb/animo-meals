@@ -1,32 +1,34 @@
-# Revised project backlog
+# Project backlog
 
-The original Week 1 and Week 2 work established deployment, database access and CRUD. Administrator CRUD has been replaced by visitor meal-box CRUD. Old GitHub issue text may describe the earlier scope; use this file for the revision.
+## Working and verified
 
-## Implemented in this revision
+- Production React frontend, FastAPI backend, Supabase PostgreSQL, and Groq integration.
+- Structured multilingual extraction, validated catalog matching, and decimal budget totals.
+- Visitor Meal Box creation, viewing, renaming, deletion, persistence, and ownership isolation.
+- Frontend lint/build, 91 backend tests, mocked AI calls in CI, and five real-provider language examples.
+- Public main-branch protection with frontend/backend checks and one required approval.
+- Isolated staging schema upgraded to 0003.
+- Current menu snapshots, rollback rehearsal, and credential-history scan.
 
-- Visitor budget and preference form; backend AI extraction and deterministic meal combinations.
-- Exact decimal budget validation and no invented menu entries.
-- Database-backed My Meal Boxes: save, view, rename, delete.
-- Browser-key ownership isolation without accounts; stored price snapshots.
-- Removal of admin UI, login, upload and catalog write APIs.
-- Recorded-menu wording instead of real-time availability claims.
-- Validated offline developer dataset import and blank five-shop template.
-- API tests with mocked provider calls, migration and updated documentation.
+## Before the video
 
-## Next: supplied menu dataset
+- Arrange an eligible reviewer. The owner cannot approve their own PR.
+- Review the recording-preparation PR, let checks pass, obtain approval, and merge.
+- Record a fresh harmless test change through branch, PR, review, merge, automatic deployment, and production verification.
+- Show repository rules, hosting dashboards, masked environment settings, AI outcomes, tests, and pipeline timings.
+- Confirm the instructor's accepted review procedure if recording as a solo developer.
 
-- Collect regular menu names, prices, categories and confirmed details from the five selected shops.
-- Confirm Maria Rosa's location.
-- Review dataset spelling and prices, then import into the intended environment.
-- Add non-spicy/ingredient descriptions only when verified.
-- Try the labeled AI acceptance cases against the real catalog; record limitations and results.
+## Remaining catalog improvements
 
-## Release and hardening
+- Supply the unnamed shop's name and location.
+- Confirm Maria Rosa's location and add its menu.
+- Add Pritong Manok's menu.
+- Confirm USLS Agora Potato Corner offerings and counter prices.
+- Review recorded delivery prices periodically.
 
-- Verify the revised production deployment after passing CI.
-- Check real provider behavior through the public interface once affordable menu data exists.
-- Measure pipeline timings before/after an optimization.
-- Verify rollback, complete final release documentation and tag v1.0.0 with a changelog.
-- Evaluate stronger persistent/global abuse limits if the app grows beyond the single-process course deployment.
+## Future scope
 
-Optional later: a random choice among saved boxes that fit today's budget. No daily stock tracking, vendor accounts, ordering or payments are planned.
+- Stronger distributed request limits if the single-process deployment expands.
+- Cross-device accounts only if the project scope changes.
+
+No live-stock tracking, vendor accounts, ordering, or payments are included.

@@ -25,3 +25,18 @@ Photo uploads are outside the revised scope. Existing public photos can continue
 `backend/data/potato-corner-menu.json` lists Potato Corner items under USLS Agora using North Drive's Foodpanda menu as a reference. Confirm current offerings and counter prices at USLS Agora. [Potato Corner North Drive](https://www.foodpanda.ph/restaurant/mjnw/potato-corner-north-drive)
 
 The La Salle delivery dataset includes selected items from two Bacolod branches. It records Foodpanda item prices, or the starting price where the menu lists variants. Delivery fees, minimum order amounts, and promotions are separate. Check the branch for counter prices. [Jollibee Bacolod La Salle](https://www.foodpanda.ph/restaurant/r9ql/jollibee-bacolod-la-salle) · [McDonald's North Drive La Salle](https://www.foodpanda.ph/restaurant/r8sy/mcdonalds-north-drive-la-salle)
+
+## Production snapshot
+
+The four files below mirror 28 published items across nine shops. They preserve the names, prices, and descriptions returned by production. Their starting point is a recorded catalog, so they do not independently verify today's counter prices.
+
+| Dataset | Items |
+| --- | --- |
+| backend/data/campus-menu.json | 5 |
+| backend/data/la-salle-delivery-menu.json | 8 |
+| backend/data/potato-corner-menu.json | 12 |
+| backend/data/unnamed-rice-bowls.json | 3 |
+
+The eight unimported entries in the older delivery draft were reconciled by replacing that draft with the actual published catalog. The snapshot preserves published names and prices.
+
+The blank shop name in unnamed-rice-bowls.json is intentional. Supply its name and location before relying on it as a destination in the presentation. [Recorded snapshot](verification/catalog-snapshot.json)

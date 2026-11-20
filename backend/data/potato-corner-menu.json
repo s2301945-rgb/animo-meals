@@ -4,6 +4,24 @@
       "name": "Potato Corner - USLS Agora",
       "menu_items": [
         {
+          "name": "Crunchy Chicken Pops Mega",
+          "price": "219.00",
+          "category": "Snack",
+          "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
+        },
+        {
+          "name": "Crunchy Chicken Pops Solo",
+          "price": "95.00",
+          "category": "Snack",
+          "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
+        },
+        {
+          "name": "Flavored Fries Giga",
+          "price": "247.00",
+          "category": "Snack",
+          "description": "Recorded North Drive Foodpanda item price. Delivery fees excluded. Confirm price and availability at USLS Agora."
+        },
+        {
           "name": "Flavored Fries Jumbo",
           "price": "115.00",
           "category": "Snack",
@@ -16,38 +34,20 @@
           "description": "Recorded North Drive Foodpanda item price. Delivery fees excluded. Confirm price and availability at USLS Agora."
         },
         {
-          "name": "Flavored Fries Giga",
-          "price": "247.00",
-          "category": "Snack",
-          "description": "Recorded North Drive Foodpanda item price. Delivery fees excluded. Confirm price and availability at USLS Agora."
-        },
-        {
           "name": "Flavored Fries Tera",
           "price": "267.00",
           "category": "Snack",
           "description": "Recorded North Drive Foodpanda item price. Delivery fees excluded. Confirm price and availability at USLS Agora."
         },
         {
-          "name": "Crunchy Chicken Pops Solo",
-          "price": "95.00",
+          "name": "Large Mix - Chicken Fries and Fries with Korean Sweet Sauce",
+          "price": "120.00",
           "category": "Snack",
-          "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
+          "description": "Recorded North Drive Foodpanda starting price. Delivery fees excluded. Confirm price and availability at USLS Agora."
         },
         {
           "name": "Large Mix - Fries and Crunchy Chicken Pops",
           "price": "120.00",
-          "category": "Snack",
-          "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
-        },
-        {
-          "name": "Crunchy Chicken Pops Mega",
-          "price": "219.00",
-          "category": "Snack",
-          "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
-        },
-        {
-          "name": "Mega Mix - Fries and Crunchy Chicken Pops",
-          "price": "169.00",
           "category": "Snack",
           "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
         },
@@ -58,16 +58,16 @@
           "description": "Recorded North Drive Foodpanda starting price. Delivery fees excluded. Confirm price and availability at USLS Agora."
         },
         {
-          "name": "Large Mix - Chicken Fries and Fries with Korean Sweet Sauce",
-          "price": "120.00",
-          "category": "Snack",
-          "description": "Recorded North Drive Foodpanda starting price. Delivery fees excluded. Confirm price and availability at USLS Agora."
-        },
-        {
           "name": "Mega Mix - Chicken Fries and Fries with Korean Sweet Soy",
           "price": "169.00",
           "category": "Snack",
           "description": "Recorded North Drive Foodpanda starting price. Delivery fees excluded. Confirm price and availability at USLS Agora."
+        },
+        {
+          "name": "Mega Mix - Fries and Crunchy Chicken Pops",
+          "price": "169.00",
+          "category": "Snack",
+          "description": "North Drive Foodpanda starting price for a limited-time item. Delivery fees excluded. Confirm price and availability at USLS Agora."
         },
         {
           "name": "Party Mix B",

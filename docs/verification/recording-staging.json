@@ -1,0 +1,8 @@
+{
+  "migration": "0003",
+  "shops": 9,
+  "menu_items": 28,
+  "crud": "create, read, rename, isolation, delete passed",
+  "temporary_box": "deleted",
+  "environment": "restricted animomeals_staging role and schema"
+}
