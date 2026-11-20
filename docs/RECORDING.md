@@ -4,8 +4,8 @@ Keep the recording under 15 minutes. Use the production application at https://a
 
 ## Before recording
 
-- Merge the recording-preparation PR after frontend/backend checks pass and an eligible reviewer approves it.
-- Arrange a reviewer with the repository permissions GitHub requires for a counting approval. A solo author cannot approve their own PR. Confirm the instructor's accepted solo procedure if a reviewer is unavailable.
+- Merge the recording-preparation PR after frontend/backend checks pass.
+- Explain that the instructor confirmed solo developers can merge their own PRs once required checks pass.
 - Open the website, Supabase Table Editor, Render, Vercel, GitHub Actions, branch settings, and the test/evaluation evidence.
 - Keep environment values, database URLs, AI credentials, and browser ownership keys masked.
 - Use a separate browser profile for demonstration boxes so the recording's data is easy to identify.
@@ -19,7 +19,7 @@ Keep the recording under 15 minutes. Use the production application at https://a
 | 4:00–6:00 | Create a clearly named demo box and show its saved_plans and saved_plan_items records in Supabase. Explain stalls → menu_items and saved_plans → saved_plan_items. Show Render status/runtime logs and Vercel production/build logs. |
 | 6:00–7:15 | Demonstrate Groq preference extraction, backend validation, database matching, and exact budget totals. Show the AI error mapping in backend/app/recommendations.py. |
 | 7:15–8:30 | Show passing API tests, mocked provider tests, the real-provider language results, and the GitHub Actions test artifact. |
-| 8:30–13:45 | Complete the fresh change-to-deployment demonstration below. Show protection rules, workflow configuration, test/build stages, review, deployment logs, and the working production site. |
+| 8:30–13:45 | Complete the fresh change-to-deployment demonstration below. Show protection rules, workflow configuration, test/build stages, merge, deployment logs, and the working production site. |
 | 13:45–14:30 | Summarize the verified features and remaining catalog details. |
 
 ## Fresh change-to-deployment demonstration
@@ -30,8 +30,8 @@ Perform these steps during the recording. Choose an unused branch name.
 2. Add backend/tests/test_video_budget.py containing the harmless test below.
 3. Run the test, commit it, and push the branch.
 4. Open a PR into main and show the Application checks workflow starting automatically.
-5. Show required frontend/backend checks, required approval, and the blocked merge state while a requirement is unmet.
-6. Obtain an eligible reviewer’s approval and merge after the checks pass.
+5. Show required frontend/backend checks and the blocked merge state while checks are pending or failing. Explain the instructor-approved solo exception for reviews.
+6. Merge after the required checks pass.
 7. Follow the resulting main-branch workflow. Its deploy-frontend job invokes the configured Vercel hook. Render deploys after successful checks.
 8. Show the Vercel and Render deployment logs and final status. Verify the backend revision at https://animo-meals-api.onrender.com/api/environment against the merge commit.
 9. Open production, request a meal, and verify that the application still works.

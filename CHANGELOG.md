@@ -7,7 +7,7 @@
 - Record the production catalog in four reproducible datasets.
 - Update isolated staging to migration 0003.
 - Add current AI evaluation, pipeline measurements, and the video demonstration checklist.
-- Require frontend/backend checks and one approval on the public repository's main branch.
+- Require frontend/backend checks on the public repository's main branch, following the instructor-approved solo workflow.
 
 ## v1.0.0
 

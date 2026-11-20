@@ -27,7 +27,7 @@ Existing unused Supabase Auth variables, Auth accounts and old Storage objects a
 
 ## Main-branch protection
 
-The public repository requires the frontend and backend checks, an up-to-date branch, one approving review, and resolved conversations before merge. Administrators are included. The recording-preparation PR must pass the same rules. [Verified settings](verification/recording-repository-rules.json)
+The public repository requires the frontend and backend checks, an up-to-date branch and resolved conversations before merge. Administrators are included. The recording-preparation PR must pass the same rules. The instructor confirmed that solo developers may merge after checks pass. [Verified settings](verification/recording-repository-rules.json)
 
 ## Supabase Data API configuration
 
