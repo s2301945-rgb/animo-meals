@@ -5,7 +5,7 @@ The repository uses Vercel for the frontend, Render for the backend, and Supabas
 ## Before merging
 
 - Pass frontend lint/build and backend lint/tests on the pull request.
-- Review the additive migration 0003. It creates saved_plans/saved_plan_items with PostgreSQL RLS and preserves menu records.
+- Review migrations 0003 and 0004. Migration 0004 adds quantities (default one), nullable catalog references and edit versions without changing saved prices. It creates saved_plans/saved_plan_items with PostgreSQL RLS and preserves menu records.
 - Keep DATABASE_URL, GROQ_API_KEY, GROQ_MODEL and FRONTEND_ORIGIN in backend private environment settings.
 - Keep VITE_API_BASE_URL pointing to the hosted API; Vite settings are public.
 - Do not copy local fixture menus into production. Import only the supplied dataset after reviewing it.
@@ -21,7 +21,7 @@ After merging to main, GitHub Actions runs checks and triggers the existing priv
 3. GET /api/stalls and /api/menu-items: check the existing catalog was preserved.
 4. Open the public website, check the AI request form and My Meal Boxes, and verify old #admin bookmarks redirect.
 5. Confirm /api/admin/auth-config is 404 and public catalog writes are unavailable.
-6. With the supplied dataset, request a real AI recommendation; save, rename, reload and delete a meal box. Until data arrives, verify the no-matches response instead.
+6. With the supplied dataset, request a real AI recommendation; save, edit meals/quantities/budget, reload and delete a meal box. Until data arrives, verify the no-matches response instead.
 
 Existing unused Supabase Auth variables, Auth accounts and old Storage objects are not automatically deleted. They do not enable old endpoints in the revised app. Do not publish `.env.render` or browser ownership keys.
 
@@ -37,7 +37,7 @@ Frontend/backend free-host cold starts can delay verification. Avoid claiming a 
 
 ## Rollback plan
 
-Redeploy the previous verified frontend and backend revisions. Keep database migration 0003 in place to preserve saved boxes. Verify the backend revision, database health, shop listing, and a saved box before restoring the candidate. Downgrading migration 0003 deletes saved boxes.
+Redeploy verified quantity-aware frontend and backend revisions. Keep database migration 0004 in place to preserve saved boxes. Once a box has multiple portions, a backend older than migration 0004 is incompatible because it ignores quantities; use a quantity-aware release or forward fix. Verify the backend revision, database health, shop listing, and a saved box before restoring the candidate. Downgrading migration 0003 deletes saved boxes.
 
 The Week 4 rehearsal ran the candidate, the previous production backend, and the candidate again against the same isolated database. The shop and saved box survived all three phases. [Rollback and Git history audit](verification/week-4-audit.json)
 
