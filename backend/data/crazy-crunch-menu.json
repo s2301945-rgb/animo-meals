@@ -1,0 +1,21 @@
+{
+  "shops": [
+    {
+      "name": "Crazy Crunch",
+      "menu_items": [
+        {
+          "name": "Chicken Joy with Java Rice",
+          "price": "60.00",
+          "category": "Main dish",
+          "description": "Chicken served with Java rice."
+        },
+        {
+          "name": "Chicken Joy Solo",
+          "price": "50.00",
+          "category": "Main dish",
+          "description": "Chicken only."
+        }
+      ]
+    }
+  ]
+}
