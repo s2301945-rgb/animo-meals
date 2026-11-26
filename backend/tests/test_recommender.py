@@ -337,3 +337,104 @@ def test_dataset_rejects_unknown_shops_or_duplicate_items():
         Dataset.model_validate({'shops': [{'name': 'Maria Rosa', 'menu_items': [
             {'name': 'Duplicate', 'price': 5, 'category': 'Snack'},
             {'name': 'Duplicate', 'price': 6, 'category': 'Snack'}]}]})
+
+
+def test_create_box_with_quantities_uses_catalog_unit_prices(db_client):
+    client, _ = db_client
+    response = client.post('/api/plans', headers=A, json={
+        'title': 'Three portions', 'budget': '200',
+        'items': [{'menu_item_id': 1, 'quantity': 3}]})
+    assert response.status_code == 201
+    plan = response.json()
+    assert plan['total'] == '181.50' and plan['remaining'] == '18.50'
+    assert plan['version'] == 1
+    assert plan['items'][0]['quantity'] == 3
+    assert plan['items'][0]['price'] == '60.50'
+    assert plan['items'][0]['line_total'] == '181.50'
+
+
+def test_edit_box_adds_removes_meals_changes_budget_and_preserves_snapshots(db_client):
+    client, engine = db_client
+    original = client.post('/api/plans', headers=A, json={
+        'title': 'Original', 'budget': '100', 'item_ids': [1, 3]}).json()
+    with Session(engine) as session:
+        session.get(MenuItem, 1).price = Decimal('99')
+        session.commit()
+    retained = original['items'][0]
+    response = client.put(f"/api/plans/{original['id']}", headers=A, json={
+        'title': 'Shared lunch', 'budget': '150', 'expected_version': original['version'],
+        'items': [{'saved_item_id': retained['id'], 'quantity': 2},
+                  {'menu_item_id': 2, 'quantity': 1}]})
+    assert response.status_code == 200
+    plan = response.json()
+    assert plan['title'] == 'Shared lunch' and plan['budget'] == '150.00'
+    assert plan['version'] == 2
+    assert plan['total'] == '136.00' and plan['remaining'] == '14.00'
+    assert [item['name'] for item in plan['items']] == ['Chicken', 'Rice']
+    assert plan['items'][0]['id'] == retained['id']
+    assert plan['items'][0]['price'] == '60.50'
+    assert client.get(f"/api/plans/{plan['id']}", headers=A).json() == plan
+
+
+def test_stale_box_edit_returns_conflict_without_overwriting(db_client):
+    client, _ = db_client
+    plan = client.post('/api/plans', headers=A, json={
+        'title': 'Original', 'budget': '100', 'item_ids': [1]}).json()
+    path = f"/api/plans/{plan['id']}"
+    assert client.put(path, headers=A, json={'title': 'First tab', 'expected_version': 1}).status_code == 200
+    assert client.put(path, headers=A, json={'title': 'Stale tab', 'expected_version': 1}).status_code == 409
+    assert client.get(path, headers=A).json()['title'] == 'First tab'
+
+
+@pytest.mark.parametrize('quantity', [0, -1, 21, 1.5, '2', True])
+def test_quantity_validation_preserves_existing_box(db_client, quantity):
+    client, _ = db_client
+    plan = client.post('/api/plans', headers=A, json={
+        'title': 'Original', 'budget': '100', 'item_ids': [1]}).json()
+    path = f"/api/plans/{plan['id']}"
+    response = client.put(path, headers=A, json={'items': [
+        {'saved_item_id': plan['items'][0]['id'], 'quantity': quantity}]})
+    assert response.status_code == 422
+    assert client.get(path, headers=A).json() == plan
+
+
+def test_failed_budget_edit_is_atomic(db_client):
+    client, _ = db_client
+    plan = client.post('/api/plans', headers=A, json={
+        'title': 'Original', 'budget': '100', 'item_ids': [1]}).json()
+    path = f"/api/plans/{plan['id']}"
+    response = client.put(path, headers=A, json={
+        'title': 'Should roll back', 'budget': '50',
+        'items': [{'saved_item_id': plan['items'][0]['id'], 'quantity': 2}]})
+    assert response.status_code == 409
+    assert client.get(path, headers=A).json() == plan
+
+
+def test_box_editor_rejects_foreign_snapshot_and_duplicate_references(db_client):
+    client, _ = db_client
+    first = client.post('/api/plans', headers=A, json={
+        'title': 'First', 'budget': '100', 'item_ids': [1]}).json()
+    second = client.post('/api/plans', headers=A, json={
+        'title': 'Second', 'budget': '100', 'item_ids': [2]}).json()
+    path = f"/api/plans/{second['id']}"
+    assert client.put(path, headers=A, json={'items': [
+        {'saved_item_id': first['items'][0]['id'], 'quantity': 1}]}).status_code == 404
+    assert client.put(path, headers=B, json={'budget': '100'}).status_code == 404
+    assert client.put(path, headers=A, json={'items': [
+        {'saved_item_id': second['items'][0]['id'], 'quantity': 1},
+        {'menu_item_id': 2, 'quantity': 1}]}).status_code == 422
+
+
+@pytest.mark.parametrize('body', [
+    {}, {'items': []}, {'budget': None}, {'title': None}, {'items': None},
+    {'items': [{'menu_item_id': 1, 'saved_item_id': 1}]},
+    {'items': [{'menu_item_id': 5, 'quantity': 1}]},
+])
+def test_editor_rejects_empty_ambiguous_or_retired_meals(db_client, body):
+    client, _ = db_client
+    plan = client.post('/api/plans', headers=A, json={
+        'title': 'Original', 'budget': '100', 'item_ids': [1]}).json()
+    path = f"/api/plans/{plan['id']}"
+    expected = 409 if body == {'items': [{'menu_item_id': 5, 'quantity': 1}]} else 422
+    assert client.put(path, headers=A, json=body).status_code == expected
+    assert client.get(path, headers=A).json() == plan

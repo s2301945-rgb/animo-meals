@@ -28,7 +28,7 @@ BAMSOYS offers three recorded rice bowls at PHP 50 each. Its location is pending
 2. Groq extracts structured preferences. The backend validates them and rejects a conflicting budget.
 3. The backend selects recorded combinations and adds exact decimal prices. It never asks the AI to invent a menu or calculate the bill.
 4. Compare up to six combinations, with item prices, shop locations, totals and remaining budget.
-5. Save a suggestion to My Meal Boxes, view it later, rename it, or delete it.
+5. Save a suggestion to My Meal Boxes, view it later, edit its meals, quantities and budget, or delete it.
 
 Each suggestion contains one main dish or snack, optionally one side and one requested drink. One shop per suggestion is the default; multiple shops are allowed only when the visitor explicitly permits it. Results are ordered by lowest total, not by unsupported food-quality scores. An empty preference box performs price comparison without an AI call. An empty catalog never calls the provider.
 
@@ -38,12 +38,12 @@ Each suggestion contains one main dish or snack, optionally one side and one req
 | --- | --- | --- |
 | Create | Save a suggested meal box | POST /api/plans |
 | Read | Open their saved boxes | GET /api/plans and GET /api/plans/{id} |
-| Update | Rename a box, such as Monday Lunch | PUT /api/plans/{id} |
+| Update | Edit the name, budget, meals and quantities | PUT /api/plans/{id} |
 | Delete | Remove an unwanted box | DELETE /api/plans/{id} |
 
 Saved boxes live in the database. A cryptographically random browser-held bearer key identifies the visitor; only its SHA-256 hash is stored in the database. Visitors cannot read or alter boxes belonging to another key. The key stays in this site's local browser storage and is sent only to the configured backend. Anyone using that browser can access the same boxes. Clearing site data loses access; there is no password recovery or cross-device sync. This is intended for low-sensitivity meal plans, not personal or medical records. Up to 20 boxes can be saved per browser key.
 
-Saved items are snapshots of recorded names, shop details and prices. A later dataset update does not silently change an earlier meal box. Prices are rechecked when saving a new box.
+Saved items are snapshots of recorded names, shop details and prices. A later dataset update does not silently change an earlier meal box. Existing meals keep their saved unit prices. Added meals use current recorded prices. Totals update with quantities, and a box must fit its budget before saving.
 
 ## Technology stack
 
@@ -71,7 +71,7 @@ flowchart LR
   I --> P
 ```
 
-Tables: `stalls` → `menu_items`, and `saved_plans` → `saved_plan_items`. Migration 0003 adds meal boxes while preserving existing catalog records. The internal legacy `is_available` column is exposed as `is_listed`; it means inclusion in the recorded catalog, never real-time stock.
+Tables: `stalls` → `menu_items`, and `saved_plans` → `saved_plan_items`. Migration 0003 adds meal boxes while preserving existing catalog records. Migration 0004 adds quantities, optional catalog references and edit versions; older boxes keep their snapshots with quantity one. The internal legacy `is_available` column is exposed as `is_listed`; it means inclusion in the recorded catalog, never real-time stock.
 
 ## Setup, API and menu data
 

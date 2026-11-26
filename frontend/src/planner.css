@@ -245,6 +245,97 @@ textarea:focus-visible {
   outline: 3px solid #b7801a;
   outline-offset: 4px;
 }
+.box-editor fieldset {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 0;
+  margin: 16px 0 0;
+  border: 0;
+}
+.box-editor legend {
+  font-family: Manrope, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+.box-editor .planner-small {
+  margin: -6px 0 0;
+}
+.editable-meals,
+.meal-picker-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.editable-meals li {
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.editable-meal-info,
+.meal-picker-list li > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.editable-meal-info span,
+.meal-picker-list span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.editable-meal-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+.editable-meal-controls label {
+  font-size: 12px;
+  gap: 6px;
+}
+.editable-meal-controls input {
+  width: 88px;
+  padding: 10px;
+  min-height: 44px;
+}
+.meal-picker {
+  border-top: 1px solid var(--line);
+  padding-top: 4px;
+}
+.meal-picker summary {
+  min-height: 44px;
+  padding: 12px 0;
+  color: var(--green);
+  font-weight: 700;
+  cursor: pointer;
+}
+.meal-picker > label {
+  font-size: 13px;
+  margin: 8px 0 16px;
+}
+.meal-picker-list {
+  max-height: 280px;
+  overflow-y: auto;
+  scrollbar-color: #819b82 #edf3e6;
+  padding-right: 8px;
+}
+.meal-picker-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.meal-total.over-budget {
+  background: #fff0e9;
+  color: #963520;
+}
+.meal-total.over-budget span {
+  color: inherit;
+}
 @media (max-width: 760px) {
   .saved-boxes {
     padding: 32px 0;

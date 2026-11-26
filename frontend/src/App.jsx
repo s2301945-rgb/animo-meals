@@ -638,6 +638,7 @@ export default function App() {
       <main>
         <MealPlanner
           budget={draftBudget}
+          catalog={catalog}
           onBudgetChange={setDraftBudget}
           highlights={
             <MenuCarousel

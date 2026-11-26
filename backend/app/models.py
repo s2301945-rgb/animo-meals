@@ -44,6 +44,7 @@ class SavedPlan(Base):
     owner_hash: Mapped[str] = mapped_column(String(64), index=True)
     title: Mapped[str] = mapped_column(String(100))
     budget: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    version: Mapped[int] = mapped_column(default=1, server_default='1')
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     items: Mapped[list['SavedPlanItem']] = relationship(
         cascade='all, delete-orphan', back_populates='plan', order_by='SavedPlanItem.id')
@@ -51,6 +52,7 @@ class SavedPlan(Base):
 
 class SavedPlanItem(Base):
     __tablename__ = 'saved_plan_items'
+    __table_args__ = (CheckConstraint('quantity >= 1 AND quantity <= 20', name='saved_item_quantity_range'),)
     id: Mapped[int] = mapped_column(primary_key=True)
     plan_id: Mapped[int] = mapped_column(ForeignKey('saved_plans.id', ondelete='CASCADE'), index=True)
     # Snapshot of listed prices: old plans must not silently change after a dataset update.
@@ -58,4 +60,6 @@ class SavedPlanItem(Base):
     shop_name: Mapped[str] = mapped_column(String(100))
     location: Mapped[str] = mapped_column(String(200))
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    quantity: Mapped[int] = mapped_column(default=1, server_default='1')
+    menu_item_id: Mapped[int | None] = mapped_column(ForeignKey('menu_items.id', ondelete='SET NULL'), nullable=True)
     plan: Mapped[SavedPlan] = relationship(back_populates='items')
