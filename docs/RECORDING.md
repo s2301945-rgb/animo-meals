@@ -63,7 +63,7 @@ The pipeline measurements show npm installation decreasing from 4 to 2 seconds, 
 
 ## Remaining catalog information
 
-The pending shop needs its name and location. Maria Rosa needs a confirmed location and menu. Pritong Manok needs a menu. Potato Corner USLS Agora counter prices and offerings need confirmation because the recorded references came from the North Drive delivery menu. Describe these data limits when stating completion.
+BAMSOYS needs its location. Maria Rosa needs a confirmed location and menu. Pritong Manok needs a menu. Potato Corner USLS Agora counter prices and offerings need confirmation because the recorded references came from the North Drive delivery menu. Describe these data limits when stating completion.
 
 ## Submit
 

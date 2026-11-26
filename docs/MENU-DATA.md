@@ -39,4 +39,4 @@ The four files below mirror 28 published items across nine shops. They preserve 
 
 The eight unimported entries in the older delivery draft were reconciled by replacing that draft with the actual published catalog. The snapshot preserves published names and prices.
 
-The blank shop name in unnamed-rice-bowls.json is intentional. Supply its name and location before relying on it as a destination in the presentation. [Recorded snapshot](verification/catalog-snapshot.json)
+The dataset unnamed-rice-bowls.json now names the shop BAMSOYS. Its three rice bowls are PHP 50 each. Its location still needs confirmation. [Recorded snapshot](verification/catalog-snapshot.json)

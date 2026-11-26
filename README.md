@@ -18,9 +18,9 @@ We list regular menu offerings, not live stock. Prices and availability must be 
 | Jollibee - Bacolod La Salle | La Salle Avenue, Bacolod |
 | McDonald's - North Drive La Salle | North Drive La Salle, Bacolod |
 | Potato Corner - USLS Agora | Inside Lasalle, AGORA |
-| Shop name pending | Location to be confirmed |
+| BAMSOYS | Location to be confirmed |
 
-The pending shop has a blank database name at the developer's request. Maria Rosa and Pritong Manok await menus. Potato Corner's recorded prices use the North Drive delivery menu as a reference and need confirmation at USLS Agora. [Catalog snapshot](docs/verification/catalog-snapshot.json)
+BAMSOYS offers three recorded rice bowls at PHP 50 each. Its location is pending. Maria Rosa and Pritong Manok await menus. Potato Corner's recorded prices use the North Drive delivery menu as a reference and need confirmation at USLS Agora. [Catalog snapshot](docs/verification/catalog-snapshot.json)
 
 ## Visitor flow
 
