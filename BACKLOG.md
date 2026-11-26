@@ -20,7 +20,7 @@
 
 ## Remaining catalog improvements
 
-- Supply the unnamed shop's name and location.
+- Supply BAMSOYS' location.
 - Confirm Maria Rosa's location and add its menu.
 - Add Pritong Manok's menu.
 - Confirm USLS Agora Potato Corner offerings and counter prices.
