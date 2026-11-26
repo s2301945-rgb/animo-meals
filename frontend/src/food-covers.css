@@ -1,0 +1,67 @@
+.food-visual {
+  height: 220px;
+}
+.food-visual.main-dish,
+.food-visual.snack,
+.food-visual.side,
+.food-visual.drink {
+  background: #f5f0e4;
+}
+.food-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #f5f0e4;
+}
+.food-cover-art {
+  width: min(100%, 225px);
+  aspect-ratio: 1;
+  clip-path: inset(2px);
+  flex-shrink: 0;
+  background-image: url("/images/menu-food-atlas.webp");
+  background-size: 300% 400%;
+  background-repeat: no-repeat;
+}
+.food-cover-caption {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #5b594b;
+  background: #f5f0e4;
+  padding: 3px 5px;
+}
+.food-cover-generic {
+  background: #e9efde;
+}
+.food-cover-type {
+  font-family: Manrope, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green);
+}
+.carousel-slide .hero-plate {
+  height: 230px;
+  max-width: 350px;
+  margin: 0 auto 12px;
+  transform: none;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.hero-plate .food-cover-art {
+  width: min(100%, 225px);
+}
+.hero-plate .food-cover-caption {
+  display: none;
+}
+@media (max-width: 800px) {
+  .carousel-slide .hero-plate {
+    height: 210px;
+    margin-bottom: 10px;
+  }
+}
