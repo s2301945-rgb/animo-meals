@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Photo from "./Photo.jsx";
+import FoodCover from "./FoodCover.jsx";
 import MealPlanner from "./MealPlanner.jsx";
 import StagingBanner, { verifyStagingEnvironment } from "./Staging.jsx";
 
@@ -49,241 +50,6 @@ function Brand() {
         Animo<span>Meals</span>
       </span>
     </a>
-  );
-}
-
-// Illustrations intentionally avoid implying photos of demonstration listings.
-function FoodArt({ item }) {
-  return (
-    <Photo
-      src={item.image_url}
-      alt={item.name}
-      className="food-photo"
-      fallback={<FoodIllustration item={item} />}
-    />
-  );
-}
-
-function FoodIllustration({ item }) {
-  const name = item.name.toLowerCase();
-  const vegetables = /tofu|vegetable|mushroom/.test(name);
-  return (
-    <svg viewBox="0 0 300 220" className="food-art" aria-hidden="true">
-      <ellipse cx="150" cy="190" rx="86" ry="9" fill="#173f2812" />
-      {item.category === "Drink" ? (
-        /water/.test(name) ? (
-          <g>
-            <rect x="127" y="29" width="46" height="23" rx="6" fill="#286947" />
-            <path
-              d="M128 53h44v21l13 19v80q0 16-16 16h-38q-16 0-16-16V93l13-19Z"
-              fill="#d1e7de"
-              stroke="#649b87"
-              strokeWidth="2"
-            />
-            <path
-              d="M120 128h60v42q0 12-12 12h-36q-12 0-12-12Z"
-              fill="#a4d0be"
-            />
-            <rect
-              x="114"
-              y="106"
-              width="72"
-              height="35"
-              rx="3"
-              fill="#fffdf5"
-            />
-            <path
-              d="m142 116 8 15 8-15"
-              fill="none"
-              stroke="#397553"
-              strokeWidth="3"
-            />
-          </g>
-        ) : (
-          <g>
-            <path
-              d="m102 65 13 116q1 10 12 10h46q11 0 12-10l13-116Z"
-              fill="#fffdf3"
-              stroke="#dad8c1"
-              strokeWidth="2"
-            />
-            <path
-              d="m109 88 11 89q1 8 10 8h40q9 0 10-8l11-89Z"
-              fill={/tea/.test(name) ? "#bd853c" : "#c7d466"}
-            />
-            <path
-              d="m164 103 15-73h22"
-              fill="none"
-              stroke="#367b56"
-              strokeWidth="7"
-            />
-            <rect
-              x="121"
-              y="92"
-              width="24"
-              height="26"
-              rx="4"
-              fill="#fff9dd"
-              opacity=".6"
-              transform="rotate(-12 130 100)"
-            />
-            <rect
-              x="152"
-              y="119"
-              width="26"
-              height="26"
-              rx="4"
-              fill="#fff9dd"
-              opacity=".4"
-              transform="rotate(15 160 130)"
-            />
-            <circle cx="106" cy="83" r="24" fill="#e9d06b" />
-            <circle cx="106" cy="83" r="18" fill="#f7e9aa" />
-            <path d="m106 66 0 34m-16-17h32" stroke="#e0c467" strokeWidth="2" />
-          </g>
-        )
-      ) : item.category === "Snack" ? (
-        /bread/.test(name) ? (
-          <g>
-            <path
-              d="M91 99q-9-31 20-39 37-18 77 0 31 9 21 39v76H91Z"
-              fill="#ae713b"
-            />
-            <path
-              d="M99 102q-8-30 20-35 34-13 61 0 27 6 21 35v65H99Z"
-              fill="#e4bf7d"
-            />
-            <path
-              d="m119 104 9 4m37-21 9 4m-29 39 9 4m20 13 9 4m-67-4 9 4"
-              stroke="#a97539"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-          </g>
-        ) : (
-          <g>
-            <path d="m78 152 76-100 74 100Z" fill="#c78c47" />
-            <path d="m85 146 69-85 64 85Z" fill="#f4e4b5" />
-            <path d="m82 151 73-14 69 14-9 12H92Z" fill="#6e9854" />
-            <path d="m84 164 71-9 68 9-10 9H96Z" fill="#e5bc57" />
-            <path d="m88 174 66-13 65 13-9 14H99Z" fill="#f2d69a" />
-          </g>
-        )
-      ) : (
-        <g>
-          <ellipse
-            cx="150"
-            cy="115"
-            rx="99"
-            ry="75"
-            fill="#fcfcf7"
-            stroke="#e0e3d6"
-            strokeWidth="3"
-          />
-          <ellipse cx="150" cy="115" rx="81" ry="60" fill="#f0f1e7" />
-          {/pancit/.test(name) ? (
-            <g>
-              <ellipse cx="150" cy="115" rx="65" ry="43" fill="#dcb56d" />
-              {[0, 1, 2, 3, 4].map((row) => (
-                <path
-                  key={row}
-                  d={`M96 ${91 + row * 11}q23-12 44 0t62 0`}
-                  fill="none"
-                  stroke="#f5d58f"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                />
-              ))}
-              <path
-                d="m113 98 15 9m40-20 13 10m-36 28 19 9m-48 8 18 3"
-                stroke="#5b884c"
-                strokeWidth="6"
-                strokeLinecap="round"
-              />
-              <path
-                d="m149 88 10 9m21 32 10 8"
-                stroke="#d27e44"
-                strokeWidth="5"
-              />
-            </g>
-          ) : /fried rice/.test(name) ? (
-            <g>
-              <ellipse cx="150" cy="116" rx="64" ry="42" fill="#d7b870" />
-              {[0, 1, 2, 3].map((row) => (
-                <path
-                  key={row}
-                  d={`m${108 + row * 4} ${93 + row * 12} 9 3m13-1 9 3m14-4 9 2`}
-                  stroke="#f8e4a6"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              ))}
-              <path
-                d="m125 100 5 5m41 25 5 5m-35 5 4 4m-24-20 3 3"
-                stroke="#61984c"
-                strokeWidth="6"
-              />
-              <path d="M157 86q17-9 27 4 7 14-8 20-18 5-23-8Z" fill="#fffdf0" />
-              <circle cx="170" cy="98" r="9" fill="#edc348" />
-            </g>
-          ) : (
-            <>
-              <ellipse cx="120" cy="109" rx="39" ry="42" fill="#fffef9" />
-              {[0, 1, 2, 3].map((row) => (
-                <path
-                  key={row}
-                  d={`m${98 + row * 3} ${87 + row * 12} 8 3m9-4 8 3m9-3 7 2`}
-                  stroke="#dedfca"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              ))}
-              {item.category !== "Side" && (
-                <>
-                  {/fish/.test(name) ? (
-                    <g>
-                      <path
-                        d="M154 85q27-18 45 9l7 39q-33 21-53-3Z"
-                        fill="#d4a354"
-                      />
-                      <path
-                        d="m164 91 27 30m-32-16 25 29m-10-49 23 27"
-                        stroke="#edc577"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                      />
-                    </g>
-                  ) : (
-                    <>
-                      <path
-                        d="M161 76q25-10 38 9 7 18-9 24-28 11-37-7-5-16 8-26Z"
-                        fill={vegetables ? "#cfa963" : "#ad6734"}
-                      />
-                      <path
-                        d="M173 112q26-12 35 6 12 22-13 28-22 8-30-9-6-15 8-25Z"
-                        fill={vegetables ? "#e0bd78" : "#be7b3f"}
-                      />
-                      <path
-                        d="m158 88 20 8m3 25 16 7"
-                        stroke={vegetables ? "#b98b43" : "#8e512c"}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                      />
-                    </>
-                  )}
-                  <path
-                    d="M130 147q7-27 28-17-1 23-28 17Zm17 4q12-24 28-10-7 21-28 10Z"
-                    fill="#548b49"
-                  />
-                  <circle cx="109" cy="147" r="10" fill="#cb7050" />
-                  <circle cx="109" cy="147" r="5" fill="#ebaa74" />
-                </>
-              )}
-            </>
-          )}
-        </g>
-      )}
-    </svg>
   );
 }
 
@@ -385,7 +151,7 @@ function MenuCarousel({ items, budget, onSelect }) {
         aria-hidden={outgoing || undefined}
       >
         <div className="hero-plate">
-          <FoodArt item={item} />
+          <FoodCover item={item} />
         </div>
         {outgoing ? (
           <div className="featured-label">{content}</div>
@@ -884,7 +650,7 @@ export default function App() {
                     <div
                       className={`food-visual ${item.category.toLowerCase().replace(" ", "-")}`}
                     >
-                      <FoodArt item={item} />
+                      <FoodCover item={item} />
                       {!item.is_listed && (
                         <span className="availability unavailable"><span /> Unlisted</span>
                       )}
