@@ -31,3 +31,7 @@ The importer does not copy production data or overwrite locations/photos. Produc
 ## Recording preparation verified on November 20, 2026
 
 The restricted staging schema is at migration 0003 and contains the nine-shop, 28-item recorded snapshot. API checks passed for creating, viewing, renaming, isolating, and deleting a temporary meal box. [Staging evidence](docs/verification/recording-staging.json)
+
+## Current quantity-aware schema
+
+On November 27, 2026, restricted staging migrated to 0004. Real PostgreSQL checks verified quantity-aware create/update/read/delete, stale-edit rejection and both saved-box RLS flags; the temporary test box was deleted. The older 0003 recording evidence above remains historical.

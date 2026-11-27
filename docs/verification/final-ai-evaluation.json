@@ -1,0 +1,88 @@
+{
+  "verified_at": "2026-11-27T10:11:00.032622+08:00",
+  "environment": "production REST endpoint",
+  "provider": "Groq",
+  "model": "openai/gpt-oss-20b",
+  "budget_php": "100.00",
+  "sample_size": 5,
+  "passed": 5,
+  "acceptance": "HTTP 200, at least one suggestion, totals <= PHP 100, every selected item and unit price present in recorded catalog, exact decimal totals. This is a five-prompt smoke evaluation, not a statistical accuracy benchmark.",
+  "cases": [
+    {
+      "language": "English",
+      "prompt": "Chicken with rice.",
+      "http_status": 200,
+      "suggestions": 2,
+      "checks": {
+        "http_200": true,
+        "nonempty": true,
+        "budget": true,
+        "recorded_items": true,
+        "exact_totals": true
+      },
+      "passed": true,
+      "elapsed_seconds": 1.576
+    },
+    {
+      "language": "Tagalog",
+      "prompt": "Gusto ko ng manok at kanin.",
+      "http_status": 200,
+      "suggestions": 2,
+      "checks": {
+        "http_200": true,
+        "nonempty": true,
+        "budget": true,
+        "recorded_items": true,
+        "exact_totals": true
+      },
+      "passed": true,
+      "elapsed_seconds": 1.609
+    },
+    {
+      "language": "Hiligaynon",
+      "prompt": "Gusto ko manok kag kan-on.",
+      "http_status": 200,
+      "suggestions": 2,
+      "checks": {
+        "http_200": true,
+        "nonempty": true,
+        "budget": true,
+        "recorded_items": true,
+        "exact_totals": true
+      },
+      "passed": true,
+      "elapsed_seconds": 1.687
+    },
+    {
+      "language": "Bisaya",
+      "prompt": "Gusto ko og manok ug kan-on.",
+      "http_status": 200,
+      "suggestions": 2,
+      "checks": {
+        "http_200": true,
+        "nonempty": true,
+        "budget": true,
+        "recorded_items": true,
+        "exact_totals": true
+      },
+      "passed": true,
+      "elapsed_seconds": 1.318
+    },
+    {
+      "language": "Typo",
+      "prompt": "Gusto ko manook.",
+      "http_status": 200,
+      "suggestions": 6,
+      "checks": {
+        "http_200": true,
+        "nonempty": true,
+        "budget": true,
+        "recorded_items": true,
+        "exact_totals": true
+      },
+      "passed": true,
+      "elapsed_seconds": 1.203
+    }
+  ],
+  "recorded_at_philippine_time": "2026-11-27T10:16:42.166829+08:00"
+}
