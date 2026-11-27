@@ -4,10 +4,10 @@
 
 - Production React frontend, FastAPI backend, Supabase PostgreSQL, and Groq integration.
 - Structured multilingual extraction, validated catalog matching, and decimal budget totals.
-- Visitor Meal Box creation, viewing, renaming, deletion, persistence, and ownership isolation.
-- Frontend lint/build, 91 backend tests, mocked AI calls in CI, and five real-provider language examples.
+- Visitor Meal Box creation, viewing, name/budget/meal/quantity editing, deletion, persistence, and ownership isolation.
+- Frontend lint/build, 110 backend tests, mocked AI calls in CI, and five real-provider language examples.
 - Public main-branch protection with frontend/backend checks under the instructor-approved solo workflow.
-- Isolated staging schema upgraded to 0003.
+- Isolated staging schema upgraded to 0004.
 - Current menu snapshots, rollback rehearsal, and credential-history scan.
 
 ## Before the video

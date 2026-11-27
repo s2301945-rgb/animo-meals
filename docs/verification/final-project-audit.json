@@ -1,0 +1,86 @@
+{
+  "versions": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "vite": "7.3.7",
+    "eslint": "9.39.5"
+  },
+  "latest_run": {
+    "id": 45866255836,
+    "head_sha": "8e5cf398f04c38a94583b61e83190686c683db48",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/s2301945-rgb/animo-meals/actions/runs/45866255836"
+  },
+  "report": {
+    "artifact_name": "api-test-results",
+    "artifact_id": 15139349227,
+    "tests": 110,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "jobs": [
+    {
+      "name": "backend",
+      "started_at": "2026-11-26T17:16:04Z",
+      "completed_at": "2026-11-26T17:16:23Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "frontend",
+      "started_at": "2026-11-26T17:16:04Z",
+      "completed_at": "2026-11-26T17:16:16Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "Deploy frontend after checks",
+      "started_at": "2026-11-26T17:16:25Z",
+      "completed_at": "2026-11-26T17:16:37Z",
+      "conclusion": "success"
+    }
+  ],
+  "public": {
+    "health": {
+      "status": "ok",
+      "database": "connected"
+    },
+    "environment": {
+      "environment": "production",
+      "revision": "e879f3fd35fdf2665881d377ef7ba803f5ebabea"
+    },
+    "menu-items": 28,
+    "stalls": 9
+  },
+  "branch_rules": {
+    "checks": [
+      "frontend",
+      "backend"
+    ],
+    "strict": true,
+    "required_approvals": 0,
+    "enforce_admins": true
+  },
+  "recorded_at_philippine_time": "2026-11-27T10:16:42.165443+08:00",
+  "historical_v1_0_0_tag": {
+    "sha": "f92c2ac97b316ad256adacd29c65653a8ea1b236",
+    "type": "commit",
+    "url": "https://api.github.com/repos/s2301945-rgb/animo-meals/git/commits/f92c2ac97b316ad256adacd29c65653a8ea1b236"
+  },
+  "release_tag": {
+    "name": "v1.1.0",
+    "application_source_commit": "8e5cf398f04c38a94583b61e83190686c683db48",
+    "backend_reported_commit": "e879f3fd35fdf2665881d377ef7ba803f5ebabea",
+    "backend_source_trees_identical": true
+  },
+  "production_editor_browser_check": {
+    "verified_at": "2026-11-27T10:34:33.406750+08:00",
+    "liveFrontend": true,
+    "liveBackend": true,
+    "addRemoveQuantityBudget": true,
+    "persistedAfterReload": true,
+    "phoneLayout": true,
+    "testBoxDeleted": true
+  },
+  "browser_check_note": "The first API fetch hit a 30-second timeout; allowing 90 seconds for the documented free-host cold start produced the passing result."
+}

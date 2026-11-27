@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased recording preparation
+## v1.1.0 - November 27, 2026
+
+- Edit Meal Box names, budgets, contents and quantities, with server validation and stale-edit protection.
+- Preserve saved unit prices; use current recorded prices for newly added meals.
+- Add migration 0004 while preserving historical boxes with quantity one.
+- Replace menu placeholders with twelve labeled illustration designs shared by all 28 listings.
+- Verify 110 backend tests, responsive browser flows and five current live-language examples.
+- Release source: 8e5cf398f04c38a94583b61e83190686c683db48. Subsequent documentation-only commits contain the final handoff.
+
+## Earlier recording preparation
 
 - Place My Meal Boxes directly below the finder and highlight access in navigation.
 - Add visible view, rename, delete, save confirmation, and browser-storage guidance.

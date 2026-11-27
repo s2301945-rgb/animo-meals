@@ -2,6 +2,16 @@
 
 AnimoMeals helps students choose meals from recorded local shop menus based on their budget and food preferences. A visitor can describe what they want, compare meal combinations, and save favorite combinations as **My Meal Boxes**. No visitor account or administrator dashboard is required.
 
+## Final technical handoff
+
+**[Google Doc](https://docs.google.com/document/d/1V1uL_hmHFE0UcaDdsfX89nBcymX323DT0ltk34kgLmc/edit) | [Three-page PDF](docs/final/AnimoMeals-Final-Technical-Documentation.pdf) | [Readable brief](docs/final/TECHNICAL-HANDOFF.md)**
+
+Prepared for CSP221A by Lance Francis M. Gargaritano, solo developer and sole DevOps Engineer. Application release [v1.1.0](https://github.com/s2301945-rgb/animo-meals/releases/tag/v1.1.0) identifies source `8e5cf398f04c38a94583b61e83190686c683db48`. The brief records verified implementation, 110 passing CI tests, five passing live-language examples, external/AI assistance and remaining data/recovery limitations.
+
+[Architecture diagram](docs/ARCHITECTURE.md) | [Schema and ERD](docs/SCHEMA.md) | [API](docs/API.md) | [Pipeline and measured timings](PIPELINE.md) | [Technology and asset disclosure](docs/TECHNOLOGY.md)
+
+[Developer-supplied consultation recording folder](https://drive.google.com/drive/folders/1ZKTryG_lfVrOrqRCASA8FN6cy-cjMOjb): recording access and uninterrupted challenge coverage remain unverified. The older rollback rehearsal covers schema 0003; a fresh hosting rehearsal for 0004 is pending. The brief distinguishes these gaps from completed application features.
+
 ## Revised scope — November 4, 2026
 
 The former administrator app has been retired. Shop and menu editing, administrator login, and photo-upload endpoints are removed. The developer maintains a small curated menu dataset through an offline import command. This avoids daily vendor checks; it does not eliminate the need to occasionally correct recorded prices.

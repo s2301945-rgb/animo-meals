@@ -5,7 +5,7 @@ The repository uses Vercel for the frontend, Render for the backend, and Supabas
 ## Before merging
 
 - Pass frontend lint/build and backend lint/tests on the pull request.
-- Review migrations 0003 and 0004. Migration 0004 adds quantities (default one), nullable catalog references and edit versions without changing saved prices. It creates saved_plans/saved_plan_items with PostgreSQL RLS and preserves menu records.
+- Review migrations 0003 and 0004. Migration 0004 adds quantities (default one), nullable catalog references and edit versions without changing saved prices. Migration 0003 creates saved_plans/saved_plan_items with PostgreSQL RLS and preserves menu records.
 - Keep DATABASE_URL, GROQ_API_KEY, GROQ_MODEL and FRONTEND_ORIGIN in backend private environment settings.
 - Keep VITE_API_BASE_URL pointing to the hosted API; Vite settings are public.
 - Do not copy local fixture menus into production. Import only the supplied dataset after reviewing it.
